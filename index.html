@@ -1,1 +1,731 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMP Tonnage Ledger — Team Asphalt</title>
+ 
+  <!-- Firebase v9 compat (CDN) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+ 
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+ 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --bg:       #0f1115;
+      --bg2:      #181b21;
+      --bg3:      #1f232b;
+      --border:   #2a2f3a;
+      --border2:  #353c4a;
+      --text:     #e8eaf0;
+      --text2:    #8c92a4;
+      --text3:    #555d70;
+      --green:    #6fcf4a;
+      --green-bg: #1a2d12;
+      --green-border: #2f5220;
+      --red:      #f0634a;
+      --red-bg:   #2d1512;
+      --red-border: #522520;
+      --amber:    #f0b84a;
+      --mono:     'IBM Plex Mono', monospace;
+      --sans:     'IBM Plex Sans', sans-serif;
+    }
+ 
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      padding: 0;
+    }
+ 
+    /* ── Header ── */
+    header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-mark {
+      width: 32px; height: 32px;
+      background: var(--green);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 14px;
+      color: #0f1115;
+    }
+    .logo-text {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: .04em;
+    }
+    .logo-sub {
+      font-size: 11px;
+      color: var(--text3);
+      font-family: var(--mono);
+      letter-spacing: .06em;
+    }
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .sync-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: pulse 2s infinite;
+    }
+    .sync-dot.offline { background: var(--red); box-shadow: 0 0 6px var(--red); animation: none; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+ 
+    /* ── Buttons ── */
+    btn, .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      color: var(--text2);
+      cursor: pointer;
+      transition: all .15s;
+      text-decoration: none;
+      letter-spacing: .03em;
+    }
+    .btn:hover { border-color: var(--text3); color: var(--text); background: var(--bg2); }
+    .btn-green { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+    .btn-green:hover { background: #223a17; border-color: var(--green); }
+    .btn-red { background: var(--red-bg); border-color: var(--red-border); color: var(--red); }
+    .btn-red:hover { background: #3d1a17; border-color: var(--red); }
+ 
+    /* ── Main layout ── */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+ 
+    /* ── Stats bar ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+    }
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-value .unit {
+      font-size: 13px;
+      color: var(--text3);
+      margin-left: 4px;
+    }
+    .stat-card.green .stat-value { color: var(--green); }
+    .stat-card.red .stat-value { color: var(--red); }
+ 
+    /* ── Entry panels ── */
+    .entry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .entry-panel {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+    }
+    .entry-panel.green-panel { border-color: var(--green-border); }
+    .entry-panel.red-panel   { border-color: var(--red-border); }
+    .panel-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-title.green { color: var(--green); }
+    .panel-title.red   { color: var(--red); }
+    .panel-title::before {
+      content: '';
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .panel-title.green::before { background: var(--green); }
+    .panel-title.red::before   { background: var(--red); }
+ 
+    .form-row { display: flex; flex-direction: column; gap: 8px; }
+    .form-group { display: flex; gap: 8px; }
+ 
+    input[type="number"], input[type="text"], input[type="date"] {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      padding: 8px 12px;
+      width: 100%;
+      transition: border-color .15s;
+      outline: none;
+    }
+    input::placeholder { color: var(--text3); }
+    input:focus { border-color: var(--text3); }
+    .green-panel input:focus { border-color: var(--green-border); }
+    .red-panel input:focus   { border-color: var(--red-border); }
+ 
+    /* ── Register ── */
+    .register {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .register-header {
+      padding: .875rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .register-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .filter-bar input {
+      width: 180px;
+      font-size: 12px;
+      padding: 5px 10px;
+    }
+ 
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    thead tr {
+      background: var(--bg3);
+    }
+    th {
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    th.right { text-align: right; }
+    td {
+      padding: 11px 16px;
+      border-top: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    td.right { text-align: right; }
+    td.mono   { font-family: var(--mono); }
+ 
+    tr.row-buy  { background: #111a0e; }
+    tr.row-use  { background: var(--bg2); }
+    tr.row-buy:hover { background: #162213; }
+    tr.row-use:hover { background: var(--bg3); }
+ 
+    .tag-buy {
+      display: inline-block;
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+      color: var(--green);
+      font-size: 10px;
+      letter-spacing: .06em;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .tag-use {
+      display: inline-block;
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+      color: var(--red);
+      font-size: 10px;
+      letter-spacing: .06em;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .amount-buy { color: var(--green); font-weight: 600; }
+    .amount-use { color: var(--red);   font-weight: 600; }
+    .balance-cell { color: var(--text); font-weight: 600; }
+    .note-text { color: var(--text3); font-size: 11px; display: block; margin-top: 2px; font-family: var(--sans); }
+ 
+    .del-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text3);
+      font-size: 16px;
+      line-height: 1;
+      padding: 4px;
+      border-radius: 4px;
+      transition: all .15s;
+      opacity: 0;
+    }
+    tr:hover .del-btn { opacity: 1; }
+    .del-btn:hover { color: var(--red); background: var(--red-bg); }
+ 
+    .empty-state {
+      padding: 3rem;
+      text-align: center;
+      color: var(--text3);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+ 
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all .25s;
+      z-index: 999;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.green { border-color: var(--green-border); color: var(--green); }
+    #toast.red   { border-color: var(--red-border);   color: var(--red); }
+ 
+    /* ── Print styles ── */
+    @media print {
+      body { background: #fff; color: #000; }
+      header { background: #fff; border-bottom: 1px solid #ccc; position: static; }
+      .logo-mark { background: #000; color: #fff; }
+      .logo-text, .logo-sub { color: #000; }
+      .header-actions, .entry-grid, .filter-bar, .del-btn { display: none !important; }
+      .stats, .register { break-inside: avoid; }
+      .stat-card { background: #f5f5f5; border: 1px solid #ccc; }
+      .stat-label { color: #666; }
+      .stat-value { color: #000; }
+      .stat-card.green .stat-value { color: #2d6e0a; }
+      .stat-card.red .stat-value   { color: #8b2010; }
+      .register { background: #fff; border: 1px solid #ccc; }
+      table { font-size: 11px; }
+      th { background: #eee; color: #333; }
+      td { border-top: 1px solid #ddd; }
+      tr.row-buy { background: #f0f7ea; }
+      tr.row-use { background: #fff; }
+      .amount-buy { color: #2d6e0a; }
+      .amount-use { color: #8b2010; }
+      .balance-cell { color: #000; }
+      .tag-buy { background: #e8f5d8; border: 1px solid #a0c870; color: #2d6e0a; }
+      .tag-use { background: #fde8e3; border: 1px solid #e8a090; color: #8b2010; }
+      .note-text { color: #666; }
+      main { padding: 0; max-width: 100%; }
+    }
+ 
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .entry-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
+      main { padding: 1rem; }
+      header { padding: 0 1rem; }
+    }
+ 
+    /* ── Modal (confirm delete) ── */
+    .modal-bg {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.6);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.open { display: flex; }
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 360px;
+      width: 90%;
+      text-align: center;
+    }
+    .modal h3 { font-family: var(--mono); font-size: 14px; margin-bottom: 8px; }
+    .modal p  { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
+    .modal-actions { display: flex; gap: 10px; justify-content: center; }
+  </style>
+</head>
+<body>
+ 
+<header>
+  <div class="logo">
+    <div class="logo-mark">AMP</div>
+    <div>
+      <div class="logo-text">Tonnage Ledger</div>
+      <div class="logo-sub">Team Asphalt · Spring Valley, WI</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="sync-dot" id="sync-dot" title="Firebase sync status"></div>
+    <span style="font-size:11px; color:var(--text3); font-family:var(--mono);" id="sync-label">connecting...</span>
+    <button class="btn" onclick="window.print()">⎙ Print</button>
+    <button class="btn" onclick="exportCSV()">↓ Export CSV</button>
+  </div>
+</header>
+ 
+<main>
+ 
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card green">
+      <div class="stat-label">Current Balance</div>
+      <div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Purchased</div>
+      <div class="stat-value" id="stat-in">—<span class="unit">ton</span></div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">Total Used</div>
+      <div class="stat-value" id="stat-out">—<span class="unit">ton</span></div>
+    </div>
+  </div>
+ 
+  <!-- Entry Panels -->
+  <div class="entry-grid">
+ 
+    <div class="entry-panel green-panel">
+      <div class="panel-title green">Add Block Purchase</div>
+      <div class="form-row">
+        <div class="form-group">
+          <input type="number" id="buy-tons" placeholder="Tons purchased" min="0" step="0.1" />
+          <input type="date" id="buy-date" />
+        </div>
+        <input type="text" id="buy-supplier" placeholder="Supplier name (e.g. Fahrner Asphalt)" />
+        <input type="text" id="buy-note" placeholder="Note / PO number (optional)" />
+        <button class="btn btn-green" onclick="submitEntry('buy')">＋ Add Purchase</button>
+      </div>
+    </div>
+ 
+    <div class="entry-panel red-panel">
+      <div class="panel-title red">Record Usage</div>
+      <div class="form-row">
+        <div class="form-group">
+          <input type="number" id="use-tons" placeholder="Tons used" min="0" step="0.1" />
+          <input type="date" id="use-date" />
+        </div>
+        <input type="text" id="use-supplier" placeholder="Supplier / Mix type" />
+        <input type="text" id="use-note" placeholder="Job / location (optional)" />
+        <button class="btn btn-red" onclick="submitEntry('use')">− Record Usage</button>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <!-- Register -->
+  <div class="register">
+    <div class="register-header">
+      <span class="register-title">Transaction Register</span>
+      <div class="filter-bar">
+        <input type="text" id="filter-input" placeholder="Filter by supplier or note..." oninput="renderTable()" />
+        <button class="btn" onclick="document.getElementById('filter-input').value=''; renderTable();">✕ Clear</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Supplier</th>
+            <th class="right">Purchase (ton)</th>
+            <th class="right">Usage (ton)</th>
+            <th class="right">Balance (ton)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="register-body">
+          <tr><td colspan="7"><div class="empty-state">Connecting to database...</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+ 
+</main>
+ 
+<!-- Delete confirm modal -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h3>Delete this entry?</h3>
+    <p>This will permanently remove the transaction and recalculate all balances.</p>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-red" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- Toast -->
+<div id="toast"></div>
+ 
+<!-- ═══════════════════════════════════════════════════════
+     FIREBASE CONFIG — PASTE YOUR CONFIG HERE
+     ═══════════════════════════════════════════════════════ -->
+<script>
+  // ┌─────────────────────────────────────────────────────────┐
+  // │  STEP 1: Replace this entire firebaseConfig object      │
+  // │  with your own config from Firebase Console             │
+  // │  (Project Settings → Your Apps → Web App → Config)     │
+  // └─────────────────────────────────────────────────────────┘
+  const firebaseConfig = {
+    apiKey:            "PASTE_YOUR_API_KEY_HERE",
+    authDomain:        "PASTE_YOUR_AUTH_DOMAIN_HERE",
+    databaseURL:       "PASTE_YOUR_DATABASE_URL_HERE",
+    projectId:         "PASTE_YOUR_PROJECT_ID_HERE",
+    storageBucket:     "PASTE_YOUR_STORAGE_BUCKET_HERE",
+    messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
+    appId:             "PASTE_YOUR_APP_ID_HERE"
+  };
+ 
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const entriesRef = db.ref('tonnage_entries');
+ 
+  // ─── State ───────────────────────────────────────────────
+  let allEntries = [];   // sorted newest-first, with running balances
+  let pendingDeleteId = null;
+ 
+  // ─── Sync indicator ──────────────────────────────────────
+  const connRef = db.ref('.info/connected');
+  connRef.on('value', snap => {
+    const online = snap.val();
+    document.getElementById('sync-dot').className = 'sync-dot' + (online ? '' : ' offline');
+    document.getElementById('sync-label').textContent = online ? 'live sync' : 'offline';
+  });
+ 
+  // ─── Listen for data changes ─────────────────────────────
+  entriesRef.on('value', snap => {
+    const raw = snap.val() || {};
+    // Convert object to array, sort by timestamp ascending
+    const sorted = Object.entries(raw)
+      .map(([id, v]) => ({ id, ...v }))
+      .sort((a, b) => a.ts - b.ts);
+ 
+    // Compute running balance (oldest → newest)
+    let running = 0;
+    for (const e of sorted) {
+      running += e.type === 'buy' ? e.tons : -e.tons;
+      e.balance = running;
+    }
+ 
+    // Reverse so newest is first in the display
+    allEntries = sorted.reverse();
+    renderTable();
+    updateStats();
+  });
+ 
+  // ─── Submit entry ─────────────────────────────────────────
+  function submitEntry(type) {
+    const tonsEl     = document.getElementById(type === 'buy' ? 'buy-tons'     : 'use-tons');
+    const dateEl     = document.getElementById(type === 'buy' ? 'buy-date'     : 'use-date');
+    const supplierEl = document.getElementById(type === 'buy' ? 'buy-supplier' : 'use-supplier');
+    const noteEl     = document.getElementById(type === 'buy' ? 'buy-note'     : 'use-note');
+ 
+    const tons = parseFloat(tonsEl.value);
+    if (!tons || tons <= 0) {
+      tonsEl.focus();
+      showToast('Enter a valid tonnage amount.', 'red');
+      return;
+    }
+ 
+    const dateVal = dateEl.value || new Date().toISOString().slice(0, 10);
+    const entry = {
+      type,
+      tons,
+      date:     dateVal,
+      supplier: supplierEl.value.trim() || (type === 'buy' ? 'Supplier' : '—'),
+      note:     noteEl.value.trim(),
+      ts:       new Date(dateVal).getTime() + Date.now() % 100000  // sort by date, then insert order
+    };
+ 
+    entriesRef.push(entry)
+      .then(() => {
+        tonsEl.value = ''; dateEl.value = ''; supplierEl.value = ''; noteEl.value = '';
+        showToast(type === 'buy' ? '+ Purchase recorded.' : '− Usage recorded.', type === 'buy' ? 'green' : 'red');
+      })
+      .catch(err => showToast('Error: ' + err.message, 'red'));
+  }
+ 
+  // ─── Delete flow ──────────────────────────────────────────
+  function promptDelete(id) {
+    pendingDeleteId = id;
+    document.getElementById('modal-bg').classList.add('open');
+  }
+  function closeModal() {
+    pendingDeleteId = null;
+    document.getElementById('modal-bg').classList.remove('open');
+  }
+  function confirmDelete() {
+    if (!pendingDeleteId) return;
+    entriesRef.child(pendingDeleteId).remove()
+      .then(() => showToast('Entry deleted.', ''))
+      .catch(err => showToast('Error: ' + err.message, 'red'));
+    closeModal();
+  }
+ 
+  // ─── Render table ─────────────────────────────────────────
+  function renderTable() {
+    const filter = (document.getElementById('filter-input')?.value || '').toLowerCase();
+    const tbody  = document.getElementById('register-body');
+    const shown  = filter
+      ? allEntries.filter(e =>
+          (e.supplier || '').toLowerCase().includes(filter) ||
+          (e.note     || '').toLowerCase().includes(filter))
+      : allEntries;
+ 
+    if (shown.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">${
+        filter ? 'No entries match that filter.' : 'No entries yet. Add a purchase or usage above.'
+      }</div></td></tr>`;
+      return;
+    }
+ 
+    tbody.innerHTML = shown.map(e => {
+      const isBuy = e.type === 'buy';
+      return `
+        <tr class="${isBuy ? 'row-buy' : 'row-use'}">
+          <td class="mono">${e.date || '—'}</td>
+          <td><span class="${isBuy ? 'tag-buy' : 'tag-use'}">${isBuy ? 'Purchase' : 'Usage'}</span></td>
+          <td>
+            ${escHtml(e.supplier || '—')}
+            ${e.note ? `<span class="note-text">${escHtml(e.note)}</span>` : ''}
+          </td>
+          <td class="right mono ${isBuy ? 'amount-buy' : ''}">
+            ${isBuy ? '+' + fmt(e.tons) : ''}
+          </td>
+          <td class="right mono ${!isBuy ? 'amount-use' : ''}">
+            ${!isBuy ? '−' + fmt(e.tons) : ''}
+          </td>
+          <td class="right mono balance-cell">${fmt(e.balance)}</td>
+          <td>
+            <button class="del-btn" onclick="promptDelete('${e.id}')" title="Delete entry">✕</button>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+ 
+  // ─── Update summary stats ─────────────────────────────────
+  function updateStats() {
+    const totalIn  = allEntries.filter(e => e.type === 'buy').reduce((s, e) => s + e.tons, 0);
+    const totalOut = allEntries.filter(e => e.type === 'use').reduce((s, e) => s + e.tons, 0);
+    const balance  = allEntries.length ? allEntries[0].balance : 0;
+ 
+    document.getElementById('stat-balance').innerHTML = fmt(balance) + '<span class="unit">ton</span>';
+    document.getElementById('stat-in').innerHTML      = fmt(totalIn)  + '<span class="unit">ton</span>';
+    document.getElementById('stat-out').innerHTML     = fmt(totalOut) + '<span class="unit">ton</span>';
+  }
+ 
+  // ─── Export CSV ───────────────────────────────────────────
+  function exportCSV() {
+    const rows = [['Date','Type','Supplier','Note','Tons','Balance']];
+    [...allEntries].reverse().forEach(e => {
+      rows.push([e.date, e.type === 'buy' ? 'Purchase' : 'Usage', e.supplier || '', e.note || '', e.tons, e.balance]);
+    });
+    const csv  = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = 'amp-tonnage-ledger.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }
+ 
+  // ─── Helpers ─────────────────────────────────────────────
+  function fmt(n) {
+    if (n === undefined || n === null) return '—';
+    return Number(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
+  }
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function showToast(msg, cls) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'show' + (cls ? ' ' + cls : '');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.className = ''; }, 3000);
+  }
+ 
+  // Set today's date as default in both date inputs
+  const today = new Date().toISOString().slice(0, 10);
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('buy-date').value = today;
+    document.getElementById('use-date').value = today;
+  });
+</script>
+ 
+</body>
+</html>
+ 
