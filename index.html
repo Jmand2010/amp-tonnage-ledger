@@ -1,522 +1,297 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AMP Tonnage Ledger — Team Asphalt</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AMP Materials Ledger — Team Asphalt</title>
  
-  <!-- Firebase v9 compat (CDN) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
  
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
  
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── THEME VARIABLES ── */
+[data-theme="dark"] {
+  --bg:#0f1115; --bg2:#181b21; --bg3:#1f232b;
+  --border:#2a2f3a; --border2:#353c4a;
+  --text:#e8eaf0; --text2:#8c92a4; --text3:#555d70;
+  --green:#6fcf4a; --green-bg:#1a2d12; --green-border:#2f5220;
+  --red:#f0634a; --red-bg:#2d1512; --red-border:#522520;
+  --blue:#4ab4f0; --blue-bg:#0e2030; --blue-border:#1a4060;
+  --amber:#f0b84a; --amber-bg:#2a1f08; --amber-border:#5a3e10;
+  --shadow:rgba(0,0,0,.5);
+  --toggle-icon:"☀️";
+}
+[data-theme="light"] {
+  --bg:#f4f5f7; --bg2:#ffffff; --bg3:#eceef2;
+  --border:#dde0e8; --border2:#c8ccd6;
+  --text:#1a1d24; --text2:#5a6070; --text3:#9098aa;
+  --green:#2d7a0a; --green-bg:#eaf5df; --green-border:#8fcc60;
+  --red:#c03820; --red-bg:#fdeae5; --red-border:#f09070;
+  --blue:#1a6aaa; --blue-bg:#e5f0fa; --blue-border:#70b0e0;
+  --amber:#a06800; --amber-bg:#fdf3d8; --amber-border:#e0b050;
+  --shadow:rgba(0,0,0,.15);
+  --toggle-icon:"🌙";
+}
  
-    :root {
-      --bg:       #0f1115;
-      --bg2:      #181b21;
-      --bg3:      #1f232b;
-      --border:   #2a2f3a;
-      --border2:  #353c4a;
-      --text:     #e8eaf0;
-      --text2:    #8c92a4;
-      --text3:    #555d70;
-      --green:    #6fcf4a;
-      --green-bg: #1a2d12;
-      --green-border: #2f5220;
-      --red:      #f0634a;
-      --red-bg:   #2d1512;
-      --red-border: #522520;
-      --amber:    #f0b84a;
-      --mono:     'IBM Plex Mono', monospace;
-      --sans:     'IBM Plex Sans', sans-serif;
-    }
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;transition:background .2s,color .2s;}
  
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      min-height: 100vh;
-      padding: 0;
-    }
+/* ── HEADER ── */
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-mark{width:32px;height:32px;background:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:#fff;}
+.logo-text{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--text);}
+.logo-sub{font-size:11px;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
+.header-right{display:flex;gap:8px;align-items:center;}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite;}
+.sync-dot.offline{background:var(--red);box-shadow:0 0 6px var(--red);animation:none;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-label{font-size:11px;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
  
-    /* ── Header ── */
-    header {
-      background: var(--bg2);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 56px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .logo-mark {
-      width: 32px; height: 32px;
-      background: var(--green);
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--mono);
-      font-weight: 600;
-      font-size: 14px;
-      color: #0f1115;
-    }
-    .logo-text {
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: .04em;
-    }
-    .logo-sub {
-      font-size: 11px;
-      color: var(--text3);
-      font-family: var(--mono);
-      letter-spacing: .06em;
-    }
-    .header-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .sync-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 6px var(--green);
-      animation: pulse 2s infinite;
-    }
-    .sync-dot.offline { background: var(--red); box-shadow: 0 0 6px var(--red); animation: none; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;padding:7px 14px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;letter-spacing:.03em;}
+.btn:hover{border-color:var(--text3);color:var(--text);}
+.btn-green{background:var(--green-bg);border-color:var(--green-border);color:var(--green);}
+.btn-green:hover{filter:brightness(1.1);}
+.btn-red{background:var(--red-bg);border-color:var(--red-border);color:var(--red);}
+.btn-red:hover{filter:brightness(1.1);}
+.btn-blue{background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue);}
+.btn-blue:hover{filter:brightness(1.1);}
+.btn-amber{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber);}
+.btn-amber:hover{filter:brightness(1.1);}
+.toggle-theme{font-size:18px;background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;}
+.toggle-theme:hover{background:var(--bg3);}
  
-    /* ── Buttons ── */
-    btn, .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 7px 14px;
-      border-radius: 6px;
-      border: 1px solid var(--border2);
-      background: var(--bg3);
-      color: var(--text2);
-      cursor: pointer;
-      transition: all .15s;
-      text-decoration: none;
-      letter-spacing: .03em;
-    }
-    .btn:hover { border-color: var(--text3); color: var(--text); background: var(--bg2); }
-    .btn-green { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
-    .btn-green:hover { background: #223a17; border-color: var(--green); }
-    .btn-red { background: var(--red-bg); border-color: var(--red-border); color: var(--red); }
-    .btn-red:hover { background: #3d1a17; border-color: var(--red); }
+/* ── TRACKER SELECTOR ── */
+.tracker-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:.75rem 2rem;display:flex;align-items:center;gap:12px;}
+.tracker-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);}
+select{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:7px 14px;border-radius:6px;cursor:pointer;outline:none;}
+select:focus{border-color:var(--text2);}
  
-    /* ── Main layout ── */
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
+/* ── MAIN ── */
+main{max-width:1100px;margin:0 auto;padding:2rem;}
  
-    /* ── Stats bar ── */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .stat-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem 1.5rem;
-    }
-    .stat-label {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--text3);
-      margin-bottom: 8px;
-    }
-    .stat-value {
-      font-family: var(--mono);
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1;
-    }
-    .stat-value .unit {
-      font-size: 13px;
-      color: var(--text3);
-      margin-left: 4px;
-    }
-    .stat-card.green .stat-value { color: var(--green); }
-    .stat-card.red .stat-value { color: var(--red); }
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;}
+.stat-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.stat-value{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;color:var(--text);line-height:1;}
+.stat-value .unit{font-size:13px;color:var(--text3);margin-left:4px;}
+.stat-card.green .stat-value{color:var(--green);}
+.stat-card.red   .stat-value{color:var(--red);}
+.stat-card.blue  .stat-value{color:var(--blue);}
+.stat-card.amber .stat-value{color:var(--amber);}
  
-    /* ── Entry panels ── */
-    .entry-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .entry-panel {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem 1.5rem;
-    }
-    .entry-panel.green-panel { border-color: var(--green-border); }
-    .entry-panel.red-panel   { border-color: var(--red-border); }
-    .panel-title {
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .panel-title.green { color: var(--green); }
-    .panel-title.red   { color: var(--red); }
-    .panel-title::before {
-      content: '';
-      display: inline-block;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-    }
-    .panel-title.green::before { background: var(--green); }
-    .panel-title.red::before   { background: var(--red); }
+/* ── ENTRY PANELS ── */
+.entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.entry-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;}
+.entry-panel.green-panel{border-color:var(--green-border);}
+.entry-panel.red-panel{border-color:var(--red-border);}
+.entry-panel.blue-panel{border-color:var(--blue-border);}
+.entry-panel.amber-panel{border-color:var(--amber-border);}
+.panel-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.panel-title::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;}
+.panel-title.green{color:var(--green)}.panel-title.green::before{background:var(--green);}
+.panel-title.red{color:var(--red)}.panel-title.red::before{background:var(--red);}
+.panel-title.blue{color:var(--blue)}.panel-title.blue::before{background:var(--blue);}
+.panel-title.amber{color:var(--amber)}.panel-title.amber::before{background:var(--amber);}
+.form-row{display:flex;flex-direction:column;gap:8px;}
+.form-group{display:flex;gap:8px;}
+.form-group-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+input[type="number"],input[type="text"],input[type="date"]{background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:8px 12px;width:100%;transition:border-color .15s;outline:none;}
+input::placeholder{color:var(--text3);}
+input:focus{border-color:var(--text2);}
+label.field-label{font-size:11px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;margin-bottom:2px;display:block;}
  
-    .form-row { display: flex; flex-direction: column; gap: 8px; }
-    .form-group { display: flex; gap: 8px; }
+/* ── REGISTER ── */
+.register{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.register-header{padding:.875rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+.register-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);}
+.filter-bar{display:flex;gap:8px;align-items:center;}
+.filter-bar input{width:200px;font-size:12px;padding:5px 10px;}
+table{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:13px;}
+thead tr{background:var(--bg3);}
+th{padding:10px 16px;text-align:left;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;white-space:nowrap;}
+th.right{text-align:right;}
+td{padding:11px 16px;border-top:1px solid var(--border);vertical-align:middle;}
+td.right{text-align:right;}
+tr.row-buy{background:var(--green-bg);}
+tr.row-use{background:var(--bg2);}
+tr.row-fill{background:var(--blue-bg);}
+tr.row-reading{background:var(--amber-bg);}
+tr.row-buy:hover{filter:brightness(1.08);}
+tr.row-use:hover{filter:brightness(1.08);}
+tr.row-fill:hover{filter:brightness(1.08);}
+tr.row-reading:hover{filter:brightness(1.08);}
+.tag{display:inline-block;font-size:10px;letter-spacing:.06em;padding:2px 7px;border-radius:4px;text-transform:uppercase;}
+.tag-buy{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
+.tag-use{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);}
+.tag-fill{background:var(--blue-bg);border:1px solid var(--blue-border);color:var(--blue);}
+.tag-reading{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber);}
+.amount-buy{color:var(--green);font-weight:600;}
+.amount-use{color:var(--red);font-weight:600;}
+.amount-fill{color:var(--blue);font-weight:600;}
+.balance-cell{color:var(--text);font-weight:600;}
+.note-text{color:var(--text3);font-size:11px;display:block;margin-top:2px;font-family:'IBM Plex Sans',sans-serif;}
+.del-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;padding:4px 6px;border-radius:4px;transition:all .15s;opacity:0;}
+tr:hover .del-btn{opacity:1;}
+.del-btn:hover{color:var(--red);background:var(--red-bg);}
+.empty-state{padding:3rem;text-align:center;color:var(--text3);font-family:'IBM Plex Mono',monospace;font-size:13px;}
  
-    input[type="number"], input[type="text"], input[type="date"] {
-      background: var(--bg);
-      border: 1px solid var(--border2);
-      border-radius: 6px;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 13px;
-      padding: 8px 12px;
-      width: 100%;
-      transition: border-color .15s;
-      outline: none;
-    }
-    input::placeholder { color: var(--text3); }
-    input:focus { border-color: var(--text3); }
-    .green-panel input:focus { border-color: var(--green-border); }
-    .red-panel input:focus   { border-color: var(--red-border); }
+/* ── FLOATING WIDGET ── */
+#widget{position:fixed;bottom:24px;right:24px;z-index:500;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;box-shadow:0 8px 32px var(--shadow);width:230px;user-select:none;transition:background .2s,border-color .2s;}
+#widget-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 6px;cursor:grab;border-bottom:1px solid var(--border);}
+#widget-header:active{cursor:grabbing;}
+.widget-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);}
+.widget-controls{display:flex;gap:4px;}
+.widget-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:12px;padding:2px 5px;border-radius:4px;line-height:1;}
+.widget-btn:hover{background:var(--bg3);color:var(--text);}
+#widget-body{padding:10px 14px 14px;}
+#widget-body.hidden{display:none;}
+.widget-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
+.widget-row:last-child{border-bottom:none;}
+.widget-label{font-size:11px;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
+.widget-val{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;}
+.widget-val.green{color:var(--green);}
+.widget-val.blue{color:var(--blue);}
+.widget-unit{font-size:10px;color:var(--text3);margin-left:3px;}
  
-    /* ── Register ── */
-    .register {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .register-header {
-      padding: .875rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .register-title {
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--text3);
-    }
-    .filter-bar {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .filter-bar input {
-      width: 180px;
-      font-size: 12px;
-      padding: 5px 10px;
-    }
+/* ── MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:2rem;max-width:360px;width:90%;text-align:center;}
+.modal h3{font-family:'IBM Plex Mono',monospace;font-size:14px;margin-bottom:8px;}
+.modal p{font-size:13px;color:var(--text2);margin-bottom:1.5rem;}
+.modal-actions{display:flex;gap:10px;justify-content:center;}
  
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-family: var(--mono);
-      font-size: 13px;
-    }
-    thead tr {
-      background: var(--bg3);
-    }
-    th {
-      padding: 10px 16px;
-      text-align: left;
-      font-size: 10px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--text3);
-      font-weight: 500;
-      white-space: nowrap;
-    }
-    th.right { text-align: right; }
-    td {
-      padding: 11px 16px;
-      border-top: 1px solid var(--border);
-      vertical-align: middle;
-    }
-    td.right { text-align: right; }
-    td.mono   { font-family: var(--mono); }
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);opacity:0;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:12px 24px;border-radius:8px;box-shadow:0 8px 24px var(--shadow);transition:all .25s;z-index:800;}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+#toast.green{border-color:var(--green-border);color:var(--green);}
+#toast.red{border-color:var(--red-border);color:var(--red);}
+#toast.blue{border-color:var(--blue-border);color:var(--blue);}
  
-    tr.row-buy  { background: #111a0e; }
-    tr.row-use  { background: var(--bg2); }
-    tr.row-buy:hover { background: #162213; }
-    tr.row-use:hover { background: var(--bg3); }
+/* ── PRINT ── */
+@media print{
+  body{background:#fff;color:#000;}
+  header,#widget,.tracker-bar .btn,.header-right,.del-btn,.filter-bar button{display:none!important;}
+  .tracker-bar{background:#fff;border-bottom:1px solid #ccc;}
+  .stats,.register{break-inside:avoid;}
+  .stat-card{background:#f5f5f5;border:1px solid #ccc;}
+  .stat-label{color:#666;} .stat-value{color:#000;}
+  .stat-card.green .stat-value{color:#2d6e0a;} .stat-card.red .stat-value{color:#8b2010;}
+  .stat-card.blue .stat-value{color:#1a5a9a;} .stat-card.amber .stat-value{color:#7a5000;}
+  .register{background:#fff;border:1px solid #ccc;}
+  table{font-size:11px;} th{background:#eee;color:#333;} td{border-top:1px solid #ddd;}
+  tr.row-buy{background:#f0f7ea;} tr.row-use{background:#fff;}
+  tr.row-fill{background:#e8f2fc;} tr.row-reading{background:#fef8e8;}
+  .amount-buy{color:#2d6e0a;} .amount-use{color:#8b2010;} .amount-fill{color:#1a5a9a;}
+  .balance-cell{color:#000;} .note-text{color:#666;}
+  .tag-buy{background:#e8f5d8;border:1px solid #a0c870;color:#2d6e0a;}
+  .tag-use{background:#fde8e3;border:1px solid #e8a090;color:#8b2010;}
+  .tag-fill{background:#e0eefc;border:1px solid #80b8f0;color:#1a5a9a;}
+  .tag-reading{background:#fef0d0;border:1px solid #e0c060;color:#7a5000;}
+  main{padding:0;max-width:100%;}
+  .entry-grid{display:none;}
+}
  
-    .tag-buy {
-      display: inline-block;
-      background: var(--green-bg);
-      border: 1px solid var(--green-border);
-      color: var(--green);
-      font-size: 10px;
-      letter-spacing: .06em;
-      padding: 2px 7px;
-      border-radius: 4px;
-      text-transform: uppercase;
-    }
-    .tag-use {
-      display: inline-block;
-      background: var(--red-bg);
-      border: 1px solid var(--red-border);
-      color: var(--red);
-      font-size: 10px;
-      letter-spacing: .06em;
-      padding: 2px 7px;
-      border-radius: 4px;
-      text-transform: uppercase;
-    }
-    .amount-buy { color: var(--green); font-weight: 600; }
-    .amount-use { color: var(--red);   font-weight: 600; }
-    .balance-cell { color: var(--text); font-weight: 600; }
-    .note-text { color: var(--text3); font-size: 11px; display: block; margin-top: 2px; font-family: var(--sans); }
- 
-    .del-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--text3);
-      font-size: 16px;
-      line-height: 1;
-      padding: 4px;
-      border-radius: 4px;
-      transition: all .15s;
-      opacity: 0;
-    }
-    tr:hover .del-btn { opacity: 1; }
-    .del-btn:hover { color: var(--red); background: var(--red-bg); }
- 
-    .empty-state {
-      padding: 3rem;
-      text-align: center;
-      color: var(--text3);
-      font-family: var(--mono);
-      font-size: 13px;
-    }
- 
-    /* ── Toast ── */
-    #toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--bg3);
-      border: 1px solid var(--border2);
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 13px;
-      padding: 12px 20px;
-      border-radius: 8px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.4);
-      transform: translateY(80px);
-      opacity: 0;
-      transition: all .25s;
-      z-index: 999;
-    }
-    #toast.show { transform: translateY(0); opacity: 1; }
-    #toast.green { border-color: var(--green-border); color: var(--green); }
-    #toast.red   { border-color: var(--red-border);   color: var(--red); }
- 
-    /* ── Print styles ── */
-    @media print {
-      body { background: #fff; color: #000; }
-      header { background: #fff; border-bottom: 1px solid #ccc; position: static; }
-      .logo-mark { background: #000; color: #fff; }
-      .logo-text, .logo-sub { color: #000; }
-      .header-actions, .entry-grid, .filter-bar, .del-btn { display: none !important; }
-      .stats, .register { break-inside: avoid; }
-      .stat-card { background: #f5f5f5; border: 1px solid #ccc; }
-      .stat-label { color: #666; }
-      .stat-value { color: #000; }
-      .stat-card.green .stat-value { color: #2d6e0a; }
-      .stat-card.red .stat-value   { color: #8b2010; }
-      .register { background: #fff; border: 1px solid #ccc; }
-      table { font-size: 11px; }
-      th { background: #eee; color: #333; }
-      td { border-top: 1px solid #ddd; }
-      tr.row-buy { background: #f0f7ea; }
-      tr.row-use { background: #fff; }
-      .amount-buy { color: #2d6e0a; }
-      .amount-use { color: #8b2010; }
-      .balance-cell { color: #000; }
-      .tag-buy { background: #e8f5d8; border: 1px solid #a0c870; color: #2d6e0a; }
-      .tag-use { background: #fde8e3; border: 1px solid #e8a090; color: #8b2010; }
-      .note-text { color: #666; }
-      main { padding: 0; max-width: 100%; }
-    }
- 
-    /* ── Responsive ── */
-    @media (max-width: 700px) {
-      .entry-grid { grid-template-columns: 1fr; }
-      .stats { grid-template-columns: 1fr; }
-      main { padding: 1rem; }
-      header { padding: 0 1rem; }
-    }
- 
-    /* ── Modal (confirm delete) ── */
-    .modal-bg {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.6);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-bg.open { display: flex; }
-    .modal {
-      background: var(--bg2);
-      border: 1px solid var(--border2);
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 360px;
-      width: 90%;
-      text-align: center;
-    }
-    .modal h3 { font-family: var(--mono); font-size: 14px; margin-bottom: 8px; }
-    .modal p  { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
-    .modal-actions { display: flex; gap: 10px; justify-content: center; }
-  </style>
+@media(max-width:700px){
+  .entry-grid{grid-template-columns:1fr;}
+  .stats{grid-template-columns:1fr;}
+  main{padding:1rem;}
+  header,.tracker-bar{padding:0 1rem;}
+  .form-group-3{grid-template-columns:1fr;}
+}
+</style>
 </head>
 <body>
  
+<!-- ═══════════ HEADER ═══════════ -->
 <header>
   <div class="logo">
     <div class="logo-mark">AMP</div>
     <div>
-      <div class="logo-text">Tonnage Ledger</div>
+      <div class="logo-text">Materials Ledger</div>
       <div class="logo-sub">Team Asphalt · Spring Valley, WI</div>
     </div>
   </div>
-  <div class="header-actions">
-    <div class="sync-dot" id="sync-dot" title="Firebase sync status"></div>
-    <span style="font-size:11px; color:var(--text3); font-family:var(--mono);" id="sync-label">connecting...</span>
+  <div class="header-right">
+    <div class="sync-dot" id="sync-dot"></div>
+    <span class="sync-label" id="sync-label">connecting...</span>
     <button class="btn" onclick="window.print()">⎙ Print</button>
-    <button class="btn" onclick="exportCSV()">↓ Export CSV</button>
+    <button class="btn" onclick="exportCSV()">↓ CSV</button>
+    <button class="toggle-theme" id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark mode">☀️</button>
   </div>
 </header>
  
-<main>
+<!-- ═══════════ TRACKER SELECTOR ═══════════ -->
+<div class="tracker-bar">
+  <span class="tracker-label">Active Tracker:</span>
+  <select id="tracker-select" onchange="switchTracker(this.value)">
+    <option value="monarch">🏗 Asphalt — Monarch</option>
+    <option value="martin">🏗 Asphalt — Martin Marietta</option>
+    <option value="mixtek">🛢 Sealer — MixTek (8,000 gal tank)</option>
+  </select>
+  <button class="btn" id="widget-show-btn" onclick="showWidget()" style="margin-left:auto;" title="Show balance widget">⬛ Balance Widget</button>
+</div>
  
-  <!-- Stats -->
-  <div class="stats">
-    <div class="stat-card green">
-      <div class="stat-label">Current Balance</div>
-      <div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Total Purchased</div>
-      <div class="stat-value" id="stat-in">—<span class="unit">ton</span></div>
-    </div>
-    <div class="stat-card red">
-      <div class="stat-label">Total Used</div>
-      <div class="stat-value" id="stat-out">—<span class="unit">ton</span></div>
-    </div>
-  </div>
+<!-- ═══════════ MAIN CONTENT ═══════════ -->
+<main id="main-content">
  
-  <!-- Entry Panels -->
-  <div class="entry-grid">
+  <!-- ── STATS ── -->
+  <div class="stats" id="stats-bar"></div>
  
-    <div class="entry-panel green-panel">
-      <div class="panel-title green">Add Block Purchase</div>
-      <div class="form-row">
-        <div class="form-group">
-          <input type="number" id="buy-tons" placeholder="Tons purchased" min="0" step="0.1" />
-          <input type="date" id="buy-date" />
-        </div>
-        <input type="text" id="buy-supplier" placeholder="Supplier name (e.g. Fahrner Asphalt)" />
-        <input type="text" id="buy-note" placeholder="Note / PO number (optional)" />
-        <button class="btn btn-green" onclick="submitEntry('buy')">＋ Add Purchase</button>
-      </div>
-    </div>
+  <!-- ── ENTRY PANELS ── -->
+  <div class="entry-grid" id="entry-panels"></div>
  
-    <div class="entry-panel red-panel">
-      <div class="panel-title red">Record Usage</div>
-      <div class="form-row">
-        <div class="form-group">
-          <input type="number" id="use-tons" placeholder="Tons used" min="0" step="0.1" />
-          <input type="date" id="use-date" />
-        </div>
-        <input type="text" id="use-supplier" placeholder="Supplier / Mix type" />
-        <input type="text" id="use-note" placeholder="Job / location (optional)" />
-        <button class="btn btn-red" onclick="submitEntry('use')">− Record Usage</button>
-      </div>
-    </div>
- 
-  </div>
- 
-  <!-- Register -->
+  <!-- ── REGISTER ── -->
   <div class="register">
     <div class="register-header">
-      <span class="register-title">Transaction Register</span>
+      <span class="register-title" id="register-title">Transaction Register</span>
       <div class="filter-bar">
-        <input type="text" id="filter-input" placeholder="Filter by supplier or note..." oninput="renderTable()" />
-        <button class="btn" onclick="document.getElementById('filter-input').value=''; renderTable();">✕ Clear</button>
+        <input type="text" id="filter-input" placeholder="Filter entries..." oninput="renderTable()" />
+        <button class="btn" onclick="document.getElementById('filter-input').value='';renderTable();">✕</button>
       </div>
     </div>
     <div style="overflow-x:auto;">
       <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Supplier</th>
-            <th class="right">Purchase (ton)</th>
-            <th class="right">Usage (ton)</th>
-            <th class="right">Balance (ton)</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="register-body">
-          <tr><td colspan="7"><div class="empty-state">Connecting to database...</div></td></tr>
-        </tbody>
+        <thead><tr id="table-head"></tr></thead>
+        <tbody id="register-body"><tr><td colspan="8"><div class="empty-state">Connecting to database...</div></td></tr></tbody>
       </table>
     </div>
   </div>
  
 </main>
  
-<!-- Delete confirm modal -->
+<!-- ═══════════ FLOATING WIDGET ═══════════ -->
+<div id="widget">
+  <div id="widget-header">
+    <span class="widget-title">Balance Summary</span>
+    <div class="widget-controls">
+      <button class="widget-btn" id="widget-min-btn" onclick="toggleWidgetMin()" title="Minimize">─</button>
+      <button class="widget-btn" onclick="hideWidget()" title="Close">✕</button>
+    </div>
+  </div>
+  <div id="widget-body">
+    <div class="widget-row">
+      <span class="widget-label">Monarch Asphalt</span>
+      <span class="widget-val green" id="w-monarch">—<span class="widget-unit">ton</span></span>
+    </div>
+    <div class="widget-row">
+      <span class="widget-label">Martin Marietta</span>
+      <span class="widget-val green" id="w-martin">—<span class="widget-unit">ton</span></span>
+    </div>
+    <div class="widget-row">
+      <span class="widget-label">MixTek Sealer</span>
+      <span class="widget-val blue" id="w-mixtek">—<span class="widget-unit">gal</span></span>
+    </div>
+  </div>
+</div>
+ 
+<!-- ═══════════ DELETE MODAL ═══════════ -->
 <div class="modal-bg" id="modal-bg">
   <div class="modal">
     <h3>Delete this entry?</h3>
@@ -528,19 +303,15 @@
   </div>
 </div>
  
-<!-- Toast -->
+<!-- ═══════════ TOAST ═══════════ -->
 <div id="toast"></div>
  
-<!-- ═══════════════════════════════════════════════════════
-     FIREBASE CONFIG — PASTE YOUR CONFIG HERE
-     ═══════════════════════════════════════════════════════ -->
+ 
+<!-- ═══════════════════════════════════════════════════════════
+     FIREBASE CONFIG — REPLACE THIS BLOCK WITH YOUR OWN CONFIG
+     ═══════════════════════════════════════════════════════════ -->
 <script>
-  // ┌─────────────────────────────────────────────────────────┐
-  // │  STEP 1: Replace this entire firebaseConfig object      │
-  // │  with your own config from Firebase Console             │
-  // │  (Project Settings → Your Apps → Web App → Config)     │
-  // └─────────────────────────────────────────────────────────┘
-  const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyBXrg5pV1f7HcEsJuOudSwunV-34JnTRv4",
   authDomain: "amp-tonnage-ledger.firebaseapp.com",
   databaseURL: "https://amp-tonnage-ledger-default-rtdb.firebaseio.com",
@@ -549,183 +320,456 @@
   messagingSenderId: "597914172038",
   appId: "1:597914172038:web:130677ccb16088d870ef07"
 };
+/* ═══════════════════════════════════════════════════════════ */
  
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  const entriesRef = db.ref('tonnage_entries');
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
  
-  // ─── State ───────────────────────────────────────────────
-  let allEntries = [];   // sorted newest-first, with running balances
-  let pendingDeleteId = null;
+// ── Refs for each tracker ──────────────────────────────────
+const refs = {
+  monarch: db.ref('ledger_monarch'),
+  martin:  db.ref('ledger_martin'),
+  mixtek:  db.ref('ledger_mixtek'),
+};
  
-  // ─── Sync indicator ──────────────────────────────────────
-  const connRef = db.ref('.info/connected');
-  connRef.on('value', snap => {
-    const online = snap.val();
-    document.getElementById('sync-dot').className = 'sync-dot' + (online ? '' : ' offline');
-    document.getElementById('sync-label').textContent = online ? 'live sync' : 'offline';
-  });
+// ── State ──────────────────────────────────────────────────
+let currentTracker = 'monarch';
+let allEntries     = [];
+let pendingDeleteId = null;
+let listeners      = {};  // active Firebase listeners
+let balances       = { monarch: 0, martin: 0, mixtek: 0 };
  
-  // ─── Listen for data changes ─────────────────────────────
-  entriesRef.on('value', snap => {
+// ── Theme ──────────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-btn').textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('amp-theme', next);
+}
+(function initTheme() {
+  const saved = localStorage.getItem('amp-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('theme-btn').textContent = saved === 'dark' ? '☀️' : '🌙';
+})();
+ 
+// ── Sync indicator ─────────────────────────────────────────
+db.ref('.info/connected').on('value', snap => {
+  const on = snap.val();
+  document.getElementById('sync-dot').className = 'sync-dot' + (on ? '' : ' offline');
+  document.getElementById('sync-label').textContent = on ? 'live sync' : 'offline';
+});
+ 
+// ── Switch tracker ─────────────────────────────────────────
+function switchTracker(name) {
+  currentTracker = name;
+  allEntries = [];
+  document.getElementById('register-body').innerHTML =
+    '<tr><td colspan="8"><div class="empty-state">Loading...</div></td></tr>';
+  buildUI();
+  listenToTracker(name);
+}
+ 
+function listenToTracker(name) {
+  // detach all previous listeners
+  Object.entries(listeners).forEach(([key, fn]) => refs[key].off('value', fn));
+  listeners = {};
+  const fn = snap => {
     const raw = snap.val() || {};
-    // Convert object to array, sort by timestamp ascending
     const sorted = Object.entries(raw)
       .map(([id, v]) => ({ id, ...v }))
       .sort((a, b) => a.ts - b.ts);
- 
-    // Compute running balance (oldest → newest)
     let running = 0;
-    for (const e of sorted) {
-      running += e.type === 'buy' ? e.tons : -e.tons;
-      e.balance = running;
-    }
- 
-    // Reverse so newest is first in the display
+    sorted.forEach(e => {
+      if (name === 'mixtek') {
+        running = e.type === 'fill' ? running + e.gallons_after - (e.gallons_before || 0)
+                                    : e.gallons_after;
+        e.balance = e.gallons_after;
+      } else {
+        running += e.type === 'buy' ? e.tons : -e.tons;
+        e.balance = running;
+      }
+    });
     allEntries = sorted.reverse();
+    balances[name] = allEntries.length ? allEntries[0].balance : 0;
     renderTable();
     updateStats();
-  });
+    updateWidget();
+  };
+  refs[name].on('value', fn);
+  listeners[name] = fn;
+}
  
-  // ─── Submit entry ─────────────────────────────────────────
-  function submitEntry(type) {
-    const tonsEl     = document.getElementById(type === 'buy' ? 'buy-tons'     : 'use-tons');
-    const dateEl     = document.getElementById(type === 'buy' ? 'buy-date'     : 'use-date');
-    const supplierEl = document.getElementById(type === 'buy' ? 'buy-supplier' : 'use-supplier');
-    const noteEl     = document.getElementById(type === 'buy' ? 'buy-note'     : 'use-note');
- 
-    const tons = parseFloat(tonsEl.value);
-    if (!tons || tons <= 0) {
-      tonsEl.focus();
-      showToast('Enter a valid tonnage amount.', 'red');
-      return;
-    }
- 
-    const dateVal = dateEl.value || new Date().toISOString().slice(0, 10);
-    const entry = {
-      type,
-      tons,
-      date:     dateVal,
-      supplier: supplierEl.value.trim() || (type === 'buy' ? 'Supplier' : '—'),
-      note:     noteEl.value.trim(),
-      ts:       new Date(dateVal).getTime() + Date.now() % 100000  // sort by date, then insert order
-    };
- 
-    entriesRef.push(entry)
-      .then(() => {
-        tonsEl.value = ''; dateEl.value = ''; supplierEl.value = ''; noteEl.value = '';
-        showToast(type === 'buy' ? '+ Purchase recorded.' : '− Usage recorded.', type === 'buy' ? 'green' : 'red');
-      })
-      .catch(err => showToast('Error: ' + err.message, 'red'));
-  }
- 
-  // ─── Delete flow ──────────────────────────────────────────
-  function promptDelete(id) {
-    pendingDeleteId = id;
-    document.getElementById('modal-bg').classList.add('open');
-  }
-  function closeModal() {
-    pendingDeleteId = null;
-    document.getElementById('modal-bg').classList.remove('open');
-  }
-  function confirmDelete() {
-    if (!pendingDeleteId) return;
-    entriesRef.child(pendingDeleteId).remove()
-      .then(() => showToast('Entry deleted.', ''))
-      .catch(err => showToast('Error: ' + err.message, 'red'));
-    closeModal();
-  }
- 
-  // ─── Render table ─────────────────────────────────────────
-  function renderTable() {
-    const filter = (document.getElementById('filter-input')?.value || '').toLowerCase();
-    const tbody  = document.getElementById('register-body');
-    const shown  = filter
-      ? allEntries.filter(e =>
-          (e.supplier || '').toLowerCase().includes(filter) ||
-          (e.note     || '').toLowerCase().includes(filter))
-      : allEntries;
- 
-    if (shown.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">${
-        filter ? 'No entries match that filter.' : 'No entries yet. Add a purchase or usage above.'
-      }</div></td></tr>`;
-      return;
-    }
- 
-    tbody.innerHTML = shown.map(e => {
-      const isBuy = e.type === 'buy';
-      return `
-        <tr class="${isBuy ? 'row-buy' : 'row-use'}">
-          <td class="mono">${e.date || '—'}</td>
-          <td><span class="${isBuy ? 'tag-buy' : 'tag-use'}">${isBuy ? 'Purchase' : 'Usage'}</span></td>
-          <td>
-            ${escHtml(e.supplier || '—')}
-            ${e.note ? `<span class="note-text">${escHtml(e.note)}</span>` : ''}
-          </td>
-          <td class="right mono ${isBuy ? 'amount-buy' : ''}">
-            ${isBuy ? '+' + fmt(e.tons) : ''}
-          </td>
-          <td class="right mono ${!isBuy ? 'amount-use' : ''}">
-            ${!isBuy ? '−' + fmt(e.tons) : ''}
-          </td>
-          <td class="right mono balance-cell">${fmt(e.balance)}</td>
-          <td>
-            <button class="del-btn" onclick="promptDelete('${e.id}')" title="Delete entry">✕</button>
-          </td>
-        </tr>`;
-    }).join('');
-  }
- 
-  // ─── Update summary stats ─────────────────────────────────
-  function updateStats() {
-    const totalIn  = allEntries.filter(e => e.type === 'buy').reduce((s, e) => s + e.tons, 0);
-    const totalOut = allEntries.filter(e => e.type === 'use').reduce((s, e) => s + e.tons, 0);
-    const balance  = allEntries.length ? allEntries[0].balance : 0;
- 
-    document.getElementById('stat-balance').innerHTML = fmt(balance) + '<span class="unit">ton</span>';
-    document.getElementById('stat-in').innerHTML      = fmt(totalIn)  + '<span class="unit">ton</span>';
-    document.getElementById('stat-out').innerHTML     = fmt(totalOut) + '<span class="unit">ton</span>';
-  }
- 
-  // ─── Export CSV ───────────────────────────────────────────
-  function exportCSV() {
-    const rows = [['Date','Type','Supplier','Note','Tons','Balance']];
-    [...allEntries].reverse().forEach(e => {
-      rows.push([e.date, e.type === 'buy' ? 'Purchase' : 'Usage', e.supplier || '', e.note || '', e.tons, e.balance]);
+// Subscribe to all three for widget totals
+function initAllListeners() {
+  ['monarch','martin','mixtek'].forEach(name => {
+    refs[name].on('value', snap => {
+      const raw = snap.val() || {};
+      const sorted = Object.entries(raw)
+        .map(([id, v]) => ({ id, ...v }))
+        .sort((a, b) => a.ts - b.ts);
+      let running = 0;
+      sorted.forEach(e => {
+        if (name === 'mixtek') {
+          running = e.type === 'fill'
+            ? running + e.gallons_after - (e.gallons_before || 0)
+            : e.gallons_after;
+          e.balance = e.gallons_after;
+        } else {
+          running += e.type === 'buy' ? e.tons : -e.tons;
+          e.balance = running;
+        }
+      });
+      balances[name] = sorted.length ? sorted[sorted.length - 1].balance : 0;
+      // if this is the active tracker, update the main view
+      if (name === currentTracker) {
+        allEntries = sorted.reverse();
+        renderTable();
+        updateStats();
+      }
+      updateWidget();
     });
-    const csv  = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href = url; a.download = 'amp-tonnage-ledger.csv'; a.click();
-    URL.revokeObjectURL(url);
-  }
- 
-  // ─── Helpers ─────────────────────────────────────────────
-  function fmt(n) {
-    if (n === undefined || n === null) return '—';
-    return Number(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
-  }
-  function escHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-  function showToast(msg, cls) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'show' + (cls ? ' ' + cls : '');
-    clearTimeout(t._timer);
-    t._timer = setTimeout(() => { t.className = ''; }, 3000);
-  }
- 
-  // Set today's date as default in both date inputs
-  const today = new Date().toISOString().slice(0, 10);
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('buy-date').value = today;
-    document.getElementById('use-date').value = today;
   });
-</script>
+}
  
+// ── Build UI panels / headers based on tracker ────────────
+function buildUI() {
+  const t = currentTracker;
+  const statsBar = document.getElementById('stats-bar');
+  const panels   = document.getElementById('entry-panels');
+  const thead    = document.getElementById('table-head');
+  const regTitle = document.getElementById('register-title');
+ 
+  if (t === 'monarch' || t === 'martin') {
+    const label = t === 'monarch' ? 'Monarch' : 'Martin Marietta';
+    regTitle.textContent = `Transaction Register — Asphalt (${label})`;
+ 
+    statsBar.innerHTML = `
+      <div class="stat-card green"><div class="stat-label">Current Balance</div><div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div></div>
+      <div class="stat-card"><div class="stat-label">Total Purchased</div><div class="stat-value" id="stat-in">—<span class="unit">ton</span></div></div>
+      <div class="stat-card red"><div class="stat-label">Total Used</div><div class="stat-value" id="stat-out">—<span class="unit">ton</span></div></div>`;
+ 
+    panels.innerHTML = `
+      <div class="entry-panel green-panel">
+        <div class="panel-title green">Add Block Purchase</div>
+        <div class="form-row">
+          <div class="form-group">
+            <div style="flex:1"><label class="field-label">Tons Purchased</label><input type="number" id="buy-tons" placeholder="e.g. 5000" min="0" step="0.1"/></div>
+            <div style="flex:1"><label class="field-label">Date</label><input type="date" id="buy-date"/></div>
+          </div>
+          <div><label class="field-label">Supplier</label><input type="text" id="buy-supplier" placeholder="${label}"/></div>
+          <div><label class="field-label">Note / PO # (optional)</label><input type="text" id="buy-note" placeholder="e.g. PO-2025-01"/></div>
+          <button class="btn btn-green" onclick="submitAsphalt('buy')">＋ Add Purchase</button>
+        </div>
+      </div>
+      <div class="entry-panel red-panel">
+        <div class="panel-title red">Record Usage</div>
+        <div class="form-row">
+          <div class="form-group">
+            <div style="flex:1"><label class="field-label">Tons Used</label><input type="number" id="use-tons" placeholder="e.g. 280" min="0" step="0.1"/></div>
+            <div style="flex:1"><label class="field-label">Date</label><input type="date" id="use-date"/></div>
+          </div>
+          <div><label class="field-label">Mix Type (optional)</label><input type="text" id="use-supplier" placeholder="e.g. 12.5mm NWEAR"/></div>
+          <div><label class="field-label">Job / Location (optional)</label><input type="text" id="use-note" placeholder="e.g. Main St parking lot"/></div>
+          <button class="btn btn-red" onclick="submitAsphalt('use')">− Record Usage</button>
+        </div>
+      </div>`;
+ 
+    thead.innerHTML = `
+      <th>Date</th><th>Type</th><th>Supplier / Mix</th>
+      <th class="right">Purchase (ton)</th><th class="right">Usage (ton)</th>
+      <th class="right">Balance (ton)</th><th>Note</th><th></th>`;
+ 
+    setTodayDates(['buy-date','use-date']);
+ 
+  } else {
+    // MixTek sealer
+    regTitle.textContent = 'Transaction Register — MixTek Sealer (8,000 gal)';
+ 
+    statsBar.innerHTML = `
+      <div class="stat-card blue"><div class="stat-label">Current Gallons</div><div class="stat-value" id="stat-balance">—<span class="unit">gal</span></div></div>
+      <div class="stat-card"><div class="stat-label">Tank Capacity</div><div class="stat-value">8,000<span class="unit">gal</span></div></div>
+      <div class="stat-card amber"><div class="stat-label">Tank Level</div><div class="stat-value" id="stat-pct">—<span class="unit">%</span></div></div>`;
+ 
+    panels.innerHTML = `
+      <div class="entry-panel blue-panel">
+        <div class="panel-title blue">Record Tank Fill</div>
+        <div class="form-row">
+          <div style=""><label class="field-label">Date</label><input type="date" id="fill-date"/></div>
+          <div class="form-group-3">
+            <div><label class="field-label">Inches Before Fill</label><input type="number" id="fill-in-before" placeholder='e.g. 14"' min="0" step="0.25"/></div>
+            <div><label class="field-label">Gallons Before Fill</label><input type="number" id="fill-gal-before" placeholder="e.g. 1200" min="0" step="1"/></div>
+            <div></div>
+          </div>
+          <div class="form-group-3">
+            <div><label class="field-label">Inches After Fill</label><input type="number" id="fill-in-after" placeholder='e.g. 72"' min="0" step="0.25"/></div>
+            <div><label class="field-label">Gallons After Fill</label><input type="number" id="fill-gal-after" placeholder="e.g. 7200" min="0" step="1"/></div>
+            <div></div>
+          </div>
+          <div><label class="field-label">Supplier / Delivery Note</label><input type="text" id="fill-note" placeholder="e.g. MixTek delivery #4421"/></div>
+          <button class="btn btn-blue" onclick="submitMixtek('fill')">＋ Record Fill</button>
+        </div>
+      </div>
+      <div class="entry-panel amber-panel">
+        <div class="panel-title amber">Record Tank Reading / Usage</div>
+        <div class="form-row">
+          <div><label class="field-label">Date</label><input type="date" id="read-date"/></div>
+          <div class="form-group-3">
+            <div><label class="field-label">Inches</label><input type="number" id="read-inches" placeholder='e.g. 36"' min="0" step="0.25"/></div>
+            <div><label class="field-label">Gallons</label><input type="number" id="read-gallons" placeholder="e.g. 3600" min="0" step="1"/></div>
+            <div></div>
+          </div>
+          <div><label class="field-label">Job / Note (optional)</label><input type="text" id="read-note" placeholder="e.g. Nilssen's Elk Mound lot"/></div>
+          <button class="btn btn-amber" onclick="submitMixtek('reading')">◉ Record Reading</button>
+        </div>
+      </div>`;
+ 
+    thead.innerHTML = `
+      <th>Date</th><th>Type</th>
+      <th class="right">Inches Before</th><th class="right">Gal Before</th>
+      <th class="right">Inches After</th><th class="right">Gal After / Reading</th>
+      <th class="right">Balance (gal)</th><th>Note</th><th></th>`;
+ 
+    setTodayDates(['fill-date','read-date']);
+  }
+}
+ 
+// ── Submit asphalt entry ───────────────────────────────────
+function submitAsphalt(type) {
+  const tonsEl  = document.getElementById(type==='buy'?'buy-tons':'use-tons');
+  const dateEl  = document.getElementById(type==='buy'?'buy-date':'use-date');
+  const supEl   = document.getElementById(type==='buy'?'buy-supplier':'use-supplier');
+  const noteEl  = document.getElementById(type==='buy'?'buy-note':'use-note');
+  const tons    = parseFloat(tonsEl.value);
+  if (!tons || tons <= 0) { tonsEl.focus(); showToast('Enter a valid tonnage.','red'); return; }
+  const entry = {
+    type, tons,
+    date:     dateEl.value || today(),
+    supplier: supEl.value.trim() || (type==='buy'?'Supplier':'—'),
+    note:     noteEl.value.trim(),
+    ts:       Date.now()
+  };
+  refs[currentTracker].push(entry)
+    .then(() => {
+      tonsEl.value=''; supEl.value=''; noteEl.value='';
+      showToast(type==='buy'?'+ Purchase recorded.':'− Usage recorded.', type==='buy'?'green':'red');
+    })
+    .catch(e => showToast('Error: '+e.message,'red'));
+}
+ 
+// ── Submit MixTek entry ───────────────────────────────────
+function submitMixtek(type) {
+  if (type === 'fill') {
+    const galBefore = parseFloat(document.getElementById('fill-gal-before').value) || 0;
+    const galAfter  = parseFloat(document.getElementById('fill-gal-after').value);
+    const inBefore  = parseFloat(document.getElementById('fill-in-before').value) || 0;
+    const inAfter   = parseFloat(document.getElementById('fill-in-after').value) || 0;
+    const dateEl    = document.getElementById('fill-date');
+    const noteEl    = document.getElementById('fill-note');
+    if (!galAfter || galAfter <= 0) { document.getElementById('fill-gal-after').focus(); showToast('Enter gallons after fill.','red'); return; }
+    const entry = {
+      type:'fill',
+      gallons_before: galBefore,
+      gallons_after:  galAfter,
+      inches_before:  inBefore,
+      inches_after:   inAfter,
+      date: dateEl.value || today(),
+      note: noteEl.value.trim(),
+      ts: Date.now()
+    };
+    refs.mixtek.push(entry)
+      .then(() => {
+        ['fill-gal-before','fill-gal-after','fill-in-before','fill-in-after'].forEach(id => document.getElementById(id).value='');
+        document.getElementById('fill-note').value='';
+        showToast('+ Tank fill recorded.','blue');
+      })
+      .catch(e => showToast('Error: '+e.message,'red'));
+ 
+  } else {
+    const gallons = parseFloat(document.getElementById('read-gallons').value);
+    const inches  = parseFloat(document.getElementById('read-inches').value) || 0;
+    const dateEl  = document.getElementById('read-date');
+    const noteEl  = document.getElementById('read-note');
+    if (!gallons || gallons < 0) { document.getElementById('read-gallons').focus(); showToast('Enter a gallon reading.','red'); return; }
+    const entry = {
+      type:'reading',
+      gallons_after: gallons,
+      inches_after:  inches,
+      date: dateEl.value || today(),
+      note: noteEl.value.trim(),
+      ts: Date.now()
+    };
+    refs.mixtek.push(entry)
+      .then(() => {
+        ['read-gallons','read-inches'].forEach(id => document.getElementById(id).value='');
+        document.getElementById('read-note').value='';
+        showToast('◉ Tank reading recorded.','');
+      })
+      .catch(e => showToast('Error: '+e.message,'red'));
+  }
+}
+ 
+// ── Render table ───────────────────────────────────────────
+function renderTable() {
+  const filter = (document.getElementById('filter-input')?.value||'').toLowerCase();
+  const tbody  = document.getElementById('register-body');
+  const shown  = filter
+    ? allEntries.filter(e=>(e.supplier||'').toLowerCase().includes(filter)||(e.note||'').toLowerCase().includes(filter))
+    : allEntries;
+ 
+  if (!shown.length) {
+    const cols = currentTracker==='mixtek'?9:8;
+    tbody.innerHTML=`<tr><td colspan="${cols}"><div class="empty-state">${filter?'No entries match.':'No entries yet. Add one above.'}</div></td></tr>`;
+    return;
+  }
+ 
+  tbody.innerHTML = shown.map(e => {
+    if (currentTracker !== 'mixtek') {
+      const isBuy = e.type==='buy';
+      return `<tr class="${isBuy?'row-buy':'row-use'}">
+        <td>${e.date||'—'}</td>
+        <td><span class="tag ${isBuy?'tag-buy':'tag-use'}">${isBuy?'Purchase':'Usage'}</span></td>
+        <td>${esc(e.supplier||'—')}</td>
+        <td class="right ${isBuy?'amount-buy':''}">${isBuy?'+'+fmt(e.tons):''}</td>
+        <td class="right ${!isBuy?'amount-use':''}">${!isBuy?'−'+fmt(e.tons):''}</td>
+        <td class="right balance-cell">${fmt(e.balance)}</td>
+        <td><span class="note-text">${esc(e.note||'')}</span></td>
+        <td><button class="del-btn" onclick="promptDelete('${e.id}')">✕</button></td>
+      </tr>`;
+    } else {
+      const isFill = e.type==='fill';
+      return `<tr class="${isFill?'row-fill':'row-reading'}">
+        <td>${e.date||'—'}</td>
+        <td><span class="tag ${isFill?'tag-fill':'tag-reading'}">${isFill?'Fill':'Reading'}</span></td>
+        <td class="right">${isFill?fmt(e.inches_before||0)+'"':'—'}</td>
+        <td class="right">${isFill?fmt(e.gallons_before||0):'—'}</td>
+        <td class="right">${fmt(e.inches_after||0)+'"'}</td>
+        <td class="right ${isFill?'amount-fill':''}">${fmt(e.gallons_after)}</td>
+        <td class="right balance-cell">${fmt(e.balance)}</td>
+        <td><span class="note-text">${esc(e.note||'')}</span></td>
+        <td><button class="del-btn" onclick="promptDelete('${e.id}')">✕</button></td>
+      </tr>`;
+    }
+  }).join('');
+}
+ 
+// ── Update stats ───────────────────────────────────────────
+function updateStats() {
+  const t = currentTracker;
+  if (t !== 'mixtek') {
+    const totalIn  = allEntries.filter(e=>e.type==='buy').reduce((s,e)=>s+e.tons,0);
+    const totalOut = allEntries.filter(e=>e.type==='use').reduce((s,e)=>s+e.tons,0);
+    const bal      = allEntries.length ? allEntries[0].balance : 0;
+    setStatVal('stat-balance', fmt(bal),'ton');
+    setStatVal('stat-in', fmt(totalIn),'ton');
+    setStatVal('stat-out', fmt(totalOut),'ton');
+  } else {
+    const bal = allEntries.length ? allEntries[0].balance : 0;
+    const pct = Math.round((bal/8000)*100);
+    setStatVal('stat-balance', fmt(bal),'gal');
+    setStatVal('stat-pct', pct,'%');
+  }
+}
+function setStatVal(id, val, unit) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = val + `<span class="unit">${unit}</span>`;
+}
+ 
+// ── Widget ────────────────────────────────────────────────
+function updateWidget() {
+  const wm  = document.getElementById('w-monarch');
+  const wmm = document.getElementById('w-martin');
+  const wmt = document.getElementById('w-mixtek');
+  if (wm)  wm.innerHTML  = fmt(balances.monarch) + '<span class="widget-unit">ton</span>';
+  if (wmm) wmm.innerHTML = fmt(balances.martin)  + '<span class="widget-unit">ton</span>';
+  if (wmt) wmt.innerHTML = fmt(balances.mixtek)  + '<span class="widget-unit">gal</span>';
+}
+function showWidget()  { document.getElementById('widget').style.display='block'; }
+function hideWidget()  { document.getElementById('widget').style.display='none'; }
+let widgetMinimized = false;
+function toggleWidgetMin() {
+  widgetMinimized = !widgetMinimized;
+  document.getElementById('widget-body').classList.toggle('hidden', widgetMinimized);
+  document.getElementById('widget-min-btn').textContent = widgetMinimized ? '□' : '─';
+}
+ 
+// Widget drag
+(function() {
+  const widget = document.getElementById('widget');
+  const handle = document.getElementById('widget-header');
+  let dragging=false, ox=0, oy=0;
+  handle.addEventListener('mousedown', e => {
+    dragging=true;
+    ox = e.clientX - widget.getBoundingClientRect().left;
+    oy = e.clientY - widget.getBoundingClientRect().top;
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    widget.style.right='auto'; widget.style.bottom='auto';
+    widget.style.left = (e.clientX - ox) + 'px';
+    widget.style.top  = (e.clientY - oy) + 'px';
+  });
+  document.addEventListener('mouseup', () => dragging=false);
+  // touch support
+  handle.addEventListener('touchstart', e => {
+    const t=e.touches[0];
+    dragging=true; ox=t.clientX-widget.getBoundingClientRect().left; oy=t.clientY-widget.getBoundingClientRect().top;
+  }, {passive:true});
+  document.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const t=e.touches[0];
+    widget.style.right='auto'; widget.style.bottom='auto';
+    widget.style.left=(t.clientX-ox)+'px'; widget.style.top=(t.clientY-oy)+'px';
+  }, {passive:true});
+  document.addEventListener('touchend', () => dragging=false);
+})();
+ 
+// ── Delete ────────────────────────────────────────────────
+function promptDelete(id) { pendingDeleteId=id; document.getElementById('modal-bg').classList.add('open'); }
+function closeModal()      { pendingDeleteId=null; document.getElementById('modal-bg').classList.remove('open'); }
+function confirmDelete() {
+  if (!pendingDeleteId) return;
+  refs[currentTracker].child(pendingDeleteId).remove()
+    .then(()=>showToast('Entry deleted.',''))
+    .catch(e=>showToast('Error: '+e.message,'red'));
+  closeModal();
+}
+ 
+// ── CSV export ─────────────────────────────────────────────
+function exportCSV() {
+  const t = currentTracker;
+  let rows;
+  if (t !== 'mixtek') {
+    rows = [['Date','Type','Supplier','Note','Tons','Balance (ton)']];
+    [...allEntries].reverse().forEach(e => rows.push([e.date,e.type==='buy'?'Purchase':'Usage',e.supplier||'',e.note||'',e.tons,e.balance]));
+  } else {
+    rows = [['Date','Type','Inches Before','Gal Before','Inches After','Gal After/Reading','Balance (gal)','Note']];
+    [...allEntries].reverse().forEach(e => rows.push([e.date,e.type,e.inches_before||'',e.gallons_before||'',e.inches_after||0,e.gallons_after,e.balance,e.note||'']));
+  }
+  const csv  = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href=url; a.download=`amp-${t}-ledger.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+ 
+// ── Helpers ────────────────────────────────────────────────
+function fmt(n){ if(n===undefined||n===null)return'—'; return Number(n).toLocaleString('en-US',{maximumFractionDigits:2}); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function today(){ return new Date().toISOString().slice(0,10); }
+function setTodayDates(ids){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.value=today(); }); }
+function showToast(msg,cls){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='show'+(cls?' '+cls:'');
+  clearTimeout(t._t); t._t=setTimeout(()=>{t.className='';},3000);
+}
+ 
+// ── Init ──────────────────────────────────────────────────
+buildUI();
+initAllListeners();
+</script>
 </body>
 </html>
  
