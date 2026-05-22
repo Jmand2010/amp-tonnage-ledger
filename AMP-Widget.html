@@ -4,10 +4,23 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>AMP Balance Widget</title>
+<!-- PWA manifest inline so browser offers "Install as app" -->
+<link rel="manifest" href="data:application/manifest+json,{
+  %22name%22:%22AMP Balance Widget%22,
+  %22short_name%22:%22AMP Widget%22,
+  %22display%22:%22standalone%22,
+  %22start_url%22:%22/amp-tonnage-ledger/AMP-Widget.html%22,
+  %22background_color%22:%22%2313161c%22,
+  %22theme_color%22:%226fcf4a%22,
+  %22icons%22:[{%22src%22:%22https://jmand2010.github.io/amp-tonnage-ledger/icon.png%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22}]
+}"/>
+<meta name="theme-color" content="#13161c"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="AMP Widget"/>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
- 
 [data-theme="dark"]{
   --bg:#13161c;--bg2:#1c2028;--border:#2e3444;
   --text:#e8eaf0;--text2:#8c92a4;--text3:#4a5168;
@@ -26,62 +39,23 @@
   --amber:#a06800;--amber-dim:#fdf3d8;
   --shadow:0 8px 24px rgba(0,0,0,.2);
 }
- 
-html,body{
-  width:260px;
-  background:transparent;
-  font-family:'IBM Plex Mono',monospace;
-  overflow:hidden;
-}
- 
-.widget{
-  width:260px;
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:14px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  transition:background .2s,border-color .2s;
-}
- 
-/* Titlebar — drag region for PWA window movement */
-.titlebar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 12px 9px;
-  background:var(--bg2);
-  border-bottom:1px solid var(--border);
-  -webkit-app-region:drag;
-  app-region:drag;
-  cursor:move;
-}
+html,body{width:260px;background:transparent;font-family:'IBM Plex Mono',monospace;overflow:hidden;}
+.widget{width:260px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;transition:background .2s,border-color .2s;}
+.titlebar{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 9px;background:var(--bg2);border-bottom:1px solid var(--border);-webkit-app-region:drag;app-region:drag;cursor:move;}
 .titlebar-left{display:flex;align-items:center;gap:8px;}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);animation:pulse 2s infinite;}
 .sync-dot.off{background:var(--red);box-shadow:0 0 5px var(--red);animation:none;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .title-text{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);}
-.titlebar-right{
-  display:flex;gap:3px;
-  -webkit-app-region:no-drag;
-  app-region:no-drag;
-}
+.titlebar-right{display:flex;gap:3px;-webkit-app-region:no-drag;app-region:no-drag;}
 .tb-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:12px;padding:2px 6px;border-radius:4px;font-family:'IBM Plex Mono',monospace;transition:all .1s;line-height:1.5;}
 .tb-btn:hover{background:var(--border);color:var(--text);}
- 
-/* Alert banner */
 .alert-banner{display:none;font-size:10px;letter-spacing:.04em;text-align:center;padding:5px 10px;font-weight:600;}
 .alert-banner.show{display:block;}
 .alert-banner.yellow{background:var(--amber-dim);color:var(--amber);}
 .alert-banner.red{background:var(--red-dim);color:var(--red);}
- 
-/* Body */
 .body{padding:10px;}
- 
-/* Rows */
-.row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:9px 10px;border-radius:8px;margin-bottom:6px;
-  transition:background .3s;
-}
+.row{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;margin-bottom:6px;transition:background .3s;}
 .row:last-child{margin-bottom:0;}
 .row-label{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--text2);line-height:1.4;}
 .row-label small{font-size:9px;color:var(--text3);display:block;text-transform:none;letter-spacing:0;}
@@ -89,48 +63,29 @@ html,body{
 .row-value{font-size:20px;font-weight:700;line-height:1;}
 .row-unit{font-size:10px;margin-left:2px;opacity:.7;}
 .row-sub{font-size:9px;color:var(--text3);margin-top:2px;}
- 
-/* Monarch — green normal, amber low, red critical */
-.row-monarch{background:var(--green-dim);}
-.row-monarch .row-value{color:var(--green);}
-.row-monarch.warn-amber{background:var(--amber-dim);}
-.row-monarch.warn-amber .row-value{color:var(--amber);}
+.row-monarch{background:var(--green-dim);}.row-monarch .row-value{color:var(--green);}
+.row-monarch.warn-amber{background:var(--amber-dim);}.row-monarch.warn-amber .row-value{color:var(--amber);}
 @keyframes monarchRed{0%,100%{background:var(--red-dim)}50%{background:rgba(240,99,74,.3)}}
-.row-monarch.warn-red{animation:monarchRed 2.2s ease-in-out infinite;}
-.row-monarch.warn-red .row-value{color:var(--red);}
- 
-/* Martin — always steady green, never flashes */
-.row-martin{background:var(--green-dim);}
-.row-martin .row-value{color:var(--green);}
- 
-/* MixTek sealer */
-.row-mixtek{background:var(--blue-dim);}
-.row-mixtek .row-value{color:var(--blue);}
+.row-monarch.warn-red{animation:monarchRed 2.2s ease-in-out infinite;}.row-monarch.warn-red .row-value{color:var(--red);}
+.row-martin{background:var(--green-dim);}.row-martin .row-value{color:var(--green);}
+.row-mixtek{background:var(--blue-dim);}.row-mixtek .row-value{color:var(--blue);}
 @keyframes flashY{0%,100%{background:var(--amber-dim)}50%{background:rgba(240,184,74,.28)}}
 @keyframes flashR{0%,100%{background:var(--red-dim)}50%{background:rgba(240,99,74,.35)}}
-.row-mixtek.warn-yellow{animation:flashY 2.2s ease-in-out infinite;}
-.row-mixtek.warn-yellow .row-value{color:var(--amber);}
-.row-mixtek.warn-red{animation:flashR 2.2s ease-in-out infinite;}
-.row-mixtek.warn-red .row-value{color:var(--red);}
- 
-/* Progress bar */
+.row-mixtek.warn-yellow{animation:flashY 2.2s ease-in-out infinite;}.row-mixtek.warn-yellow .row-value{color:var(--amber);}
+.row-mixtek.warn-red{animation:flashR 2.2s ease-in-out infinite;}.row-mixtek.warn-red .row-value{color:var(--red);}
 .prog-wrap{height:3px;background:var(--border);border-radius:2px;margin-top:4px;overflow:hidden;}
 .prog-bar{height:100%;border-radius:2px;transition:width .6s,background .4s;}
- 
-/* Footer */
-.footer{
-  padding:7px 12px 10px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-top:1px solid var(--border);
-  -webkit-app-region:no-drag;
-  app-region:no-drag;
-}
+.footer{padding:7px 12px 10px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);-webkit-app-region:no-drag;app-region:no-drag;}
 .update-time{font-size:9px;color:var(--text3);}
 .open-btn{font-size:9px;color:var(--text3);background:none;border:1px solid var(--border);border-radius:4px;padding:3px 8px;cursor:pointer;font-family:'IBM Plex Mono',monospace;transition:all .15s;}
 .open-btn:hover{border-color:var(--text2);color:var(--text);}
- 
-/* Loading state */
 #loading{padding:20px;text-align:center;font-size:11px;color:var(--text3);}
+ 
+/* Install prompt banner */
+#install-bar{display:none;background:var(--green-dim);border-bottom:1px solid var(--green-border, #2f5220);padding:7px 12px;align-items:center;justify-content:space-between;gap:8px;}
+#install-bar.show{display:flex;}
+#install-bar span{font-size:10px;color:var(--green);letter-spacing:.03em;}
+#install-bar button{font-size:10px;font-family:'IBM Plex Mono',monospace;background:var(--green);color:#fff;border:none;border-radius:4px;padding:4px 10px;cursor:pointer;font-weight:600;}
 </style>
 </head>
 <body>
@@ -147,12 +102,17 @@ html,body{
     </div>
   </div>
  
+  <!-- Install to desktop prompt strip -->
+  <div id="install-bar">
+    <span>📌 Pin to desktop as an app</span>
+    <button id="install-btn">Install</button>
+  </div>
+ 
   <div id="alert-banner" class="alert-banner"></div>
  
   <div id="loading">Connecting...</div>
  
   <div class="body" id="widget-body" style="display:none;">
- 
     <div class="row row-monarch" id="row-monarch">
       <div class="row-label">Monarch<small>Asphalt Balance</small></div>
       <div class="row-right">
@@ -160,7 +120,6 @@ html,body{
         <div class="row-sub" id="sub-monarch">&nbsp;</div>
       </div>
     </div>
- 
     <div class="row row-martin" id="row-martin">
       <div class="row-label">Martin Marietta<small>Usage Log Total</small></div>
       <div class="row-right">
@@ -168,7 +127,6 @@ html,body{
         <div class="row-sub" id="sub-martin">&nbsp;</div>
       </div>
     </div>
- 
     <div class="row row-mixtek" id="row-mixtek">
       <div class="row-label">MixTek Sealer<small>8,000 gal tank</small></div>
       <div class="row-right">
@@ -177,7 +135,6 @@ html,body{
         <div class="row-sub" id="sub-mixtek">—% full</div>
       </div>
     </div>
- 
   </div>
  
   <div class="footer">
@@ -186,14 +143,13 @@ html,body{
   </div>
 </div>
  
-<!-- ════════════════════════════════════════════════════
-     STEP 1 — Paste your Firebase config below
-     STEP 2 — Set MAIN_APP_URL to your GitHub Pages URL
-     ════════════════════════════════════════════════════ -->
 <script type="module">
-import { initializeApp }           from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { initializeApp }             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
  
+/* ════════════════════════════════════════════════════
+   PASTE YOUR FIREBASE CONFIG HERE
+   ════════════════════════════════════════════════════ */
 const firebaseConfig = {
   apiKey: "AIzaSyBXrg5pV1f7HcEsJuOudSwunV-34JnTRv4",
   authDomain: "amp-tonnage-ledger.firebaseapp.com",
@@ -202,20 +158,33 @@ const firebaseConfig = {
   storageBucket: "amp-tonnage-ledger.firebasestorage.app",
   messagingSenderId: "597914172038",
   appId: "1:597914172038:web:130677ccb16088d870ef07"
-}; 
-const MAIN_APP_URL = "https://jmand2010.github.io/amp-tonnage-ledger/";
-// example: "https://yourusername.github.io/amp-tonnage-ledger"
+}; const MAIN_APP_URL = "https://jmand2010.github.io/amp-tonnage-ledger/";
 /* ════════════════════════════════════════════════════ */
  
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
  
-// Show body once Firebase is loaded
 document.getElementById('loading').style.display = 'none';
 document.getElementById('widget-body').style.display = 'block';
- 
-// Wire up open button
 document.getElementById('open-btn').onclick = () => window.open(MAIN_APP_URL, '_blank');
+ 
+/* ── PWA INSTALL PROMPT ─────────────────────────────── */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-bar').classList.add('show');
+});
+document.getElementById('install-btn').addEventListener('click', async () => {
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-bar').classList.remove('show');
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-bar').classList.remove('show');
+});
  
 /* ── THEME ──────────────────────────────────────────── */
 function toggleTheme(){
@@ -233,124 +202,88 @@ window.toggleTheme = toggleTheme;
  
 /* ── SYNC DOT ───────────────────────────────────────── */
 onValue(ref(db, '.info/connected'), snap=>{
-  document.getElementById('sync-dot').className = 'sync-dot' + (snap.val() ? '' : ' off');
+  document.getElementById('sync-dot').className = 'sync-dot'+(snap.val()?'':' off');
   if(snap.val()) stamp();
 });
  
 /* ── HELPERS ────────────────────────────────────────── */
-function fmt(n){
-  if(n===undefined||n===null) return '—';
-  return Number(n).toLocaleString('en-US',{maximumFractionDigits:1});
-}
-function stamp(){
-  document.getElementById('update-time').textContent =
-    'updated ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-}
+function fmt(n){ if(n===undefined||n===null)return'—'; return Number(n).toLocaleString('en-US',{maximumFractionDigits:1}); }
+function stamp(){ document.getElementById('update-time').textContent = 'updated '+new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
  
-/* ── BANNER LOGIC ───────────────────────────────────── */
-// Priority: sealer critical > monarch critical > sealer low > monarch low
-let bannerState = { monarch: 0, mixtek: 0 }; // 0=ok, 1=low, 2=critical
- 
+/* ── BANNER ─────────────────────────────────────────── */
+let bannerState = { monarch:0, mixtek:0 };
 function updateBanner(){
   const banner = document.getElementById('alert-banner');
-  // Highest priority wins
-  if(bannerState.monarch >= 2 || bannerState.mixtek >= 2){
-    const msgs = [];
-    if(bannerState.monarch >= 2) msgs.push('⚠ MONARCH CRITICAL');
-    if(bannerState.mixtek  >= 2) msgs.push('⚠ SEALER CRITICAL');
-    banner.textContent = msgs.join('  ·  ');
-    banner.className = 'alert-banner show red';
-  } else if(bannerState.monarch >= 1 || bannerState.mixtek >= 1){
-    const msgs = [];
-    if(bannerState.monarch >= 1) msgs.push('⚠ Monarch Low');
-    if(bannerState.mixtek  >= 1) msgs.push('⚠ Sealer Low');
-    banner.textContent = msgs.join('  ·  ');
-    banner.className = 'alert-banner show yellow';
+  if(bannerState.monarch>=2 || bannerState.mixtek>=2){
+    const msgs=[];
+    if(bannerState.monarch>=2) msgs.push('⚠ MONARCH CRITICAL');
+    if(bannerState.mixtek>=2)  msgs.push('⚠ SEALER CRITICAL');
+    banner.textContent=msgs.join(' · ');
+    banner.className='alert-banner show red';
+  } else if(bannerState.monarch>=1 || bannerState.mixtek>=1){
+    const msgs=[];
+    if(bannerState.monarch>=1) msgs.push('⚠ Monarch Low');
+    if(bannerState.mixtek>=1)  msgs.push('⚠ Sealer Low');
+    banner.textContent=msgs.join(' · ');
+    banner.className='alert-banner show yellow';
   } else {
-    banner.className = 'alert-banner';
-    banner.textContent = '';
+    banner.className='alert-banner';
+    banner.textContent='';
   }
 }
  
-/* ── MONARCH LISTENER ───────────────────────────────── */
-onValue(ref(db, 'ledger_monarch'), snap=>{
-  const sorted = Object.entries(snap.val()||{})
-    .map(([id,v])=>({id,...v}))
-    .sort((a,b)=>a.ts-b.ts);
-  let r = 0;
-  sorted.forEach(e=>{ r += e.type==='buy'?(e.tons||0):-(e.tons||0); e.balance=r; });
-  const bal = sorted.length ? sorted[sorted.length-1].balance : 0;
- 
-  document.getElementById('val-monarch').innerHTML = fmt(bal)+'<span class="row-unit">ton</span>';
- 
-  const row = document.getElementById('row-monarch');
+/* ── MONARCH ────────────────────────────────────────── */
+onValue(ref(db,'ledger_monarch'), snap=>{
+  const sorted=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+  let r=0; sorted.forEach(e=>{r+=e.type==='buy'?(e.tons||0):-(e.tons||0); e.balance=r;});
+  const bal=sorted.length?sorted[sorted.length-1].balance:0;
+  document.getElementById('val-monarch').innerHTML=fmt(bal)+'<span class="row-unit">ton</span>';
+  const row=document.getElementById('row-monarch');
   row.classList.remove('warn-amber','warn-red');
+  if(bal<=800){row.classList.add('warn-red');bannerState.monarch=2;}
+  else if(bal<=1500){row.classList.add('warn-amber');bannerState.monarch=1;}
+  else{bannerState.monarch=0;}
+  updateBanner(); stamp();
+});
  
-  if(bal <= 800){
-    row.classList.add('warn-red');
-    bannerState.monarch = 2;
-  } else if(bal <= 1500){
-    row.classList.add('warn-amber');
-    bannerState.monarch = 1;
-  } else {
-    bannerState.monarch = 0;
-  }
-  updateBanner();
+/* ── MARTIN — no warnings ───────────────────────────── */
+onValue(ref(db,'ledger_martin'), snap=>{
+  const sorted=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+  const total=sorted.reduce((s,e)=>s+(e.tons||0),0);
+  document.getElementById('val-martin').innerHTML=fmt(total)+'<span class="row-unit">ton</span>';
+  document.getElementById('sub-martin').textContent=sorted.length+' entr'+(sorted.length===1?'y':'ies')+' logged';
   stamp();
 });
  
-/* ── MARTIN LISTENER — log only, never flashes ──────── */
-onValue(ref(db, 'ledger_martin'), snap=>{
-  const sorted = Object.entries(snap.val()||{})
-    .map(([id,v])=>({id,...v}))
-    .sort((a,b)=>a.ts-b.ts);
-  const total = sorted.reduce((s,e)=>s+(e.tons||0), 0);
-  const count = sorted.length;
- 
-  document.getElementById('val-martin').innerHTML = fmt(total)+'<span class="row-unit">ton</span>';
-  document.getElementById('sub-martin').textContent =
-    count + ' entr' + (count===1?'y':'ies') + ' logged';
-  // No warnings, no banner changes for Martin
-  stamp();
-});
- 
-/* ── MIXTEK LISTENER ────────────────────────────────── */
-onValue(ref(db, 'ledger_mixtek'), snap=>{
-  const sorted = Object.entries(snap.val()||{})
-    .map(([id,v])=>({id,...v}))
-    .sort((a,b)=>a.ts-b.ts);
- 
-  let r = 0;
-  sorted.forEach(e=>{
-    r = e.type==='fill'
-      ? r + (e.gallons_after||0) - (e.gallons_before||0)
-      : (e.gallons_after||0);
-  });
-  const bal = sorted.length ? (sorted[sorted.length-1].gallons_after ?? 0) : 0;
-  const pct = Math.min(100, Math.round((bal/8000)*100));
- 
-  document.getElementById('val-mixtek').innerHTML = fmt(bal)+'<span class="row-unit">gal</span>';
-  document.getElementById('sub-mixtek').textContent = pct+'% full';
- 
-  const prog = document.getElementById('prog-mixtek');
-  prog.style.width   = pct+'%';
-  prog.style.background = bal<=2000 ? 'var(--red)' : bal<=3500 ? 'var(--amber)' : 'var(--blue)';
- 
-  const row = document.getElementById('row-mixtek');
+/* ── MIXTEK ─────────────────────────────────────────── */
+onValue(ref(db,'ledger_mixtek'), snap=>{
+  const sorted=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+  const bal=sorted.length?(sorted[sorted.length-1].gallons_after??0):0;
+  const pct=Math.min(100,Math.round((bal/8000)*100));
+  document.getElementById('val-mixtek').innerHTML=fmt(bal)+'<span class="row-unit">gal</span>';
+  document.getElementById('sub-mixtek').textContent=pct+'% full';
+  const prog=document.getElementById('prog-mixtek');
+  prog.style.width=pct+'%';
+  prog.style.background=bal<=2000?'var(--red)':bal<=3500?'var(--amber)':'var(--blue)';
+  const row=document.getElementById('row-mixtek');
   row.classList.remove('warn-yellow','warn-red');
- 
-  if(bal <= 2000){
-    row.classList.add('warn-red');
-    bannerState.mixtek = 2;
-  } else if(bal <= 3500){
-    row.classList.add('warn-yellow');
-    bannerState.mixtek = 1;
-  } else {
-    bannerState.mixtek = 0;
-  }
-  updateBanner();
-  stamp();
+  if(bal<=2000){row.classList.add('warn-red');bannerState.mixtek=2;}
+  else if(bal<=3500){row.classList.add('warn-yellow');bannerState.mixtek=1;}
+  else{bannerState.mixtek=0;}
+  updateBanner(); stamp();
 });
+ 
+/* ── SERVICE WORKER (required for PWA install) ──────── */
+if('serviceWorker' in navigator){
+  const swCode = `
+    self.addEventListener('install', e => self.skipWaiting());
+    self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+    self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(()=>new Response(''))));
+  `;
+  const blob = new Blob([swCode], {type:'application/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl, {scope:'/'}).catch(()=>{});
+}
 </script>
 </body>
 </html>
