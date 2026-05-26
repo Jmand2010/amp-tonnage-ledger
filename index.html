@@ -86,11 +86,20 @@ main{max-width:1100px;margin:0 auto;padding:1.5rem;}
 .panel-title.gray{color:var(--text3)}.panel-title.gray::before{background:var(--text3);}
 .form-row{display:flex;flex-direction:column;gap:7px;}
 .form-group{display:flex;gap:7px;}
+.form-group-2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
 .form-group-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;}
 label.field-label{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;margin-bottom:2px;display:block;}
 input[type="number"],input[type="text"],input[type="date"]{background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 11px;width:100%;transition:border-color .15s;outline:none;}
 input::placeholder{color:var(--text3);}
 input:focus{border-color:var(--text2);}
+input[readonly]{color:var(--green);border-color:var(--green-border);background:var(--green-bg);cursor:default;}
+/* Auto-fill highlight */
+.autofilled{animation:autofillPop .4s ease;}
+@keyframes autofillPop{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+/* Tank lookup hint */
+.tank-hint{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-top:2px;}
+.tank-hint.found{color:var(--green);}
+.tank-hint.notfound{color:var(--amber);}
 .info-note{font-size:12px;color:var(--text2);line-height:1.7;font-family:'IBM Plex Sans',sans-serif;}
 .info-note strong{color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;}
 .register{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
@@ -169,11 +178,7 @@ tr:hover .del-btn{opacity:1;}
 </head>
 <body>
  
-<!-- Loading screen shown until Firebase is ready -->
-<div id="loading-screen">
-  <div class="spinner"></div>
-  <p>Connecting to database...</p>
-</div>
+<div id="loading-screen"><div class="spinner"></div><p>Connecting to database...</p></div>
  
 <header>
   <div class="logo">
@@ -240,9 +245,8 @@ tr:hover .del-btn{opacity:1;}
      PASTE YOUR FIREBASE CONFIG HERE — replace every value
      ════════════════════════════════════════════════════════ -->
 <script type="module">
-import { initializeApp }                        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, remove, onValue, serverTimestamp }
-                                                from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { initializeApp }                          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
  
 const firebaseConfig = {
   apiKey: "AIzaSyBXrg5pV1f7HcEsJuOudSwunV-34JnTRv4",
@@ -253,18 +257,17 @@ const firebaseConfig = {
   messagingSenderId: "597914172038",
   appId: "1:597914172038:web:130677ccb16088d870ef07"
 };
+
 /* ══════════════════════════════════════════════════════════ */
  
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
- 
-// Hide loading screen once script is running
 document.getElementById('loading-screen').style.display = 'none';
  
 const dbRefs = {
-  monarch: ref(db, 'ledger_monarch'),
-  martin:  ref(db, 'ledger_martin'),
-  mixtek:  ref(db, 'ledger_mixtek'),
+  monarch: ref(db,'ledger_monarch'),
+  martin:  ref(db,'ledger_martin'),
+  mixtek:  ref(db,'ledger_mixtek'),
 };
  
 let currentTracker  = 'monarch';
@@ -272,74 +275,133 @@ let allEntries      = [];
 let pendingDeleteId = null;
 let deleteTimers    = {};
  
+/* ══════════════════════════════════════════════════════════
+   AMPI BULK TANK CHART — horizontal tank dia 96 length 251
+   Inches 1–96 → exact gallons per chart
+   ══════════════════════════════════════════════════════════ */
+const TANK_CHART = {
+   1:14.151,   2:39.898,   3:73.064,   4:112.13,
+   5:156.202,  6:204.667,  7:257.068,  8:313.043,
+   9:372.299, 10:434.586, 11:499.692, 12:567.429,
+  13:637.631, 14:710.15,  15:784.851, 16:861.61,
+  17:940.313, 18:1020.855,19:1103.138,20:1187.068,
+  21:1272.56, 22:1359.531,23:1447.902,24:1537.6,
+  25:1628.552,26:1720.691,27:1813.951,28:1908.268,
+  29:2003.582,30:2099.832,31:2196.962,32:2294.915,
+  33:2393.636,34:2493.072,35:2593.171,36:2693.882,
+  37:2795.153,38:2896.937,39:2999.183,40:3101.844,
+  41:3204.873,42:3308.222,43:3411.844,44:3515.695,
+  45:3619.727,46:3723.895,47:3828.154,48:3932.458,
+  49:4036.762,50:4141.021,51:4245.189,52:4349.221,
+  53:4453.072,54:4556.694,55:4660.043,56:4763.072,
+  57:4865.733,58:4967.979,59:5069.763,60:5171.034,
+  61:5271.745,62:5371.844,63:5471.28, 64:5570.001,
+  65:5667.954,66:5765.084,67:5861.334,68:5956.648,
+  69:6050.965,70:6144.225,71:6236.364,72:6327.316,
+  73:6417.014,74:6505.385,75:6592.356,76:6677.848,
+  77:6761.778,78:6844.061,79:6924.603,80:7003.306,
+  81:7080.065,82:7154.766,83:7227.285,84:7297.487,
+  85:7365.224,86:7430.33, 87:7492.617,88:7551.873,
+  89:7607.848,90:7660.249,91:7708.714,92:7752.786,
+  93:7791.852,94:7825.018,95:7850.765,96:7864.916
+};
+ 
+/* Look up gallons from inches — returns exact value or null */
+function inchesToGallons(inches){
+  const i = Math.round(inches);
+  return (i >= 1 && i <= 96) ? TANK_CHART[i] : null;
+}
+ 
+/* Auto-fill gallons when inches are entered */
+function tankLookup(inchesId, gallonsId, hintId){
+  const inEl  = document.getElementById(inchesId);
+  const galEl = document.getElementById(gallonsId);
+  const hint  = document.getElementById(hintId);
+  if(!inEl || !galEl) return;
+  const inches = parseFloat(inEl.value);
+  if(isNaN(inches) || inEl.value===''){
+    galEl.value = '';
+    galEl.removeAttribute('readonly');
+    if(hint){ hint.textContent=''; hint.className='tank-hint'; }
+    return;
+  }
+  const gals = inchesToGallons(inches);
+  if(gals !== null){
+    galEl.value = gals;
+    galEl.setAttribute('readonly','readonly');
+    galEl.classList.add('autofilled');
+    setTimeout(()=>galEl.classList.remove('autofilled'),400);
+    if(hint){ hint.textContent='✓ Auto-filled from tank chart ('+inches+'" = '+gals.toLocaleString()+' gal)'; hint.className='tank-hint found'; }
+  } else {
+    galEl.value = '';
+    galEl.removeAttribute('readonly');
+    if(hint){ hint.textContent='⚠ '+inches+'" not in chart (1–96"). Enter gallons manually.'; hint.className='tank-hint notfound'; }
+  }
+}
+window.tankLookup = tankLookup;
+ 
 /* ── THEME ──────────────────────────────────────────────── */
 function toggleTheme(){
-  const next = document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  document.getElementById('theme-btn').textContent = next==='dark'?'☀️ Light':'🌙 Dark';
-  localStorage.setItem('amp-theme', next);
+  const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  document.getElementById('theme-btn').textContent=next==='dark'?'☀️ Light':'🌙 Dark';
+  localStorage.setItem('amp-theme',next);
 }
-window.toggleTheme = toggleTheme;
+window.toggleTheme=toggleTheme;
 (function(){
-  const s = localStorage.getItem('amp-theme')||'dark';
-  document.documentElement.setAttribute('data-theme', s);
-  document.getElementById('theme-btn').textContent = s==='dark'?'☀️ Light':'🌙 Dark';
+  const s=localStorage.getItem('amp-theme')||'dark';
+  document.documentElement.setAttribute('data-theme',s);
+  document.getElementById('theme-btn').textContent=s==='dark'?'☀️ Light':'🌙 Dark';
 })();
  
-/* ── SYNC INDICATOR ─────────────────────────────────────── */
-onValue(ref(db, '.info/connected'), snap=>{
-  const on = snap.val();
-  document.getElementById('sync-dot').className = 'sync-dot'+(on?'':' offline');
-  document.getElementById('sync-label').textContent = on?'live sync':'offline';
+/* ── SYNC ───────────────────────────────────────────────── */
+onValue(ref(db,'.info/connected'),snap=>{
+  const on=snap.val();
+  document.getElementById('sync-dot').className='sync-dot'+(on?'':' offline');
+  document.getElementById('sync-label').textContent=on?'live sync':'offline';
 });
  
 /* ── CALC ENTRIES ───────────────────────────────────────── */
-function calcEntries(raw, name){
-  const sorted = Object.entries(raw||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
-  let running = 0;
+function calcEntries(raw,name){
+  const sorted=Object.entries(raw||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+  let r=0;
   sorted.forEach(e=>{
     if(name==='mixtek'){
-      running = e.type==='fill' ? running+(e.gallons_after||0)-(e.gallons_before||0) : (e.gallons_after||0);
-      e.balance = e.gallons_after||0;
+      r=e.type==='fill'?r+(e.gallons_after||0)-(e.gallons_before||0):(e.gallons_after||0);
+      e.balance=e.gallons_after||0;
     } else if(name==='martin'){
-      running += (e.tons||0);
-      e.balance = running;
+      r+=(e.tons||0); e.balance=r;
     } else {
-      running += e.type==='buy' ? (e.tons||0) : -(e.tons||0);
-      e.balance = running;
+      r+=e.type==='buy'?(e.tons||0):-(e.tons||0); e.balance=r;
     }
   });
   return sorted.reverse();
 }
  
-/* ── FIREBASE LISTENERS ─────────────────────────────────── */
+/* ── LISTENERS ──────────────────────────────────────────── */
 function initAllListeners(){
   ['monarch','martin','mixtek'].forEach(name=>{
-    onValue(dbRefs[name], snap=>{
-      const entries = calcEntries(snap.val(), name);
-      if(name===currentTracker){
-        allEntries = entries;
-        renderTable();
-        updateStats();
-      }
+    onValue(dbRefs[name],snap=>{
+      const entries=calcEntries(snap.val(),name);
+      if(name===currentTracker){ allEntries=entries; renderTable(); updateStats(); }
     });
   });
 }
  
 /* ── SWITCH TRACKER ─────────────────────────────────────── */
 function switchTracker(name){
-  currentTracker = name;
-  allEntries = [];
-  document.getElementById('register-body').innerHTML =
+  currentTracker=name; allEntries=[];
+  document.getElementById('register-body').innerHTML=
     '<tr><td colspan="9"><div class="empty-state">Loading...</div></td></tr>';
   buildUI();
 }
-window.switchTracker = switchTracker;
+window.switchTracker=switchTracker;
  
 /* ── BUILD UI ───────────────────────────────────────────── */
 function buildUI(){
-  const t = currentTracker;
+  const t=currentTracker;
  
+  /* Stats */
   if(t==='monarch'){
     document.getElementById('stats-bar').innerHTML=`
       <div class="stat-card green" id="stat-balance-card"><div class="stat-label">Current Balance</div><div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div></div>
@@ -357,6 +419,7 @@ function buildUI(){
       <div class="stat-card amber"><div class="stat-label">% Full</div><div class="stat-value" id="stat-pct">—<span class="unit">%</span></div></div>`;
   }
  
+  /* Entry panels */
   if(t==='monarch'){
     document.getElementById('entry-panels').innerHTML=`
       <div class="entry-panel green-panel">
@@ -384,6 +447,7 @@ function buildUI(){
         </div>
       </div>`;
     setTodayDates(['buy-date','use-date']);
+ 
   } else if(t==='martin'){
     document.getElementById('entry-panels').innerHTML=`
       <div class="entry-panel green-panel">
@@ -400,24 +464,46 @@ function buildUI(){
       </div>
       <div class="entry-panel info-panel">
         <div class="panel-title gray">About This Tracker</div>
-        <p class="info-note"><strong>Martin Marietta</strong> is a usage log only.<br/><br/>Tons are not purchased in blocks — entries here record how much material was used from Martin Marietta on each job for reference and reporting.<br/><br/>The running total shows cumulative tons logged over time.</p>
+        <p class="info-note"><strong>Martin Marietta</strong> is a usage log only.<br/><br/>Tons are not purchased in blocks — entries record how much material was used from Martin Marietta per job for reference and reporting.<br/><br/>The running total shows cumulative tons logged over time.</p>
       </div>`;
     setTodayDates(['mm-date']);
+ 
   } else {
+    /* MixTek — with tank chart auto-fill */
     document.getElementById('entry-panels').innerHTML=`
       <div class="entry-panel blue-panel">
         <div class="panel-title blue">Record Tank Fill</div>
         <div class="form-row">
           <div><label class="field-label">Date</label><input type="date" id="fill-date"/></div>
-          <div class="form-group-3">
-            <div><label class="field-label">Inches Before Fill</label><input type="number" id="fill-in-before" placeholder='e.g. 14"' min="0" step="0.25"/></div>
-            <div><label class="field-label">Gallons Before Fill</label><input type="number" id="fill-gal-before" placeholder="e.g. 1200" min="0" step="1"/></div>
-            <div></div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:2px;">
+            <div style="font-size:10px;color:var(--blue);font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;">📏 Before Fill</div>
+            <div class="form-group-2">
+              <div>
+                <label class="field-label">Inches Before</label>
+                <input type="number" id="fill-in-before" placeholder='e.g. 14' min="1" max="96" step="0.5"
+                  oninput="tankLookup('fill-in-before','fill-gal-before','fill-hint-before')"/>
+                <div class="tank-hint" id="fill-hint-before"></div>
+              </div>
+              <div>
+                <label class="field-label">Gallons Before</label>
+                <input type="number" id="fill-gal-before" placeholder="auto-fills from inches" min="0" step="0.001"/>
+              </div>
+            </div>
           </div>
-          <div class="form-group-3">
-            <div><label class="field-label">Inches After Fill</label><input type="number" id="fill-in-after" placeholder='e.g. 72"' min="0" step="0.25"/></div>
-            <div><label class="field-label">Gallons After Fill</label><input type="number" id="fill-gal-after" placeholder="e.g. 7200" min="0" step="1"/></div>
-            <div></div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;">
+            <div style="font-size:10px;color:var(--green);font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;">📏 After Fill</div>
+            <div class="form-group-2">
+              <div>
+                <label class="field-label">Inches After</label>
+                <input type="number" id="fill-in-after" placeholder='e.g. 88' min="1" max="96" step="0.5"
+                  oninput="tankLookup('fill-in-after','fill-gal-after','fill-hint-after')"/>
+                <div class="tank-hint" id="fill-hint-after"></div>
+              </div>
+              <div>
+                <label class="field-label">Gallons After</label>
+                <input type="number" id="fill-gal-after" placeholder="auto-fills from inches" min="0" step="0.001"/>
+              </div>
+            </div>
           </div>
           <div><label class="field-label">Supplier / Delivery Note</label><input type="text" id="fill-note" placeholder="e.g. MixTek delivery #4421"/></div>
           <button class="btn btn-blue" onclick="submitMixtek('fill')">＋ Record Fill</button>
@@ -427,10 +513,20 @@ function buildUI(){
         <div class="panel-title amber">Record Tank Reading</div>
         <div class="form-row">
           <div><label class="field-label">Date</label><input type="date" id="read-date"/></div>
-          <div class="form-group-3">
-            <div><label class="field-label">Inches</label><input type="number" id="read-inches" placeholder='e.g. 36"' min="0" step="0.25"/></div>
-            <div><label class="field-label">Gallons</label><input type="number" id="read-gallons" placeholder="e.g. 3600" min="0" step="1"/></div>
-            <div></div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;">
+            <div style="font-size:10px;color:var(--amber);font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;">📏 Current Reading</div>
+            <div class="form-group-2">
+              <div>
+                <label class="field-label">Inches</label>
+                <input type="number" id="read-inches" placeholder='e.g. 36' min="1" max="96" step="0.5"
+                  oninput="tankLookup('read-inches','read-gallons','read-hint')"/>
+                <div class="tank-hint" id="read-hint"></div>
+              </div>
+              <div>
+                <label class="field-label">Gallons</label>
+                <input type="number" id="read-gallons" placeholder="auto-fills from inches" min="0" step="0.001"/>
+              </div>
+            </div>
           </div>
           <div><label class="field-label">Job / Note (optional)</label><input type="text" id="read-note" placeholder="e.g. Nilssen's Elk Mound lot"/></div>
           <button class="btn btn-amber" onclick="submitMixtek('reading')">◉ Record Reading</button>
@@ -439,6 +535,7 @@ function buildUI(){
     setTodayDates(['fill-date','read-date']);
   }
  
+  /* Table headers */
   if(t==='monarch'){
     document.getElementById('table-head').innerHTML=`<th>Date</th><th>Type</th><th>Supplier / Mix</th><th class="right">Purchase (ton)</th><th class="right">Usage (ton)</th><th class="right">Balance (ton)</th><th>Note</th><th></th>`;
     document.getElementById('register-title').textContent='Transaction Register — Asphalt (Monarch)';
@@ -466,47 +563,57 @@ function submitMonarch(type){
     .then(()=>{tEl.value='';sEl.value='';nEl.value='';showToast(type==='buy'?'+ Purchase recorded.':'− Usage recorded.',type==='buy'?'green':'red');})
     .catch(e=>showToast('Error: '+e.message,'red'));
 }
-window.submitMonarch = submitMonarch;
+window.submitMonarch=submitMonarch;
  
 /* ── SUBMIT MARTIN ──────────────────────────────────────── */
 function submitMartin(){
-  const tEl=document.getElementById('mm-tons');
-  const dEl=document.getElementById('mm-date');
-  const mEl=document.getElementById('mm-mix');
-  const nEl=document.getElementById('mm-note');
+  const tEl=document.getElementById('mm-tons'),dEl=document.getElementById('mm-date'),
+        mEl=document.getElementById('mm-mix'),nEl=document.getElementById('mm-note');
   const tons=parseFloat(tEl.value);
   if(!tons||tons<=0){tEl.focus();showToast('Enter a valid tonnage.','red');return;}
   push(dbRefs.martin,{type:'log',tons,date:dEl.value||today(),supplier:mEl.value.trim()||'Martin Marietta',note:nEl.value.trim(),ts:Date.now()})
     .then(()=>{tEl.value='';mEl.value='';nEl.value='';showToast('+ Entry logged.','green');})
     .catch(e=>showToast('Error: '+e.message,'red'));
 }
-window.submitMartin = submitMartin;
+window.submitMartin=submitMartin;
  
 /* ── SUBMIT MIXTEK ──────────────────────────────────────── */
 function submitMixtek(type){
   if(type==='fill'){
     const galB=parseFloat(document.getElementById('fill-gal-before').value)||0;
     const galA=parseFloat(document.getElementById('fill-gal-after').value);
-    const inB=parseFloat(document.getElementById('fill-in-before').value)||0;
-    const inA=parseFloat(document.getElementById('fill-in-after').value)||0;
+    const inB =parseFloat(document.getElementById('fill-in-before').value)||0;
+    const inA =parseFloat(document.getElementById('fill-in-after').value)||0;
     const note=document.getElementById('fill-note').value.trim();
     const date=document.getElementById('fill-date').value||today();
-    if(!galA||galA<=0){document.getElementById('fill-gal-after').focus();showToast('Enter gallons after fill.','red');return;}
+    if(!galA||galA<=0){document.getElementById('fill-gal-after').focus();showToast('Enter or look up gallons after fill.','red');return;}
     push(dbRefs.mixtek,{type:'fill',gallons_before:galB,gallons_after:galA,inches_before:inB,inches_after:inA,date,note,ts:Date.now()})
-      .then(()=>{['fill-gal-before','fill-gal-after','fill-in-before','fill-in-after'].forEach(id=>document.getElementById(id).value='');document.getElementById('fill-note').value='';showToast('+ Tank fill recorded.','blue');})
+      .then(()=>{
+        ['fill-gal-before','fill-gal-after','fill-in-before','fill-in-after'].forEach(id=>{
+          const el=document.getElementById(id);el.value='';el.removeAttribute('readonly');
+        });
+        ['fill-hint-before','fill-hint-after'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='';el.className='tank-hint';}});
+        document.getElementById('fill-note').value='';
+        showToast('+ Tank fill recorded.','blue');
+      })
       .catch(e=>showToast('Error: '+e.message,'red'));
   } else {
-    const gal=parseFloat(document.getElementById('read-gallons').value);
+    const gal =parseFloat(document.getElementById('read-gallons').value);
     const inch=parseFloat(document.getElementById('read-inches').value)||0;
     const note=document.getElementById('read-note').value.trim();
     const date=document.getElementById('read-date').value||today();
-    if(isNaN(gal)||gal<0){document.getElementById('read-gallons').focus();showToast('Enter a gallon reading.','red');return;}
+    if(isNaN(gal)||gal<0){document.getElementById('read-gallons').focus();showToast('Enter or look up gallon reading.','red');return;}
     push(dbRefs.mixtek,{type:'reading',gallons_after:gal,inches_after:inch,date,note,ts:Date.now()})
-      .then(()=>{['read-gallons','read-inches'].forEach(id=>document.getElementById(id).value='');document.getElementById('read-note').value='';showToast('◉ Reading recorded.','');})
+      .then(()=>{
+        ['read-gallons','read-inches'].forEach(id=>{const el=document.getElementById(id);el.value='';el.removeAttribute('readonly');});
+        const hint=document.getElementById('read-hint');if(hint){hint.textContent='';hint.className='tank-hint';}
+        document.getElementById('read-note').value='';
+        showToast('◉ Reading recorded.','');
+      })
       .catch(e=>showToast('Error: '+e.message,'red'));
   }
 }
-window.submitMixtek = submitMixtek;
+window.submitMixtek=submitMixtek;
  
 /* ── RENDER TABLE ───────────────────────────────────────── */
 function renderTable(){
@@ -535,11 +642,13 @@ function renderTable(){
         <td><button class="del-btn" id="del-${e.id}" onclick="twoStepDelete(event,'${e.id}')">✕ Delete</button></td></tr>`;
     } else {
       const fill=e.type==='fill';
+      const inB  = e.inches_before ? e.inches_before+'"' : '—';
+      const inA  = e.inches_after  ? e.inches_after+'"'  : '—';
       return `<tr class="${fill?'row-fill':'row-reading'}">
         <td>${e.date||'—'}</td><td><span class="tag ${fill?'tag-fill':'tag-reading'}">${fill?'Fill':'Reading'}</span></td>
-        <td class="right">${fill?fmt(e.inches_before||0)+'"':'—'}</td>
+        <td class="right">${fill?inB:'—'}</td>
         <td class="right">${fill?fmt(e.gallons_before||0):'—'}</td>
-        <td class="right">${fmt(e.inches_after||0)+'"'}</td>
+        <td class="right">${inA}</td>
         <td class="right ${fill?'amount-fill':''}">${fmt(e.gallons_after)}</td>
         <td class="right balance-cell">${fmt(e.balance)}</td>
         <td><span class="note-text">${esc(e.note||'')}</span></td>
@@ -559,11 +668,7 @@ function updateStats(){
     setStat('stat-in',fmt(totalIn),'ton');
     setStat('stat-out',fmt(totalOut),'ton');
     const card=document.getElementById('stat-balance-card');
-    if(card){
-      card.classList.remove('flash-amber','flash-red');
-      if(bal<=800) card.classList.add('flash-red');
-      else if(bal<=1500) card.classList.add('flash-amber');
-    }
+    if(card){card.classList.remove('flash-amber','flash-red');if(bal<=800)card.classList.add('flash-red');else if(bal<=1500)card.classList.add('flash-amber');}
   } else if(t==='martin'){
     const total=allEntries.reduce((s,e)=>s+(e.tons||0),0);
     setStat('stat-balance',fmt(total),'ton');
@@ -574,11 +679,7 @@ function updateStats(){
     setStat('stat-balance',fmt(bal),'gal');
     setStat('stat-pct',pct,'%');
     const card=document.getElementById('stat-balance-card');
-    if(card){
-      card.classList.remove('flash-sealer-amber','flash-sealer-red');
-      if(bal<=2000) card.classList.add('flash-sealer-red');
-      else if(bal<=3500) card.classList.add('flash-sealer-amber');
-    }
+    if(card){card.classList.remove('flash-sealer-amber','flash-sealer-red');if(bal<=2000)card.classList.add('flash-sealer-red');else if(bal<=3500)card.classList.add('flash-sealer-amber');}
   }
 }
 function setStat(id,val,unit){const el=document.getElementById(id);if(el)el.innerHTML=val+`<span class="unit">${unit}</span>`;}
@@ -587,39 +688,31 @@ function setStat(id,val,unit){const el=document.getElementById(id);if(el)el.inne
 function twoStepDelete(evt,id){
   evt.stopPropagation();
   const btn=document.getElementById('del-'+id);
-  if(!btn) return;
+  if(!btn)return;
   if(btn.classList.contains('confirm-step')){
-    clearTimeout(deleteTimers[id]);
-    delete deleteTimers[id];
+    clearTimeout(deleteTimers[id]);delete deleteTimers[id];
     remove(ref(db,'ledger_'+currentTracker+'/'+id))
       .then(()=>showToast('Entry deleted.','red'))
       .catch(e=>showToast('Error: '+e.message,'red'));
   } else {
-    btn.classList.add('confirm-step');
-    btn.textContent='⚠ Confirm?';
-    deleteTimers[id]=setTimeout(()=>{
-      if(btn){btn.classList.remove('confirm-step');btn.textContent='✕ Delete';}
-      delete deleteTimers[id];
-    },4000);
+    btn.classList.add('confirm-step');btn.textContent='⚠ Confirm?';
+    deleteTimers[id]=setTimeout(()=>{if(btn){btn.classList.remove('confirm-step');btn.textContent='✕ Delete';}delete deleteTimers[id];},4000);
   }
 }
-window.twoStepDelete = twoStepDelete;
+window.twoStepDelete=twoStepDelete;
  
 function closeModal(){pendingDeleteId=null;document.getElementById('modal-bg').classList.remove('open');}
 function confirmDelete(){
   if(!pendingDeleteId)return;
   remove(ref(db,'ledger_'+currentTracker+'/'+pendingDeleteId))
-    .then(()=>showToast('Entry deleted.','red'))
-    .catch(e=>showToast('Error: '+e.message,'red'));
+    .then(()=>showToast('Entry deleted.','red')).catch(e=>showToast('Error: '+e.message,'red'));
   closeModal();
 }
-window.closeModal=closeModal;
-window.confirmDelete=confirmDelete;
+window.closeModal=closeModal;window.confirmDelete=confirmDelete;
  
 /* ── CSV EXPORT ─────────────────────────────────────────── */
 function exportCSV(){
-  const t=currentTracker;
-  let rows;
+  const t=currentTracker;let rows;
   if(t==='monarch'){
     rows=[['Date','Type','Supplier','Note','Tons','Balance (ton)']];
     [...allEntries].reverse().forEach(e=>rows.push([e.date,e.type==='buy'?'Purchase':'Usage',e.supplier||'',e.note||'',e.tons,e.balance]));
@@ -628,19 +721,16 @@ function exportCSV(){
     [...allEntries].reverse().forEach(e=>rows.push([e.date,e.supplier||'',e.note||'',e.tons,e.balance]));
   } else {
     rows=[['Date','Type','Inches Before','Gal Before','Inches After','Gal After/Reading','Balance (gal)','Note']];
-    [...allEntries].reverse().forEach(e=>rows.push([e.date,e.type,e.inches_before||'',e.gallons_before||'',e.inches_after||0,e.gallons_after,e.balance,e.note||'']));
+    [...allEntries].reverse().forEach(e=>rows.push([e.date,e.type,e.inches_before||'',e.gallons_before||'',e.inches_after||'',e.gallons_after,e.balance,e.note||'']));
   }
   const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=`amp-${t}-ledger.csv`;a.click();
-  URL.revokeObjectURL(url);
+  const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`amp-${t}-ledger.csv`;a.click();URL.revokeObjectURL(url);
 }
 window.exportCSV=exportCSV;
  
 /* ── HELPERS ────────────────────────────────────────────── */
-function fmt(n){if(n===undefined||n===null)return'—';return Number(n).toLocaleString('en-US',{maximumFractionDigits:2});}
+function fmt(n){if(n===undefined||n===null)return'—';return Number(n).toLocaleString('en-US',{maximumFractionDigits:3});}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function today(){return new Date().toISOString().slice(0,10);}
 function setTodayDates(ids){ids.forEach(id=>{const el=document.getElementById(id);if(el)el.value=today();});}
@@ -650,7 +740,6 @@ function showToast(msg,cls){
   clearTimeout(t._t);t._t=setTimeout(()=>{t.className='';},3200);
 }
  
-/* ── INIT ───────────────────────────────────────────────── */
 buildUI();
 initAllListeners();
 </script>
