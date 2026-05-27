@@ -66,15 +66,11 @@ main{max-width:1100px;margin:0 auto;padding:1.5rem;}
 @keyframes flashRed{0%,100%{background:var(--bg2)}50%{background:rgba(240,99,74,.20)}}
 @keyframes flashSealerAmber{0%,100%{background:var(--bg2)}50%{background:rgba(240,184,74,.18)}}
 @keyframes flashSealerRed{0%,100%{background:var(--bg2)}50%{background:rgba(240,99,74,.22)}}
-.flash-amber{animation:flashAmber 2.2s ease-in-out infinite;}
-.flash-amber .stat-value{color:var(--amber)!important;}
-.flash-red{animation:flashRed 2.2s ease-in-out infinite;}
-.flash-red .stat-value{color:var(--red)!important;}
-.flash-sealer-amber{animation:flashSealerAmber 2.2s ease-in-out infinite;}
-.flash-sealer-amber .stat-value{color:var(--amber)!important;}
-.flash-sealer-red{animation:flashSealerRed 2.2s ease-in-out infinite;}
-.flash-sealer-red .stat-value{color:var(--red)!important;}
-.entry-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.flash-amber{animation:flashAmber 2.2s ease-in-out infinite;}.flash-amber .stat-value{color:var(--amber)!important;}
+.flash-red{animation:flashRed 2.2s ease-in-out infinite;}.flash-red .stat-value{color:var(--red)!important;}
+.flash-sealer-amber{animation:flashSealerAmber 2.2s ease-in-out infinite;}.flash-sealer-amber .stat-value{color:var(--amber)!important;}
+.flash-sealer-red{animation:flashSealerRed 2.2s ease-in-out infinite;}.flash-sealer-red .stat-value{color:var(--red)!important;}
+.entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
 .entry-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;}
 .entry-panel.green-panel{border-color:var(--green-border);}
 .entry-panel.red-panel{border-color:var(--red-border);}
@@ -91,23 +87,19 @@ main{max-width:1100px;margin:0 auto;padding:1.5rem;}
 .form-row{display:flex;flex-direction:column;gap:7px;}
 .form-group{display:flex;gap:7px;}
 .form-group-2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.form-group-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;}
 label.field-label{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;margin-bottom:2px;display:block;}
 input[type="number"],input[type="text"],input[type="date"]{background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 11px;width:100%;transition:border-color .15s;outline:none;}
 input::placeholder{color:var(--text3);}
 input:focus{border-color:var(--text2);}
 input[readonly]{color:var(--green);border-color:var(--green-border);background:var(--green-bg);cursor:default;}
-@keyframes autofillPop{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
-.autofilled{animation:autofillPop .3s ease;}
-.tank-hint{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-top:3px;min-height:14px;}
+/* Auto-fill highlight */
+.autofilled{animation:autofillPop .4s ease;}
+@keyframes autofillPop{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+/* Tank lookup hint */
+.tank-hint{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-top:2px;}
 .tank-hint.found{color:var(--green);}
 .tank-hint.notfound{color:var(--amber);}
-.sub-section{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:2px;}
-.sub-section-title{font-size:9px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
-.sub-section-title.blue{color:var(--blue);}
-.sub-section-title.green{color:var(--green);}
-.sub-section-title.amber{color:var(--amber);}
-.received-badge{background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:6px;padding:8px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--blue);display:none;margin-top:2px;font-weight:600;}
-.received-badge.show{display:block;}
 .info-note{font-size:12px;color:var(--text2);line-height:1.7;font-family:'IBM Plex Sans',sans-serif;}
 .info-note strong{color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;}
 .register{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
@@ -126,7 +118,7 @@ tr.row-use{background:var(--bg2);}
 tr.row-log{background:var(--bg2);}
 tr.row-fill{background:var(--blue-bg);}
 tr.row-reading{background:var(--amber-bg);}
-tr.row-buy:hover,tr.row-use:hover,tr.row-log:hover,tr.row-fill:hover,tr.row-reading:hover{filter:brightness(1.08);}
+tr.row-buy:hover,tr.row-use:hover,tr.row-log:hover,tr.row-fill:hover,tr.row-reading:hover{filter:brightness(1.07);}
 .tag{display:inline-block;font-size:9px;letter-spacing:.06em;padding:2px 6px;border-radius:3px;text-transform:uppercase;}
 .tag-buy{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
 .tag-use{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);}
@@ -162,19 +154,25 @@ tr:hover .del-btn{opacity:1;}
 @media print{
   body{background:#fff;color:#000;}
   header,.tracker-bar .btn,.header-right,.del-btn,.filter-bar button,#loading-screen{display:none!important;}
+  .tracker-bar{background:#fff;border-bottom:1px solid #ccc;}
   .stats,.register{break-inside:avoid;}
   .stat-card{background:#f5f5f5!important;border:1px solid #ccc;animation:none!important;}
   .stat-label{color:#666!important;}.stat-value{color:#000!important;}
+  .stat-card.green .stat-value{color:#2d6e0a!important;}.stat-card.red .stat-value{color:#8b2010!important;}
+  .stat-card.blue .stat-value{color:#1a5a9a!important;}.stat-card.amber .stat-value{color:#7a5000!important;}
   .register{background:#fff;border:1px solid #ccc;}
   table{font-size:11px;}th{background:#eee;color:#333;}td{border-top:1px solid #ddd;}
   tr.row-buy{background:#f0f7ea!important;}tr.row-use,tr.row-log{background:#fff!important;}
   tr.row-fill{background:#e8f2fc!important;}tr.row-reading{background:#fef8e8!important;}
-  main{padding:0;max-width:100%;}.entry-grid-2{display:none;}
+  .amount-buy{color:#2d6e0a!important;}.amount-use{color:#8b2010!important;}.amount-fill{color:#1a5a9a!important;}
+  .balance-cell{color:#000!important;}.note-text{color:#666!important;}
+  main{padding:0;max-width:100%;}.entry-grid{display:none;}
 }
-@media(max-width:700px){
-  .entry-grid-2,.stats{grid-template-columns:1fr;}
+@media(max-width:720px){
+  .entry-grid,.stats{grid-template-columns:1fr;}
   main{padding:1rem;}
   header,.tracker-bar{padding:0 1rem;}
+  .form-group-3{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -210,7 +208,7 @@ tr:hover .del-btn{opacity:1;}
  
 <main>
   <div class="stats" id="stats-bar"></div>
-  <div id="entry-area"></div>
+  <div class="entry-grid" id="entry-panels"></div>
   <div class="register">
     <div class="register-header">
       <span class="register-title" id="register-title">Transaction Register</span>
@@ -247,7 +245,7 @@ tr:hover .del-btn{opacity:1;}
      PASTE YOUR FIREBASE CONFIG HERE — replace every value
      ════════════════════════════════════════════════════════ -->
 <script type="module">
-import { initializeApp }                           from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { initializeApp }                          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
  
 const firebaseConfig = {
@@ -259,6 +257,8 @@ const firebaseConfig = {
   messagingSenderId: "597914172038",
   appId: "1:597914172038:web:130677ccb16088d870ef07"
 };
+
+
 /* ══════════════════════════════════════════════════════════ */
  
 const app = initializeApp(firebaseConfig);
@@ -278,9 +278,9 @@ let deleteTimers    = {};
  
 /* ══════════════════════════════════════════════════════════
    AMPI BULK TANK CHART — horizontal tank dia 96 length 251
-   Inches 1–96 → exact gallons
+   Inches 1–96 → exact gallons per chart
    ══════════════════════════════════════════════════════════ */
-const TANK = {
+const TANK_CHART = {
    1:14.151,   2:39.898,   3:73.064,   4:112.13,
    5:156.202,  6:204.667,  7:257.068,  8:313.043,
    9:372.299, 10:434.586, 11:499.692, 12:567.429,
@@ -307,363 +307,245 @@ const TANK = {
   93:7791.852,94:7825.018,95:7850.765,96:7864.916
 };
  
-function tankGal(inches){
-  const i = Math.round(parseFloat(inches));
-  return (i >= 1 && i <= 96) ? TANK[i] : null;
+/* Look up gallons from inches — returns exact value or null */
+function inchesToGallons(inches){
+  const i = Math.round(inches);
+  return (i >= 1 && i <= 96) ? TANK_CHART[i] : null;
 }
  
-function tankLookup(inId, galId, hintId){
-  const inEl  = document.getElementById(inId);
-  const galEl = document.getElementById(galId);
-  const hint  = hintId ? document.getElementById(hintId) : null;
+/* Auto-fill gallons when inches are entered */
+function tankLookup(inchesId, gallonsId, hintId){
+  const inEl  = document.getElementById(inchesId);
+  const galEl = document.getElementById(gallonsId);
+  const hint  = document.getElementById(hintId);
   if(!inEl || !galEl) return;
-  const v = inEl.value;
-  if(v === '' || isNaN(parseFloat(v))){
-    galEl.value = ''; galEl.removeAttribute('readonly');
-    if(hint){ hint.textContent = ''; hint.className = 'tank-hint'; }
-    updateReceivedBadge();
+  const inches = parseFloat(inEl.value);
+  if(isNaN(inches) || inEl.value===''){
+    galEl.value = '';
+    galEl.removeAttribute('readonly');
+    if(hint){ hint.textContent=''; hint.className='tank-hint'; }
     return;
   }
-  const g = tankGal(v);
-  if(g !== null){
-    galEl.value = g;
+  const gals = inchesToGallons(inches);
+  if(gals !== null){
+    galEl.value = gals;
     galEl.setAttribute('readonly','readonly');
     galEl.classList.add('autofilled');
-    setTimeout(()=>galEl.classList.remove('autofilled'), 400);
-    if(hint){ hint.textContent = '✓ '+parseFloat(v)+'" = '+g.toLocaleString('en-US',{maximumFractionDigits:3})+' gal'; hint.className = 'tank-hint found'; }
+    setTimeout(()=>galEl.classList.remove('autofilled'),400);
+    if(hint){ hint.textContent='✓ Auto-filled from tank chart ('+inches+'" = '+gals.toLocaleString()+' gal)'; hint.className='tank-hint found'; }
   } else {
-    galEl.value = ''; galEl.removeAttribute('readonly');
-    if(hint){ hint.textContent = '⚠ Enter 1–96". You may enter gallons manually.'; hint.className = 'tank-hint notfound'; }
+    galEl.value = '';
+    galEl.removeAttribute('readonly');
+    if(hint){ hint.textContent='⚠ '+inches+'" not in chart (1–96"). Enter gallons manually.'; hint.className='tank-hint notfound'; }
   }
-  updateReceivedBadge();
 }
 window.tankLookup = tankLookup;
  
-function updateReceivedBadge(){
-  const badge  = document.getElementById('received-badge');
-  if(!badge) return;
-  const before = parseFloat(document.getElementById('fill-gal-before')?.value) || 0;
-  const after  = parseFloat(document.getElementById('fill-gal-after')?.value)  || 0;
-  if(after > 0 && after >= before){
-    const received = parseFloat((after - before).toFixed(3));
-    badge.textContent = '📦 Gallons received from MixTek: ' + received.toLocaleString('en-US',{maximumFractionDigits:3});
-    badge.classList.add('show');
-  } else {
-    badge.classList.remove('show');
-  }
-}
-window.updateReceivedBadge = updateReceivedBadge;
- 
 /* ── THEME ──────────────────────────────────────────────── */
 function toggleTheme(){
-  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  document.getElementById('theme-btn').textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
-  localStorage.setItem('amp-theme', next);
+  const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  document.getElementById('theme-btn').textContent=next==='dark'?'☀️ Light':'🌙 Dark';
+  localStorage.setItem('amp-theme',next);
 }
-window.toggleTheme = toggleTheme;
+window.toggleTheme=toggleTheme;
 (function(){
-  const s = localStorage.getItem('amp-theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', s);
-  document.getElementById('theme-btn').textContent = s === 'dark' ? '☀️ Light' : '🌙 Dark';
+  const s=localStorage.getItem('amp-theme')||'dark';
+  document.documentElement.setAttribute('data-theme',s);
+  document.getElementById('theme-btn').textContent=s==='dark'?'☀️ Light':'🌙 Dark';
 })();
  
-/* ── SYNC INDICATOR ─────────────────────────────────────── */
-onValue(ref(db,'.info/connected'), snap=>{
-  const on = snap.val();
-  document.getElementById('sync-dot').className = 'sync-dot' + (on ? '' : ' offline');
-  document.getElementById('sync-label').textContent = on ? 'live sync' : 'offline';
+/* ── SYNC ───────────────────────────────────────────────── */
+onValue(ref(db,'.info/connected'),snap=>{
+  const on=snap.val();
+  document.getElementById('sync-dot').className='sync-dot'+(on?'':' offline');
+  document.getElementById('sync-label').textContent=on?'live sync':'offline';
 });
  
-/* ══════════════════════════════════════════════════════════
-   MIXTEK BALANCE — TRUE CHECKBOOK REGISTER
-   Each entry is stored and retrieved fresh from Firebase.
-   - fill:    balance += (gallons_after - gallons_before)
-   - reading: balance  = gallons_after  (absolute snapshot)
-   The last entry in time always wins for current balance.
-   ══════════════════════════════════════════════════════════ */
-function calcMixtek(sorted){
-  let balance = 0;
-  sorted.forEach(e => {
-    if(e.type === 'fill'){
-      const delivered = (e.gallons_after || 0) - (e.gallons_before || 0);
-      balance += delivered > 0 ? delivered : 0;
-      e.balance   = parseFloat(balance.toFixed(3));
-      e.delivered = delivered > 0 ? parseFloat(delivered.toFixed(3)) : 0;
-    } else if(e.type === 'reading'){
-      balance   = e.gallons_after || 0;
-      e.balance = parseFloat(balance.toFixed(3));
+/* ── CALC ENTRIES ───────────────────────────────────────── */
+function calcEntries(raw,name){
+  const sorted=Object.entries(raw||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+  let r=0;
+  sorted.forEach(e=>{
+    if(name==='mixtek'){
+      r=e.type==='fill'?r+(e.gallons_after||0)-(e.gallons_before||0):(e.gallons_after||0);
+      e.balance=e.gallons_after||0;
+    } else if(name==='martin'){
+      r+=(e.tons||0); e.balance=r;
+    } else {
+      r+=e.type==='buy'?(e.tons||0):-(e.tons||0); e.balance=r;
     }
   });
+  return sorted.reverse();
 }
  
-function calcEntries(raw, name){
-  const sorted = Object.entries(raw || {})
-    .map(([id,v]) => ({id, ...v}))
-    .sort((a,b) => a.ts - b.ts);  // oldest first for calculation
-  if(name === 'mixtek'){
-    calcMixtek(sorted);
-  } else if(name === 'martin'){
-    let r = 0;
-    sorted.forEach(e => { r += (e.tons || 0); e.balance = r; });
-  } else {
-    let r = 0;
-    sorted.forEach(e => { r += e.type === 'buy' ? (e.tons||0) : -(e.tons||0); e.balance = r; });
-  }
-  return sorted.reverse(); // newest first for display
-}
- 
-/* ── FIREBASE LISTENERS ─────────────────────────────────── */
+/* ── LISTENERS ──────────────────────────────────────────── */
 function initAllListeners(){
-  ['monarch','martin','mixtek'].forEach(name => {
-    onValue(dbRefs[name], snap => {
-      const entries = calcEntries(snap.val(), name);
-      if(name === currentTracker){
-        allEntries = entries;
-        renderTable();
-        updateStats();
-      }
+  ['monarch','martin','mixtek'].forEach(name=>{
+    onValue(dbRefs[name],snap=>{
+      const entries=calcEntries(snap.val(),name);
+      if(name===currentTracker){ allEntries=entries; renderTable(); updateStats(); }
     });
   });
 }
  
 /* ── SWITCH TRACKER ─────────────────────────────────────── */
 function switchTracker(name){
-  currentTracker = name;
-  allEntries = [];
-  document.getElementById('register-body').innerHTML =
+  currentTracker=name; allEntries=[];
+  document.getElementById('register-body').innerHTML=
     '<tr><td colspan="9"><div class="empty-state">Loading...</div></td></tr>';
   buildUI();
 }
-window.switchTracker = switchTracker;
+window.switchTracker=switchTracker;
  
 /* ── BUILD UI ───────────────────────────────────────────── */
 function buildUI(){
-  const t = currentTracker;
+  const t=currentTracker;
  
-  /* ── STATS ── */
-  if(t === 'monarch'){
-    document.getElementById('stats-bar').innerHTML = `
-      <div class="stat-card green" id="stat-balance-card">
-        <div class="stat-label">Current Balance</div>
-        <div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Total Purchased</div>
-        <div class="stat-value" id="stat-in">—<span class="unit">ton</span></div>
-      </div>
-      <div class="stat-card red">
-        <div class="stat-label">Total Used</div>
-        <div class="stat-value" id="stat-out">—<span class="unit">ton</span></div>
-      </div>`;
-  } else if(t === 'martin'){
-    document.getElementById('stats-bar').innerHTML = `
-      <div class="stat-card">
-        <div class="stat-label">Total Tons Logged</div>
-        <div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Total Entries</div>
-        <div class="stat-value" id="stat-in">—<span class="unit">entries</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Tracking Mode</div>
-        <div class="stat-value" style="font-size:13px;color:var(--text2);padding-top:4px;">Log Only</div>
-      </div>`;
+  /* Stats */
+  if(t==='monarch'){
+    document.getElementById('stats-bar').innerHTML=`
+      <div class="stat-card green" id="stat-balance-card"><div class="stat-label">Current Balance</div><div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div></div>
+      <div class="stat-card"><div class="stat-label">Total Purchased</div><div class="stat-value" id="stat-in">—<span class="unit">ton</span></div></div>
+      <div class="stat-card red"><div class="stat-label">Total Used</div><div class="stat-value" id="stat-out">—<span class="unit">ton</span></div></div>`;
+  } else if(t==='martin'){
+    document.getElementById('stats-bar').innerHTML=`
+      <div class="stat-card"><div class="stat-label">Total Tons Logged</div><div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div></div>
+      <div class="stat-card"><div class="stat-label">Total Entries</div><div class="stat-value" id="stat-in">—<span class="unit">entries</span></div></div>
+      <div class="stat-card"><div class="stat-label">Tracking Mode</div><div class="stat-value" style="font-size:13px;color:var(--text2);padding-top:4px;">Log Only</div></div>`;
   } else {
-    document.getElementById('stats-bar').innerHTML = `
-      <div class="stat-card blue" id="stat-balance-card">
-        <div class="stat-label">Current Gallons</div>
-        <div class="stat-value" id="stat-balance">—<span class="unit">gal</span></div>
-      </div>
-      <div class="stat-card green">
-        <div class="stat-label">Total Received</div>
-        <div class="stat-value" id="stat-received">—<span class="unit">gal</span></div>
-      </div>
-      <div class="stat-card amber">
-        <div class="stat-label">% Full</div>
-        <div class="stat-value" id="stat-pct">—<span class="unit">%</span></div>
-      </div>`;
+    document.getElementById('stats-bar').innerHTML=`
+      <div class="stat-card blue" id="stat-balance-card"><div class="stat-label">Current Gallons</div><div class="stat-value" id="stat-balance">—<span class="unit">gal</span></div></div>
+      <div class="stat-card"><div class="stat-label">Tank Capacity</div><div class="stat-value">8,000<span class="unit">gal</span></div></div>
+      <div class="stat-card amber"><div class="stat-label">% Full</div><div class="stat-value" id="stat-pct">—<span class="unit">%</span></div></div>`;
   }
  
-  /* ── ENTRY PANELS ── */
-  if(t === 'monarch'){
-    document.getElementById('entry-area').innerHTML = `
-      <div class="entry-grid-2">
-        <div class="entry-panel green-panel">
-          <div class="panel-title green">Add Block Purchase</div>
-          <div class="form-row">
-            <div class="form-group">
-              <div style="flex:1"><label class="field-label">Tons Purchased</label>
-                <input type="number" id="buy-tons" placeholder="e.g. 5000" min="0" step="0.1"/></div>
-              <div style="flex:1"><label class="field-label">Date</label>
-                <input type="date" id="buy-date"/></div>
-            </div>
-            <div><label class="field-label">Supplier</label>
-              <input type="text" id="buy-supplier" placeholder="Monarch"/></div>
-            <div><label class="field-label">Note / PO # (optional)</label>
-              <input type="text" id="buy-note" placeholder="e.g. PO-2025-01"/></div>
-            <button class="btn btn-green" onclick="submitMonarch('buy')">＋ Add Purchase</button>
+  /* Entry panels */
+  if(t==='monarch'){
+    document.getElementById('entry-panels').innerHTML=`
+      <div class="entry-panel green-panel">
+        <div class="panel-title green">Add Block Purchase</div>
+        <div class="form-row">
+          <div class="form-group">
+            <div style="flex:1"><label class="field-label">Tons Purchased</label><input type="number" id="buy-tons" placeholder="e.g. 5000" min="0" step="0.1"/></div>
+            <div style="flex:1"><label class="field-label">Date</label><input type="date" id="buy-date"/></div>
           </div>
+          <div><label class="field-label">Supplier</label><input type="text" id="buy-supplier" placeholder="Monarch"/></div>
+          <div><label class="field-label">Note / PO # (optional)</label><input type="text" id="buy-note" placeholder="e.g. PO-2025-01"/></div>
+          <button class="btn btn-green" onclick="submitMonarch('buy')">＋ Add Purchase</button>
         </div>
-        <div class="entry-panel red-panel">
-          <div class="panel-title red">Record Usage</div>
-          <div class="form-row">
-            <div class="form-group">
-              <div style="flex:1"><label class="field-label">Tons Used</label>
-                <input type="number" id="use-tons" placeholder="e.g. 280" min="0" step="0.1"/></div>
-              <div style="flex:1"><label class="field-label">Date</label>
-                <input type="date" id="use-date"/></div>
-            </div>
-            <div><label class="field-label">Mix Type (optional)</label>
-              <input type="text" id="use-supplier" placeholder="e.g. 12.5mm NWEAR"/></div>
-            <div><label class="field-label">Job / Location (optional)</label>
-              <input type="text" id="use-note" placeholder="e.g. Main St parking lot"/></div>
-            <button class="btn btn-red" onclick="submitMonarch('use')">− Record Usage</button>
+      </div>
+      <div class="entry-panel red-panel">
+        <div class="panel-title red">Record Usage</div>
+        <div class="form-row">
+          <div class="form-group">
+            <div style="flex:1"><label class="field-label">Tons Used</label><input type="number" id="use-tons" placeholder="e.g. 280" min="0" step="0.1"/></div>
+            <div style="flex:1"><label class="field-label">Date</label><input type="date" id="use-date"/></div>
           </div>
+          <div><label class="field-label">Mix Type (optional)</label><input type="text" id="use-supplier" placeholder="e.g. 12.5mm NWEAR"/></div>
+          <div><label class="field-label">Job / Location (optional)</label><input type="text" id="use-note" placeholder="e.g. Main St parking lot"/></div>
+          <button class="btn btn-red" onclick="submitMonarch('use')">− Record Usage</button>
         </div>
       </div>`;
     setTodayDates(['buy-date','use-date']);
  
-  } else if(t === 'martin'){
-    document.getElementById('entry-area').innerHTML = `
-      <div class="entry-grid-2">
-        <div class="entry-panel green-panel">
-          <div class="panel-title green">Log Tons Used</div>
-          <div class="form-row">
-            <div class="form-group">
-              <div style="flex:1"><label class="field-label">Tons Used</label>
-                <input type="number" id="mm-tons" placeholder="e.g. 310" min="0" step="0.1"/></div>
-              <div style="flex:1"><label class="field-label">Date</label>
-                <input type="date" id="mm-date"/></div>
-            </div>
-            <div><label class="field-label">Mix Type (optional)</label>
-              <input type="text" id="mm-mix" placeholder="e.g. 9.5mm NWEAR"/></div>
-            <div><label class="field-label">Job / Location (optional)</label>
-              <input type="text" id="mm-note" placeholder="e.g. Hwy 29 lot"/></div>
-            <button class="btn btn-green" onclick="submitMartin()">＋ Log Entry</button>
+  } else if(t==='martin'){
+    document.getElementById('entry-panels').innerHTML=`
+      <div class="entry-panel green-panel">
+        <div class="panel-title green">Log Tons Used</div>
+        <div class="form-row">
+          <div class="form-group">
+            <div style="flex:1"><label class="field-label">Tons Used</label><input type="number" id="mm-tons" placeholder="e.g. 310" min="0" step="0.1"/></div>
+            <div style="flex:1"><label class="field-label">Date</label><input type="date" id="mm-date"/></div>
           </div>
+          <div><label class="field-label">Mix Type (optional)</label><input type="text" id="mm-mix" placeholder="e.g. 9.5mm NWEAR"/></div>
+          <div><label class="field-label">Job / Location (optional)</label><input type="text" id="mm-note" placeholder="e.g. Hwy 29 lot"/></div>
+          <button class="btn btn-green" onclick="submitMartin()">＋ Log Entry</button>
         </div>
-        <div class="entry-panel info-panel">
-          <div class="panel-title gray">About This Tracker</div>
-          <p class="info-note">
-            <strong>Martin Marietta</strong> is a usage log only.<br/><br/>
-            Tons are not purchased in blocks — entries record how much material
-            was used from Martin Marietta per job for reference and reporting.<br/><br/>
-            The running total shows cumulative tons logged over time.
-          </p>
-        </div>
+      </div>
+      <div class="entry-panel info-panel">
+        <div class="panel-title gray">About This Tracker</div>
+        <p class="info-note"><strong>Martin Marietta</strong> is a usage log only.<br/><br/>Tons are not purchased in blocks — entries record how much material was used from Martin Marietta per job for reference and reporting.<br/><br/>The running total shows cumulative tons logged over time.</p>
       </div>`;
     setTodayDates(['mm-date']);
  
   } else {
-    /* ── MIXTEK — Fill + Reading only ── */
-    document.getElementById('entry-area').innerHTML = `
-      <div class="entry-grid-2">
- 
-        <!-- FILL / DELIVERY -->
-        <div class="entry-panel blue-panel">
-          <div class="panel-title blue">Record Tank Fill (MixTek Delivery)</div>
-          <div class="form-row">
-            <div><label class="field-label">Date</label>
-              <input type="date" id="fill-date"/></div>
- 
-            <div class="sub-section">
-              <div class="sub-section-title blue">Before Fill</div>
-              <div class="form-group-2">
-                <div>
-                  <label class="field-label">Inches Before</label>
-                  <input type="number" id="fill-in-before" placeholder="e.g. 31" min="1" max="96" step="1"
-                    oninput="tankLookup('fill-in-before','fill-gal-before','fill-hint-before')"/>
-                  <div class="tank-hint" id="fill-hint-before"></div>
-                </div>
-                <div>
-                  <label class="field-label">Gallons Before</label>
-                  <input type="number" id="fill-gal-before" placeholder="auto-fills" min="0" step="0.001"
-                    oninput="updateReceivedBadge()"/>
-                </div>
+    /* MixTek — with tank chart auto-fill */
+    document.getElementById('entry-panels').innerHTML=`
+      <div class="entry-panel blue-panel">
+        <div class="panel-title blue">Record Tank Fill</div>
+        <div class="form-row">
+          <div><label class="field-label">Date</label><input type="date" id="fill-date"/></div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:2px;">
+            <div style="font-size:10px;color:var(--blue);font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;">📏 Before Fill</div>
+            <div class="form-group-2">
+              <div>
+                <label class="field-label">Inches Before</label>
+                <input type="number" id="fill-in-before" placeholder='e.g. 14' min="1" max="96" step="0.5"
+                  oninput="tankLookup('fill-in-before','fill-gal-before','fill-hint-before')"/>
+                <div class="tank-hint" id="fill-hint-before"></div>
               </div>
-            </div>
- 
-            <div class="sub-section">
-              <div class="sub-section-title green">After Fill</div>
-              <div class="form-group-2">
-                <div>
-                  <label class="field-label">Inches After</label>
-                  <input type="number" id="fill-in-after" placeholder="e.g. 74" min="1" max="96" step="1"
-                    oninput="tankLookup('fill-in-after','fill-gal-after','fill-hint-after')"/>
-                  <div class="tank-hint" id="fill-hint-after"></div>
-                </div>
-                <div>
-                  <label class="field-label">Gallons After</label>
-                  <input type="number" id="fill-gal-after" placeholder="auto-fills" min="0" step="0.001"
-                    oninput="updateReceivedBadge()"/>
-                </div>
+              <div>
+                <label class="field-label">Gallons Before</label>
+                <input type="number" id="fill-gal-before" placeholder="auto-fills from inches" min="0" step="0.001"/>
               </div>
-            </div>
- 
-            <div class="received-badge" id="received-badge"></div>
- 
-            <div><label class="field-label">Note (optional)</label>
-              <input type="text" id="fill-note" placeholder="e.g. MixTek delivery #4421"/></div>
-            <button class="btn btn-blue" onclick="submitFill()">＋ Record Fill</button>
-          </div>
-        </div>
- 
-        <!-- CURRENT READING -->
-        <div class="entry-panel amber-panel">
-          <div class="panel-title amber">Current Tank Reading</div>
-          <div class="form-row">
-            <div><label class="field-label">Date</label>
-              <input type="date" id="read-date"/></div>
- 
-            <div class="sub-section">
-              <div class="sub-section-title amber">Tank Level Right Now</div>
-              <div class="form-group-2">
-                <div>
-                  <label class="field-label">Inches</label>
-                  <input type="number" id="read-inches" placeholder="e.g. 36" min="1" max="96" step="1"
-                    oninput="tankLookup('read-inches','read-gallons','read-hint')"/>
-                  <div class="tank-hint" id="read-hint"></div>
-                </div>
-                <div>
-                  <label class="field-label">Gallons</label>
-                  <input type="number" id="read-gallons" placeholder="auto-fills" min="0" step="0.001"/>
-                </div>
-              </div>
-            </div>
- 
-            <div><label class="field-label">Note (optional)</label>
-              <input type="text" id="read-note" placeholder="e.g. morning check / pre-delivery / spot check"/></div>
-            <button class="btn btn-amber" onclick="submitReading()">◉ Record Reading</button>
- 
-            <div style="margin-top:8px;padding:10px;background:var(--bg3);border-radius:6px;border:1px solid var(--border);">
-              <p style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;line-height:1.6;">
-                A reading sets the current known tank level.<br/>
-                Use this for morning checks, pre-delivery, post-delivery confirmations, and spot checks.<br/>
-                The register shows every reading as a snapshot in time.
-              </p>
             </div>
           </div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;">
+            <div style="font-size:10px;color:var(--green);font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;">📏 After Fill</div>
+            <div class="form-group-2">
+              <div>
+                <label class="field-label">Inches After</label>
+                <input type="number" id="fill-in-after" placeholder='e.g. 88' min="1" max="96" step="0.5"
+                  oninput="tankLookup('fill-in-after','fill-gal-after','fill-hint-after')"/>
+                <div class="tank-hint" id="fill-hint-after"></div>
+              </div>
+              <div>
+                <label class="field-label">Gallons After</label>
+                <input type="number" id="fill-gal-after" placeholder="auto-fills from inches" min="0" step="0.001"/>
+              </div>
+            </div>
+          </div>
+          <div><label class="field-label">Supplier / Delivery Note</label><input type="text" id="fill-note" placeholder="e.g. MixTek delivery #4421"/></div>
+          <button class="btn btn-blue" onclick="submitMixtek('fill')">＋ Record Fill</button>
         </div>
- 
+      </div>
+      <div class="entry-panel amber-panel">
+        <div class="panel-title amber">Record Tank Reading</div>
+        <div class="form-row">
+          <div><label class="field-label">Date</label><input type="date" id="read-date"/></div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;">
+            <div style="font-size:10px;color:var(--amber);font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;">📏 Current Reading</div>
+            <div class="form-group-2">
+              <div>
+                <label class="field-label">Inches</label>
+                <input type="number" id="read-inches" placeholder='e.g. 36' min="1" max="96" step="0.5"
+                  oninput="tankLookup('read-inches','read-gallons','read-hint')"/>
+                <div class="tank-hint" id="read-hint"></div>
+              </div>
+              <div>
+                <label class="field-label">Gallons</label>
+                <input type="number" id="read-gallons" placeholder="auto-fills from inches" min="0" step="0.001"/>
+              </div>
+            </div>
+          </div>
+          <div><label class="field-label">Job / Note (optional)</label><input type="text" id="read-note" placeholder="e.g. Nilssen's Elk Mound lot"/></div>
+          <button class="btn btn-amber" onclick="submitMixtek('reading')">◉ Record Reading</button>
+        </div>
       </div>`;
     setTodayDates(['fill-date','read-date']);
   }
  
-  /* ── TABLE HEADERS ── */
-  if(t === 'monarch'){
-    document.getElementById('table-head').innerHTML =
-      '<th>Date</th><th>Type</th><th>Supplier / Mix</th><th class="right">Purchase (ton)</th><th class="right">Usage (ton)</th><th class="right">Balance (ton)</th><th>Note</th><th></th>';
-    document.getElementById('register-title').textContent = 'Transaction Register — Asphalt (Monarch)';
-  } else if(t === 'martin'){
-    document.getElementById('table-head').innerHTML =
-      '<th>Date</th><th>Type</th><th>Mix Type</th><th class="right">Tons Logged</th><th class="right">Running Total (ton)</th><th>Note</th><th></th>';
-    document.getElementById('register-title').textContent = 'Usage Log — Asphalt (Martin Marietta)';
+  /* Table headers */
+  if(t==='monarch'){
+    document.getElementById('table-head').innerHTML=`<th>Date</th><th>Type</th><th>Supplier / Mix</th><th class="right">Purchase (ton)</th><th class="right">Usage (ton)</th><th class="right">Balance (ton)</th><th>Note</th><th></th>`;
+    document.getElementById('register-title').textContent='Transaction Register — Asphalt (Monarch)';
+  } else if(t==='martin'){
+    document.getElementById('table-head').innerHTML=`<th>Date</th><th>Type</th><th>Mix Type</th><th class="right">Tons Logged</th><th class="right">Running Total (ton)</th><th>Note</th><th></th>`;
+    document.getElementById('register-title').textContent='Usage Log — Asphalt (Martin Marietta)';
   } else {
-    document.getElementById('table-head').innerHTML =
-      '<th>Date</th><th>Type</th><th class="right">Inches Before</th><th class="right">Gal Before</th><th class="right">Inches After</th><th class="right">Gal After / Reading</th><th class="right">Received / Change</th><th class="right">Balance (gal)</th><th>Note</th><th></th>';
-    document.getElementById('register-title').textContent = 'Transaction Register — MixTek Sealer';
+    document.getElementById('table-head').innerHTML=`<th>Date</th><th>Type</th><th class="right">In Before</th><th class="right">Gal Before</th><th class="right">In After</th><th class="right">Gal After / Reading</th><th class="right">Balance (gal)</th><th>Note</th><th></th>`;
+    document.getElementById('register-title').textContent='Transaction Register — MixTek Sealer';
   }
  
   renderTable();
@@ -672,217 +554,166 @@ function buildUI(){
  
 /* ── SUBMIT MONARCH ─────────────────────────────────────── */
 function submitMonarch(type){
-  const tEl = document.getElementById(type==='buy' ? 'buy-tons'     : 'use-tons');
-  const dEl = document.getElementById(type==='buy' ? 'buy-date'     : 'use-date');
-  const sEl = document.getElementById(type==='buy' ? 'buy-supplier' : 'use-supplier');
-  const nEl = document.getElementById(type==='buy' ? 'buy-note'     : 'use-note');
-  const tons = parseFloat(tEl.value);
-  if(!tons || tons <= 0){ tEl.focus(); showToast('Enter a valid tonnage.','red'); return; }
-  push(dbRefs.monarch, {type, tons, date:dEl.value||today(), supplier:sEl.value.trim()||'Monarch', note:nEl.value.trim(), ts:Date.now()})
-    .then(()=>{ tEl.value=''; sEl.value=''; nEl.value='';
-      showToast(type==='buy' ? '+ Purchase recorded.' : '− Usage recorded.', type==='buy' ? 'green' : 'red'); })
+  const tEl=document.getElementById(type==='buy'?'buy-tons':'use-tons');
+  const dEl=document.getElementById(type==='buy'?'buy-date':'use-date');
+  const sEl=document.getElementById(type==='buy'?'buy-supplier':'use-supplier');
+  const nEl=document.getElementById(type==='buy'?'buy-note':'use-note');
+  const tons=parseFloat(tEl.value);
+  if(!tons||tons<=0){tEl.focus();showToast('Enter a valid tonnage.','red');return;}
+  push(dbRefs.monarch,{type,tons,date:dEl.value||today(),supplier:sEl.value.trim()||'Monarch',note:nEl.value.trim(),ts:Date.now()})
+    .then(()=>{tEl.value='';sEl.value='';nEl.value='';showToast(type==='buy'?'+ Purchase recorded.':'− Usage recorded.',type==='buy'?'green':'red');})
     .catch(e=>showToast('Error: '+e.message,'red'));
 }
-window.submitMonarch = submitMonarch;
+window.submitMonarch=submitMonarch;
  
 /* ── SUBMIT MARTIN ──────────────────────────────────────── */
 function submitMartin(){
-  const tEl=document.getElementById('mm-tons'), dEl=document.getElementById('mm-date'),
-        mEl=document.getElementById('mm-mix'),  nEl=document.getElementById('mm-note');
+  const tEl=document.getElementById('mm-tons'),dEl=document.getElementById('mm-date'),
+        mEl=document.getElementById('mm-mix'),nEl=document.getElementById('mm-note');
   const tons=parseFloat(tEl.value);
-  if(!tons||tons<=0){ tEl.focus(); showToast('Enter a valid tonnage.','red'); return; }
-  push(dbRefs.martin, {type:'log', tons, date:dEl.value||today(), supplier:mEl.value.trim()||'Martin Marietta', note:nEl.value.trim(), ts:Date.now()})
-    .then(()=>{ tEl.value=''; mEl.value=''; nEl.value=''; showToast('+ Entry logged.','green'); })
+  if(!tons||tons<=0){tEl.focus();showToast('Enter a valid tonnage.','red');return;}
+  push(dbRefs.martin,{type:'log',tons,date:dEl.value||today(),supplier:mEl.value.trim()||'Martin Marietta',note:nEl.value.trim(),ts:Date.now()})
+    .then(()=>{tEl.value='';mEl.value='';nEl.value='';showToast('+ Entry logged.','green');})
     .catch(e=>showToast('Error: '+e.message,'red'));
 }
-window.submitMartin = submitMartin;
+window.submitMartin=submitMartin;
  
-/* ── SUBMIT FILL ────────────────────────────────────────── */
-function submitFill(){
-  const galB = parseFloat(document.getElementById('fill-gal-before').value) || 0;
-  const galA = parseFloat(document.getElementById('fill-gal-after').value);
-  const inB  = parseFloat(document.getElementById('fill-in-before').value) || 0;
-  const inA  = parseFloat(document.getElementById('fill-in-after').value)  || 0;
-  const note = document.getElementById('fill-note').value.trim();
-  const date = document.getElementById('fill-date').value || today();
-  if(!galA || galA <= 0){ document.getElementById('fill-gal-after').focus(); showToast('Enter gallons after fill.','red'); return; }
-  const delivered = parseFloat((galA - galB).toFixed(3));
-  push(dbRefs.mixtek, {type:'fill', gallons_before:galB, gallons_after:galA, inches_before:inB, inches_after:inA, delivered, date, note, ts:Date.now()})
-    .then(()=>{
-      ['fill-gal-before','fill-gal-after','fill-in-before','fill-in-after'].forEach(id=>{
-        const el=document.getElementById(id); if(el){ el.value=''; el.removeAttribute('readonly'); }
-      });
-      ['fill-hint-before','fill-hint-after'].forEach(id=>{
-        const el=document.getElementById(id); if(el){ el.textContent=''; el.className='tank-hint'; }
-      });
-      document.getElementById('fill-note').value='';
-      const badge=document.getElementById('received-badge'); if(badge) badge.classList.remove('show');
-      showToast('+ Fill recorded. '+delivered.toLocaleString('en-US',{maximumFractionDigits:3})+' gal received.','blue');
-    })
-    .catch(e=>showToast('Error: '+e.message,'red'));
+/* ── SUBMIT MIXTEK ──────────────────────────────────────── */
+function submitMixtek(type){
+  if(type==='fill'){
+    const galB=parseFloat(document.getElementById('fill-gal-before').value)||0;
+    const galA=parseFloat(document.getElementById('fill-gal-after').value);
+    const inB =parseFloat(document.getElementById('fill-in-before').value)||0;
+    const inA =parseFloat(document.getElementById('fill-in-after').value)||0;
+    const note=document.getElementById('fill-note').value.trim();
+    const date=document.getElementById('fill-date').value||today();
+    if(!galA||galA<=0){document.getElementById('fill-gal-after').focus();showToast('Enter or look up gallons after fill.','red');return;}
+    push(dbRefs.mixtek,{type:'fill',gallons_before:galB,gallons_after:galA,inches_before:inB,inches_after:inA,date,note,ts:Date.now()})
+      .then(()=>{
+        ['fill-gal-before','fill-gal-after','fill-in-before','fill-in-after'].forEach(id=>{
+          const el=document.getElementById(id);el.value='';el.removeAttribute('readonly');
+        });
+        ['fill-hint-before','fill-hint-after'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='';el.className='tank-hint';}});
+        document.getElementById('fill-note').value='';
+        showToast('+ Tank fill recorded.','blue');
+      })
+      .catch(e=>showToast('Error: '+e.message,'red'));
+  } else {
+    const gal =parseFloat(document.getElementById('read-gallons').value);
+    const inch=parseFloat(document.getElementById('read-inches').value)||0;
+    const note=document.getElementById('read-note').value.trim();
+    const date=document.getElementById('read-date').value||today();
+    if(isNaN(gal)||gal<0){document.getElementById('read-gallons').focus();showToast('Enter or look up gallon reading.','red');return;}
+    push(dbRefs.mixtek,{type:'reading',gallons_after:gal,inches_after:inch,date,note,ts:Date.now()})
+      .then(()=>{
+        ['read-gallons','read-inches'].forEach(id=>{const el=document.getElementById(id);el.value='';el.removeAttribute('readonly');});
+        const hint=document.getElementById('read-hint');if(hint){hint.textContent='';hint.className='tank-hint';}
+        document.getElementById('read-note').value='';
+        showToast('◉ Reading recorded.','');
+      })
+      .catch(e=>showToast('Error: '+e.message,'red'));
+  }
 }
-window.submitFill = submitFill;
- 
-/* ── SUBMIT READING ─────────────────────────────────────── */
-function submitReading(){
-  const gal  = parseFloat(document.getElementById('read-gallons').value);
-  const inch = parseFloat(document.getElementById('read-inches').value) || 0;
-  const note = document.getElementById('read-note').value.trim();
-  const date = document.getElementById('read-date').value || today();
-  if(isNaN(gal) || gal < 0){ document.getElementById('read-gallons').focus(); showToast('Enter a gallon reading.','red'); return; }
-  push(dbRefs.mixtek, {type:'reading', gallons_after:gal, inches_after:inch, date, note, ts:Date.now()})
-    .then(()=>{
-      ['read-gallons','read-inches'].forEach(id=>{
-        const el=document.getElementById(id); if(el){ el.value=''; el.removeAttribute('readonly'); }
-      });
-      const hint=document.getElementById('read-hint'); if(hint){ hint.textContent=''; hint.className='tank-hint'; }
-      document.getElementById('read-note').value='';
-      showToast('◉ Reading recorded.','');
-    })
-    .catch(e=>showToast('Error: '+e.message,'red'));
-}
-window.submitReading = submitReading;
+window.submitMixtek=submitMixtek;
  
 /* ── RENDER TABLE ───────────────────────────────────────── */
 function renderTable(){
-  const filter = (document.getElementById('filter-input')?.value||'').toLowerCase();
-  const tbody  = document.getElementById('register-body');
-  const shown  = filter
-    ? allEntries.filter(e=>(e.supplier||'').toLowerCase().includes(filter)||(e.note||'').toLowerCase().includes(filter))
-    : allEntries;
- 
-  if(!shown.length){
-    tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state">'+(filter?'No entries match that filter.':'No entries yet. Add one above.')+'</div></td></tr>';
-    return;
-  }
- 
-  tbody.innerHTML = shown.map(e => {
-    if(currentTracker === 'monarch'){
-      const buy = e.type === 'buy';
-      return '<tr class="'+(buy?'row-buy':'row-use')+'">'
-        +'<td>'+esc(e.date||'—')+'</td>'
-        +'<td><span class="tag '+(buy?'tag-buy':'tag-use')+'">'+(buy?'Purchase':'Usage')+'</span></td>'
-        +'<td>'+esc(e.supplier||'—')+'</td>'
-        +'<td class="right '+(buy?'amount-buy':'')+'">'+( buy?'+'+fmt(e.tons):'')+'</td>'
-        +'<td class="right '+(!buy?'amount-use':'')+'">'+(!buy?'−'+fmt(e.tons):'')+'</td>'
-        +'<td class="right balance-cell">'+fmt(e.balance)+'</td>'
-        +'<td><span class="note-text">'+esc(e.note||'')+'</span></td>'
-        +'<td><button class="del-btn" id="del-'+e.id+'" onclick="twoStepDelete(event,\''+e.id+'\')">✕ Delete</button></td>'
-        +'</tr>';
- 
-    } else if(currentTracker === 'martin'){
-      return '<tr class="row-log">'
-        +'<td>'+esc(e.date||'—')+'</td>'
-        +'<td><span class="tag tag-log">Log</span></td>'
-        +'<td>'+esc(e.supplier||'Martin Marietta')+'</td>'
-        +'<td class="right amount-buy">+'+fmt(e.tons)+'</td>'
-        +'<td class="right balance-cell">'+fmt(e.balance)+'</td>'
-        +'<td><span class="note-text">'+esc(e.note||'')+'</span></td>'
-        +'<td><button class="del-btn" id="del-'+e.id+'" onclick="twoStepDelete(event,\''+e.id+'\')">✕ Delete</button></td>'
-        +'</tr>';
- 
+  const filter=(document.getElementById('filter-input')?.value||'').toLowerCase();
+  const tbody=document.getElementById('register-body');
+  const shown=filter?allEntries.filter(e=>(e.supplier||'').toLowerCase().includes(filter)||(e.note||'').toLowerCase().includes(filter)):allEntries;
+  if(!shown.length){tbody.innerHTML=`<tr><td colspan="9"><div class="empty-state">${filter?'No entries match that filter.':'No entries yet. Add one above.'}</div></td></tr>`;return;}
+  tbody.innerHTML=shown.map(e=>{
+    if(currentTracker==='monarch'){
+      const buy=e.type==='buy';
+      return `<tr class="${buy?'row-buy':'row-use'}">
+        <td>${e.date||'—'}</td><td><span class="tag ${buy?'tag-buy':'tag-use'}">${buy?'Purchase':'Usage'}</span></td>
+        <td>${esc(e.supplier||'—')}</td>
+        <td class="right ${buy?'amount-buy':''}">${buy?'+'+fmt(e.tons):''}</td>
+        <td class="right ${!buy?'amount-use':''}">${!buy?'−'+fmt(e.tons):''}</td>
+        <td class="right balance-cell">${fmt(e.balance)}</td>
+        <td><span class="note-text">${esc(e.note||'')}</span></td>
+        <td><button class="del-btn" id="del-${e.id}" onclick="twoStepDelete(event,'${e.id}')">✕ Delete</button></td></tr>`;
+    } else if(currentTracker==='martin'){
+      return `<tr class="row-log">
+        <td>${e.date||'—'}</td><td><span class="tag tag-log">Log</span></td>
+        <td>${esc(e.supplier||'Martin Marietta')}</td>
+        <td class="right amount-buy">+${fmt(e.tons)}</td>
+        <td class="right balance-cell">${fmt(e.balance)}</td>
+        <td><span class="note-text">${esc(e.note||'')}</span></td>
+        <td><button class="del-btn" id="del-${e.id}" onclick="twoStepDelete(event,'${e.id}')">✕ Delete</button></td></tr>`;
     } else {
-      const fill    = e.type === 'fill';
-      const reading = e.type === 'reading';
-      const rowCls  = fill ? 'row-fill' : 'row-reading';
-      const tagCls  = fill ? 'tag-fill'  : 'tag-reading';
-      const tagTxt  = fill ? 'Fill'      : 'Reading';
-      const inBefore  = fill && e.inches_before ? e.inches_before+'"' : '—';
-      const galBefore = fill ? fmt(e.gallons_before||0) : '—';
-      const inAfter   = e.inches_after ? e.inches_after+'"' : '—';
-      const galAfter  = fmt(e.gallons_after||0);
-      const receivedCol = fill
-        ? '<span class="amount-fill">+'+fmt(e.delivered||0)+'</span><span class="note-text">gal received</span>'
-        : '<span style="color:var(--text3);font-size:10px;">snapshot</span>';
-      return '<tr class="'+rowCls+'">'
-        +'<td>'+esc(e.date||'—')+'</td>'
-        +'<td><span class="tag '+tagCls+'">'+tagTxt+'</span></td>'
-        +'<td class="right">'+inBefore+'</td>'
-        +'<td class="right">'+galBefore+'</td>'
-        +'<td class="right">'+inAfter+'</td>'
-        +'<td class="right">'+galAfter+'</td>'
-        +'<td class="right">'+receivedCol+'</td>'
-        +'<td class="right balance-cell">'+fmt(e.balance)+'</td>'
-        +'<td><span class="note-text">'+esc(e.note||'')+'</span></td>'
-        +'<td><button class="del-btn" id="del-'+e.id+'" onclick="twoStepDelete(event,\''+e.id+'\')">✕ Delete</button></td>'
-        +'</tr>';
+      const fill=e.type==='fill';
+      const inB  = e.inches_before ? e.inches_before+'"' : '—';
+      const inA  = e.inches_after  ? e.inches_after+'"'  : '—';
+      return `<tr class="${fill?'row-fill':'row-reading'}">
+        <td>${e.date||'—'}</td><td><span class="tag ${fill?'tag-fill':'tag-reading'}">${fill?'Fill':'Reading'}</span></td>
+        <td class="right">${fill?inB:'—'}</td>
+        <td class="right">${fill?fmt(e.gallons_before||0):'—'}</td>
+        <td class="right">${inA}</td>
+        <td class="right ${fill?'amount-fill':''}">${fmt(e.gallons_after)}</td>
+        <td class="right balance-cell">${fmt(e.balance)}</td>
+        <td><span class="note-text">${esc(e.note||'')}</span></td>
+        <td><button class="del-btn" id="del-${e.id}" onclick="twoStepDelete(event,'${e.id}')">✕ Delete</button></td></tr>`;
     }
   }).join('');
 }
  
 /* ── UPDATE STATS ───────────────────────────────────────── */
 function updateStats(){
-  const t = currentTracker;
-  if(t === 'monarch'){
-    const totalIn  = allEntries.filter(e=>e.type==='buy').reduce((s,e)=>s+(e.tons||0),0);
-    const totalOut = allEntries.filter(e=>e.type==='use').reduce((s,e)=>s+(e.tons||0),0);
-    const bal      = allEntries.length ? allEntries[0].balance : 0;
+  const t=currentTracker;
+  if(t==='monarch'){
+    const totalIn=allEntries.filter(e=>e.type==='buy').reduce((s,e)=>s+(e.tons||0),0);
+    const totalOut=allEntries.filter(e=>e.type==='use').reduce((s,e)=>s+(e.tons||0),0);
+    const bal=allEntries.length?allEntries[0].balance:0;
     setStat('stat-balance',fmt(bal),'ton');
     setStat('stat-in',fmt(totalIn),'ton');
     setStat('stat-out',fmt(totalOut),'ton');
-    const card = document.getElementById('stat-balance-card');
-    if(card){
-      card.classList.remove('flash-amber','flash-red');
-      if(bal <= 800) card.classList.add('flash-red');
-      else if(bal <= 1500) card.classList.add('flash-amber');
-    }
-  } else if(t === 'martin'){
-    const total = allEntries.reduce((s,e)=>s+(e.tons||0),0);
+    const card=document.getElementById('stat-balance-card');
+    if(card){card.classList.remove('flash-amber','flash-red');if(bal<=800)card.classList.add('flash-red');else if(bal<=1500)card.classList.add('flash-amber');}
+  } else if(t==='martin'){
+    const total=allEntries.reduce((s,e)=>s+(e.tons||0),0);
     setStat('stat-balance',fmt(total),'ton');
     setStat('stat-in',allEntries.length,'entries');
   } else {
-    const bal      = allEntries.length ? allEntries[0].balance : 0;
-    const received = allEntries.filter(e=>e.type==='fill').reduce((s,e)=>s+(e.delivered||0),0);
-    const pct      = Math.min(100, Math.round((bal/8000)*100));
+    const bal=allEntries.length?allEntries[0].balance:0;
+    const pct=Math.round((bal/8000)*100);
     setStat('stat-balance',fmt(bal),'gal');
-    setStat('stat-received',fmt(received),'gal');
     setStat('stat-pct',pct,'%');
-    const card = document.getElementById('stat-balance-card');
-    if(card){
-      card.classList.remove('flash-sealer-amber','flash-sealer-red');
-      if(bal <= 2000) card.classList.add('flash-sealer-red');
-      else if(bal <= 3500) card.classList.add('flash-sealer-amber');
-    }
+    const card=document.getElementById('stat-balance-card');
+    if(card){card.classList.remove('flash-sealer-amber','flash-sealer-red');if(bal<=2000)card.classList.add('flash-sealer-red');else if(bal<=3500)card.classList.add('flash-sealer-amber');}
   }
 }
-function setStat(id,val,unit){
-  const el=document.getElementById(id);
-  if(el) el.innerHTML=val+'<span class="unit">'+unit+'</span>';
-}
+function setStat(id,val,unit){const el=document.getElementById(id);if(el)el.innerHTML=val+`<span class="unit">${unit}</span>`;}
  
 /* ── TWO-STEP DELETE ────────────────────────────────────── */
 function twoStepDelete(evt,id){
   evt.stopPropagation();
   const btn=document.getElementById('del-'+id);
-  if(!btn) return;
+  if(!btn)return;
   if(btn.classList.contains('confirm-step')){
-    clearTimeout(deleteTimers[id]); delete deleteTimers[id];
+    clearTimeout(deleteTimers[id]);delete deleteTimers[id];
     remove(ref(db,'ledger_'+currentTracker+'/'+id))
       .then(()=>showToast('Entry deleted.','red'))
       .catch(e=>showToast('Error: '+e.message,'red'));
   } else {
-    btn.classList.add('confirm-step'); btn.textContent='⚠ Confirm?';
-    deleteTimers[id]=setTimeout(()=>{
-      const b=document.getElementById('del-'+id);
-      if(b){ b.classList.remove('confirm-step'); b.textContent='✕ Delete'; }
-      delete deleteTimers[id];
-    },4000);
+    btn.classList.add('confirm-step');btn.textContent='⚠ Confirm?';
+    deleteTimers[id]=setTimeout(()=>{if(btn){btn.classList.remove('confirm-step');btn.textContent='✕ Delete';}delete deleteTimers[id];},4000);
   }
 }
 window.twoStepDelete=twoStepDelete;
  
-function closeModal(){ pendingDeleteId=null; document.getElementById('modal-bg').classList.remove('open'); }
+function closeModal(){pendingDeleteId=null;document.getElementById('modal-bg').classList.remove('open');}
 function confirmDelete(){
-  if(!pendingDeleteId) return;
+  if(!pendingDeleteId)return;
   remove(ref(db,'ledger_'+currentTracker+'/'+pendingDeleteId))
     .then(()=>showToast('Entry deleted.','red')).catch(e=>showToast('Error: '+e.message,'red'));
   closeModal();
 }
-window.closeModal=closeModal; window.confirmDelete=confirmDelete;
+window.closeModal=closeModal;window.confirmDelete=confirmDelete;
  
 /* ── CSV EXPORT ─────────────────────────────────────────── */
 function exportCSV(){
-  const t=currentTracker; let rows;
+  const t=currentTracker;let rows;
   if(t==='monarch'){
     rows=[['Date','Type','Supplier','Note','Tons','Balance (ton)']];
     [...allEntries].reverse().forEach(e=>rows.push([e.date,e.type==='buy'?'Purchase':'Usage',e.supplier||'',e.note||'',e.tons,e.balance]));
@@ -890,35 +721,26 @@ function exportCSV(){
     rows=[['Date','Mix Type','Note','Tons Logged','Running Total (ton)']];
     [...allEntries].reverse().forEach(e=>rows.push([e.date,e.supplier||'',e.note||'',e.tons,e.balance]));
   } else {
-    rows=[['Date','Type','Inches Before','Gal Before','Inches After','Gal After/Reading','Received','Balance (gal)','Note']];
-    [...allEntries].reverse().forEach(e=>rows.push([
-      e.date, e.type,
-      e.inches_before||'', e.gallons_before||'',
-      e.inches_after||'',  e.gallons_after||'',
-      e.type==='fill'?(e.delivered||0):'',
-      e.balance, e.note||''
-    ]));
+    rows=[['Date','Type','Inches Before','Gal Before','Inches After','Gal After/Reading','Balance (gal)','Note']];
+    [...allEntries].reverse().forEach(e=>rows.push([e.date,e.type,e.inches_before||'',e.gallons_before||'',e.inches_after||'',e.gallons_after,e.balance,e.note||'']));
   }
-  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='amp-'+t+'-ledger.csv'; a.click();
-  URL.revokeObjectURL(url);
+  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`amp-${t}-ledger.csv`;a.click();URL.revokeObjectURL(url);
 }
 window.exportCSV=exportCSV;
  
 /* ── HELPERS ────────────────────────────────────────────── */
-function fmt(n){ if(n===undefined||n===null) return '—'; return Number(n).toLocaleString('en-US',{maximumFractionDigits:3}); }
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function today(){ return new Date().toISOString().slice(0,10); }
-function setTodayDates(ids){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.value=today(); }); }
+function fmt(n){if(n===undefined||n===null)return'—';return Number(n).toLocaleString('en-US',{maximumFractionDigits:3});}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function today(){return new Date().toISOString().slice(0,10);}
+function setTodayDates(ids){ids.forEach(id=>{const el=document.getElementById(id);if(el)el.value=today();});}
 function showToast(msg,cls){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.className='show'+(cls?' '+cls:'');
-  clearTimeout(t._t); t._t=setTimeout(()=>{ t.className=''; },3200);
+  t.textContent=msg;t.className='show'+(cls?' '+cls:'');
+  clearTimeout(t._t);t._t=setTimeout(()=>{t.className='';},3200);
 }
  
-/* ── INIT ───────────────────────────────────────────────── */
 buildUI();
 initAllListeners();
 </script>
