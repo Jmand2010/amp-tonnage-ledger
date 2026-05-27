@@ -72,7 +72,7 @@ html,body{width:260px;background:transparent;font-family:'IBM Plex Mono',monospa
 .open-btn{font-size:9px;color:var(--text3);background:none;border:1px solid var(--border);border-radius:4px;padding:3px 8px;cursor:pointer;font-family:'IBM Plex Mono',monospace;transition:all .15s;}
 .open-btn:hover{border-color:var(--text2);color:var(--text);}
 #loading{padding:20px;text-align:center;font-size:11px;color:var(--text3);}
- 
+
 /* Install prompt banner */
 #install-bar{display:none;background:var(--green-dim);border-bottom:1px solid var(--green-border, #2f5220);padding:7px 12px;align-items:center;justify-content:space-between;gap:8px;}
 #install-bar.show{display:flex;}
@@ -81,7 +81,7 @@ html,body{width:260px;background:transparent;font-family:'IBM Plex Mono',monospa
 </style>
 </head>
 <body>
- 
+
 <div class="widget">
   <div class="titlebar">
     <div class="titlebar-left">
@@ -93,17 +93,17 @@ html,body{width:260px;background:transparent;font-family:'IBM Plex Mono',monospa
       <button class="tb-btn" onclick="location.reload()" title="Refresh">↺</button>
     </div>
   </div>
- 
+
   <!-- Install to desktop prompt strip -->
   <div id="install-bar">
     <span>📌 Pin to desktop as an app</span>
     <button id="install-btn">Install</button>
   </div>
- 
+
   <div id="alert-banner" class="alert-banner"></div>
- 
+
   <div id="loading">Connecting...</div>
- 
+
   <div class="body" id="widget-body" style="display:none;">
     <div class="row row-monarch" id="row-monarch">
       <div class="row-label">Monarch<small>Asphalt Balance</small></div>
@@ -128,17 +128,17 @@ html,body{width:260px;background:transparent;font-family:'IBM Plex Mono',monospa
       </div>
     </div>
   </div>
- 
+
   <div class="footer">
     <span class="update-time" id="update-time">connecting...</span>
     <button class="open-btn" id="open-btn">Open Full Ledger ↗</button>
   </div>
 </div>
- 
+
 <script type="module">
 import { initializeApp }             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
- 
+
 /* ════════════════════════════════════════════════════
    PASTE YOUR FIREBASE CONFIG HERE
    ════════════════════════════════════════════════════ */
@@ -151,16 +151,17 @@ const firebaseConfig = {
   messagingSenderId: "597914172038",
   appId: "1:597914172038:web:130677ccb16088d870ef07"
 };
+
 const MAIN_APP_URL = "https://jmand2010.github.io/amp-tonnage-ledger/";
 /* ════════════════════════════════════════════════════ */
- 
+
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
- 
+
 document.getElementById('loading').style.display = 'none';
 document.getElementById('widget-body').style.display = 'block';
 document.getElementById('open-btn').onclick = () => window.open(MAIN_APP_URL, '_blank');
- 
+
 /* ── PWA INSTALL PROMPT ─────────────────────────────── */
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
@@ -178,7 +179,7 @@ document.getElementById('install-btn').addEventListener('click', async () => {
 window.addEventListener('appinstalled', () => {
   document.getElementById('install-bar').classList.remove('show');
 });
- 
+
 /* ── THEME ──────────────────────────────────────────── */
 function toggleTheme(){
   const next = document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
@@ -192,17 +193,17 @@ window.toggleTheme = toggleTheme;
   document.documentElement.setAttribute('data-theme', s);
   document.getElementById('theme-btn').textContent = s==='dark'?'☀️':'🌙';
 })();
- 
+
 /* ── SYNC DOT ───────────────────────────────────────── */
 onValue(ref(db, '.info/connected'), snap=>{
   document.getElementById('sync-dot').className = 'sync-dot'+(snap.val()?'':' off');
   if(snap.val()) stamp();
 });
- 
+
 /* ── HELPERS ────────────────────────────────────────── */
 function fmt(n){ if(n===undefined||n===null)return'—'; return Number(n).toLocaleString('en-US',{maximumFractionDigits:1}); }
 function stamp(){ document.getElementById('update-time').textContent = 'updated '+new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
- 
+
 /* ── BANNER ─────────────────────────────────────────── */
 let bannerState = { monarch:0, mixtek:0 };
 function updateBanner(){
@@ -224,7 +225,7 @@ function updateBanner(){
     banner.textContent='';
   }
 }
- 
+
 /* ── MONARCH ────────────────────────────────────────── */
 onValue(ref(db,'ledger_monarch'), snap=>{
   const sorted=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
@@ -238,7 +239,7 @@ onValue(ref(db,'ledger_monarch'), snap=>{
   else{bannerState.monarch=0;}
   updateBanner(); stamp();
 });
- 
+
 /* ── MARTIN — no warnings ───────────────────────────── */
 onValue(ref(db,'ledger_martin'), snap=>{
   const sorted=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
@@ -247,11 +248,12 @@ onValue(ref(db,'ledger_martin'), snap=>{
   document.getElementById('sub-martin').textContent=sorted.length+' entr'+(sorted.length===1?'y':'ies')+' logged';
   stamp();
 });
- 
+
 /* ── MIXTEK ─────────────────────────────────────────── */
 onValue(ref(db,'ledger_mixtek'), snap=>{
   const sorted=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
-  const bal=sorted.length?(sorted[sorted.length-1].gallons_after??0):0;
+  // Balance = gallons_after of most recent entry (fill or reading)
+  const bal=sorted.length?(sorted[sorted.length-1].gallons_after||0):0;
   const pct=Math.min(100,Math.round((bal/8000)*100));
   document.getElementById('val-mixtek').innerHTML=fmt(bal)+'<span class="row-unit">gal</span>';
   document.getElementById('sub-mixtek').textContent=pct+'% full';
@@ -265,7 +267,7 @@ onValue(ref(db,'ledger_mixtek'), snap=>{
   else{bannerState.mixtek=0;}
   updateBanner(); stamp();
 });
- 
+
 /* ── SERVICE WORKER (required for PWA install) ──────── */
 if('serviceWorker' in navigator){
   const swCode = `
@@ -280,4 +282,3 @@ if('serviceWorker' in navigator){
 </script>
 </body>
 </html>
- 
