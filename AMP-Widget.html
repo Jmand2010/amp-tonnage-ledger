@@ -4,16 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>AMP Balance Widget</title>
-<!-- PWA manifest inline so browser offers "Install as app" -->
-<link rel="manifest" href="data:application/manifest+json,{
-  %22name%22:%22AMP Balance Widget%22,
-  %22short_name%22:%22AMP Widget%22,
-  %22display%22:%22standalone%22,
-  %22start_url%22:%22/amp-tonnage-ledger/AMP-Widget.html%22,
-  %22background_color%22:%22%2313161c%22,
-  %22theme_color%22:%226fcf4a%22,
-  %22icons%22:[{%22src%22:%22https://jmand2010.github.io/amp-tonnage-ledger/icon.png%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22}]
-}"/>
+<!-- PWA manifest — no icon so Chrome uses clean default -->
+<link rel="manifest" href="data:application/manifest+json,{%22name%22:%22AMP Balance Widget%22,%22short_name%22:%22AMP Widget%22,%22display%22:%22standalone%22,%22start_url%22:%22/amp-tonnage-ledger/AMP-Widget.html%22,%22background_color%22:%22%2313161c%22,%22theme_color%22:%2213161c%22}"/>
 <meta name="theme-color" content="#13161c"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -158,7 +150,8 @@ const firebaseConfig = {
   storageBucket: "amp-tonnage-ledger.firebasestorage.app",
   messagingSenderId: "597914172038",
   appId: "1:597914172038:web:130677ccb16088d870ef07"
-}; const MAIN_APP_URL = "https://jmand2010.github.io/amp-tonnage-ledger/";
+};
+const MAIN_APP_URL = "https://jmand2010.github.io/amp-tonnage-ledger/";
 /* ════════════════════════════════════════════════════ */
  
 const app = initializeApp(firebaseConfig);
