@@ -15,6 +15,7 @@
   --red:#f0634a;--red-bg:#2d1512;--red-border:#522520;
   --blue:#4ab4f0;--blue-bg:#0e2030;--blue-border:#1a4060;
   --amber:#f0b84a;--amber-bg:#2a1f08;--amber-border:#5a3e10;
+  --purple:#b47ef0;--purple-bg:#1a1030;--purple-border:#4a2a80;
   --shadow:rgba(0,0,0,.5);
 }
 [data-theme="light"]{
@@ -25,6 +26,7 @@
   --red:#c03820;--red-bg:#fdeae5;--red-border:#f09070;
   --blue:#1a6aaa;--blue-bg:#e5f0fa;--blue-border:#70b0e0;
   --amber:#a06800;--amber-bg:#fdf3d8;--amber-border:#e0b050;
+  --purple:#6a3ab0;--purple-bg:#f0eafa;--purple-border:#b090e0;
   --shadow:rgba(0,0,0,.12);
 }
 body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;transition:background .2s,color .2s;}
@@ -48,44 +50,50 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5
 .btn-blue:hover{filter:brightness(1.12);}
 .btn-amber{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber);}
 .btn-amber:hover{filter:brightness(1.12);}
+.btn-purple{background:var(--purple-bg);border-color:var(--purple-border);color:var(--purple);}
+.btn-purple:hover{filter:brightness(1.12);}
 .tracker-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:.6rem 1.5rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .tracker-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);white-space:nowrap;}
 select{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 12px;border-radius:6px;cursor:pointer;outline:none;}
 select:focus{border-color:var(--text2);}
-main{max-width:1100px;margin:0 auto;padding:1.5rem;}
-/* ── STATS — 4 cards for MixTek ── */
-.stats{display:grid;gap:10px;margin-bottom:20px;}
-.stats.cols3{grid-template-columns:repeat(3,1fr);}
-.stats.cols4{grid-template-columns:repeat(4,1fr);}
-.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;transition:background .3s;}
-.stat-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
-.stat-value{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;color:var(--text);line-height:1;}
-.stat-value .unit{font-size:12px;color:var(--text3);margin-left:3px;}
+main{max-width:1200px;margin:0 auto;padding:1.5rem;}
+/* ── STATS ── */
+.stats-primary{display:grid;gap:10px;margin-bottom:10px;}
+.stats-primary.cols3{grid-template-columns:repeat(3,1fr);}
+.stats-primary.cols4{grid-template-columns:repeat(4,1fr);}
+.stats-primary.cols5{grid-template-columns:repeat(5,1fr);}
+.stats-mix{display:grid;gap:10px;margin-bottom:20px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;transition:background .3s;}
+.stat-card.compact{padding:.8rem 1rem;}
+.stat-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stat-value{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;color:var(--text);line-height:1;}
+.stat-value.small{font-size:18px;}
+.stat-value .unit{font-size:11px;color:var(--text3);margin-left:3px;}
 .stat-card.green .stat-value{color:var(--green);}
 .stat-card.red   .stat-value{color:var(--red);}
 .stat-card.blue  .stat-value{color:var(--blue);}
 .stat-card.amber .stat-value{color:var(--amber);}
 .stat-card.gray  .stat-value{color:var(--text2);}
-/* ── ALERT FLASHING ── */
+.stat-card.purple .stat-value{color:var(--purple);}
+.mix-label{font-size:9px;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* ── ALERT FLASH ── */
 @keyframes flashAmber{0%,100%{background:var(--bg2)}50%{background:rgba(240,184,74,.15)}}
 @keyframes flashRed{0%,100%{background:var(--bg2)}50%{background:rgba(240,99,74,.20)}}
-@keyframes flashSealerAmber{0%,100%{background:var(--bg2)}50%{background:rgba(240,184,74,.18)}}
-@keyframes flashSealerRed{0%,100%{background:var(--bg2)}50%{background:rgba(240,99,74,.22)}}
-.flash-amber{animation:flashAmber 2.2s ease-in-out infinite;}
-.flash-amber .stat-value{color:var(--amber)!important;}
-.flash-red{animation:flashRed 2.2s ease-in-out infinite;}
-.flash-red .stat-value{color:var(--red)!important;}
-.flash-sealer-amber{animation:flashSealerAmber 2.2s ease-in-out infinite;}
-.flash-sealer-amber .stat-value{color:var(--amber)!important;}
-.flash-sealer-red{animation:flashSealerRed 2.2s ease-in-out infinite;}
-.flash-sealer-red .stat-value{color:var(--red)!important;}
+@keyframes flashSA{0%,100%{background:var(--bg2)}50%{background:rgba(240,184,74,.18)}}
+@keyframes flashSR{0%,100%{background:var(--bg2)}50%{background:rgba(240,99,74,.22)}}
+.flash-amber{animation:flashAmber 2.2s ease-in-out infinite;}.flash-amber .stat-value{color:var(--amber)!important;}
+.flash-red{animation:flashRed 2.2s ease-in-out infinite;}.flash-red .stat-value{color:var(--red)!important;}
+.flash-sealer-amber{animation:flashSA 2.2s ease-in-out infinite;}.flash-sealer-amber .stat-value{color:var(--amber)!important;}
+.flash-sealer-red{animation:flashSR 2.2s ease-in-out infinite;}.flash-sealer-red .stat-value{color:var(--red)!important;}
 /* ── ENTRY PANELS ── */
 .entry-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.entry-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
 .entry-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;}
 .entry-panel.green-panel{border-color:var(--green-border);}
 .entry-panel.red-panel{border-color:var(--red-border);}
 .entry-panel.blue-panel{border-color:var(--blue-border);}
 .entry-panel.amber-panel{border-color:var(--amber-border);}
+.entry-panel.purple-panel{border-color:var(--purple-border);background:rgba(26,16,48,.4);}
 .entry-panel.info-panel{border-color:var(--border2);background:var(--bg3);}
 .panel-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
 .panel-title::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;}
@@ -93,6 +101,7 @@ main{max-width:1100px;margin:0 auto;padding:1.5rem;}
 .panel-title.red{color:var(--red)}.panel-title.red::before{background:var(--red);}
 .panel-title.blue{color:var(--blue)}.panel-title.blue::before{background:var(--blue);}
 .panel-title.amber{color:var(--amber)}.panel-title.amber::before{background:var(--amber);}
+.panel-title.purple{color:var(--purple)}.panel-title.purple::before{background:var(--purple);}
 .panel-title.gray{color:var(--text3)}.panel-title.gray::before{background:var(--text3);}
 .form-row{display:flex;flex-direction:column;gap:7px;}
 .form-group{display:flex;gap:7px;}
@@ -133,16 +142,19 @@ tr.row-use{background:var(--bg2);}
 tr.row-log{background:var(--bg2);}
 tr.row-fill{background:var(--blue-bg);}
 tr.row-reading{background:var(--amber-bg);}
-tr.row-buy:hover,tr.row-use:hover,tr.row-log:hover,tr.row-fill:hover,tr.row-reading:hover{filter:brightness(1.08);}
+tr.row-sale{background:rgba(45,21,18,.6);}
+tr.row-buy:hover,tr.row-use:hover,tr.row-log:hover,tr.row-fill:hover,tr.row-reading:hover,tr.row-sale:hover{filter:brightness(1.08);}
 .tag{display:inline-block;font-size:9px;letter-spacing:.06em;padding:2px 6px;border-radius:3px;text-transform:uppercase;}
 .tag-buy{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
 .tag-use{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);}
 .tag-log{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);}
 .tag-fill{background:var(--blue-bg);border:1px solid var(--blue-border);color:var(--blue);}
 .tag-reading{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber);}
+.tag-sale{background:rgba(45,21,18,.9);border:1px solid var(--red-border);color:var(--red);}
 .amount-buy{color:var(--green);font-weight:600;}
 .amount-use{color:var(--red);font-weight:600;}
 .amount-fill{color:var(--blue);font-weight:600;}
+.amount-sale{color:var(--red);font-weight:600;}
 .balance-cell{color:var(--text);font-weight:600;}
 .note-text{color:var(--text3);font-size:10px;display:block;margin-top:1px;font-family:'IBM Plex Sans',sans-serif;}
 .del-btn{background:none;border:1px solid transparent;cursor:pointer;color:var(--text3);font-size:11px;padding:3px 7px;border-radius:4px;transition:all .15s;opacity:0;font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
@@ -151,7 +163,6 @@ tr:hover .del-btn{opacity:1;}
 .del-btn.confirm-step{color:var(--red);background:var(--red-bg);border-color:var(--red);opacity:1;animation:pulseBorder .7s ease-in-out infinite;}
 @keyframes pulseBorder{0%,100%{box-shadow:0 0 0 0 rgba(240,99,74,0)}50%{box-shadow:0 0 0 3px rgba(240,99,74,.4)}}
 .empty-state{padding:2.5rem;text-align:center;color:var(--text3);font-family:'IBM Plex Mono',monospace;font-size:12px;}
-/* ── MODAL ── */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;align-items:center;justify-content:center;}
 .modal-bg.open{display:flex;}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:1.75rem;max-width:340px;width:90%;text-align:center;}
@@ -170,22 +181,24 @@ tr:hover .del-btn{opacity:1;}
 @media print{
   body{background:#fff;color:#000;}
   header,.tracker-bar .btn,.header-right,.del-btn,.filter-bar button,#loading-screen{display:none!important;}
-  .stats,.register{break-inside:avoid;}
+  .stats-primary,.stats-mix,.register{break-inside:avoid;}
   .stat-card{background:#f5f5f5!important;border:1px solid #ccc;animation:none!important;}
-  .stat-label{color:#666!important;}.stat-value{color:#000!important;}
+  .stat-label,.stat-value{color:#000!important;}
   .register{background:#fff;border:1px solid #ccc;}
   table{font-size:11px;}th{background:#eee;color:#333;}td{border-top:1px solid #ddd;}
   tr.row-buy{background:#f0f7ea!important;}tr.row-use,tr.row-log{background:#fff!important;}
   tr.row-fill{background:#e8f2fc!important;}tr.row-reading{background:#fef8e8!important;}
-  main{padding:0;max-width:100%;}.entry-grid-2{display:none;}
+  tr.row-sale{background:#fde8e3!important;}
+  main{padding:0;max-width:100%;}.entry-grid-2,.entry-grid-3{display:none;}
 }
-@media(max-width:700px){
-  .entry-grid-2,.stats.cols3,.stats.cols4{grid-template-columns:1fr 1fr;}
+@media(max-width:900px){
+  .entry-grid-3{grid-template-columns:1fr 1fr;}
+  .stats-primary.cols4,.stats-primary.cols5{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:600px){
+  .entry-grid-2,.entry-grid-3,.stats-primary{grid-template-columns:1fr;}
   main{padding:1rem;}
   header,.tracker-bar{padding:0 1rem;}
-}
-@media(max-width:480px){
-  .entry-grid-2,.stats.cols3,.stats.cols4{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -270,7 +283,6 @@ const firebaseConfig = {
   messagingSenderId: "597914172038",
   appId: "1:597914172038:web:130677ccb16088d870ef07"
 };
-
 /* ══════════════════════════════════════════════════════════ */
 
 const app = initializeApp(firebaseConfig);
@@ -288,9 +300,7 @@ let allEntries      = [];
 let pendingDeleteId = null;
 let deleteTimers    = {};
 
-/* ══════════════════════════════════════════════════════════
-   AMPI BULK TANK CHART — horizontal tank dia 96 length 251
-   ══════════════════════════════════════════════════════════ */
+/* ══ TANK CHART ══════════════════════════════════════════ */
 const TANK = {
    1:14.151,   2:39.898,   3:73.064,   4:112.13,
    5:156.202,  6:204.667,  7:257.068,  8:313.043,
@@ -317,152 +327,115 @@ const TANK = {
   89:7607.848,90:7660.249,91:7708.714,92:7752.786,
   93:7791.852,94:7825.018,95:7850.765,96:7864.916
 };
-
 function tankGal(inches){
-  const i = Math.round(parseFloat(inches));
-  return (i >= 1 && i <= 96) ? TANK[i] : null;
+  const i=Math.round(parseFloat(inches));
+  return (i>=1&&i<=96)?TANK[i]:null;
 }
-
-function tankLookup(inId, galId, hintId){
-  const inEl  = document.getElementById(inId);
-  const galEl = document.getElementById(galId);
-  const hint  = hintId ? document.getElementById(hintId) : null;
-  if(!inEl || !galEl) return;
-  const v = inEl.value;
-  if(v === '' || isNaN(parseFloat(v))){
-    galEl.value = ''; galEl.removeAttribute('readonly');
-    if(hint){ hint.textContent=''; hint.className='tank-hint'; }
-    updateReceivedBadge();
-    return;
-  }
-  const g = tankGal(v);
-  if(g !== null){
-    galEl.value = g;
-    galEl.setAttribute('readonly','readonly');
-    galEl.classList.add('autofilled');
-    setTimeout(()=>galEl.classList.remove('autofilled'),400);
-    if(hint){ hint.textContent='✓ '+parseFloat(v)+'" = '+g.toLocaleString('en-US',{maximumFractionDigits:3})+' gal'; hint.className='tank-hint found'; }
+function tankLookup(inId,galId,hintId){
+  const inEl=document.getElementById(inId),galEl=document.getElementById(galId),hint=hintId?document.getElementById(hintId):null;
+  if(!inEl||!galEl)return;
+  const v=inEl.value;
+  if(v===''||isNaN(parseFloat(v))){galEl.value='';galEl.removeAttribute('readonly');if(hint){hint.textContent='';hint.className='tank-hint';}updateReceivedBadge();return;}
+  const g=tankGal(v);
+  if(g!==null){
+    galEl.value=g;galEl.setAttribute('readonly','readonly');galEl.classList.add('autofilled');setTimeout(()=>galEl.classList.remove('autofilled'),400);
+    if(hint){hint.textContent='✓ '+parseFloat(v)+'" = '+g.toLocaleString('en-US',{maximumFractionDigits:3})+' gal';hint.className='tank-hint found';}
   } else {
-    galEl.value = ''; galEl.removeAttribute('readonly');
-    if(hint){ hint.textContent='⚠ Valid range: 1–96". Enter gallons manually if needed.'; hint.className='tank-hint notfound'; }
+    galEl.value='';galEl.removeAttribute('readonly');
+    if(hint){hint.textContent='⚠ Valid range 1–96". Enter gallons manually if needed.';hint.className='tank-hint notfound';}
   }
   updateReceivedBadge();
 }
-window.tankLookup = tankLookup;
-
+window.tankLookup=tankLookup;
 function updateReceivedBadge(){
-  const badge  = document.getElementById('received-badge');
-  if(!badge) return;
-  const before = parseFloat(document.getElementById('fill-gal-before')?.value) || 0;
-  const after  = parseFloat(document.getElementById('fill-gal-after')?.value)  || 0;
-  if(after > 0 && after >= before){
-    const received = parseFloat((after - before).toFixed(3));
-    badge.textContent = '📦 Gallons received from MixTek: ' + received.toLocaleString('en-US',{maximumFractionDigits:3});
+  const badge=document.getElementById('received-badge');if(!badge)return;
+  const before=parseFloat(document.getElementById('fill-gal-before')?.value)||0;
+  const after=parseFloat(document.getElementById('fill-gal-after')?.value)||0;
+  if(after>0&&after>=before){
+    const r=parseFloat((after-before).toFixed(3));
+    badge.textContent='📦 Gallons received from MixTek: '+r.toLocaleString('en-US',{maximumFractionDigits:3});
     badge.classList.add('show');
-  } else {
-    badge.classList.remove('show');
-  }
+  } else {badge.classList.remove('show');}
 }
-window.updateReceivedBadge = updateReceivedBadge;
+window.updateReceivedBadge=updateReceivedBadge;
 
-/* ── THEME ──────────────────────────────────────────────── */
+/* ══ THEME ═══════════════════════════════════════════════ */
 function toggleTheme(){
-  const next = document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+  const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
   document.documentElement.setAttribute('data-theme',next);
-  document.getElementById('theme-btn').textContent = next==='dark' ? '☀️ Light' : '🌙 Dark';
+  document.getElementById('theme-btn').textContent=next==='dark'?'☀️ Light':'🌙 Dark';
   localStorage.setItem('amp-theme',next);
 }
-window.toggleTheme = toggleTheme;
+window.toggleTheme=toggleTheme;
 (function(){
-  const s = localStorage.getItem('amp-theme') || 'dark';
+  const s=localStorage.getItem('amp-theme')||'dark';
   document.documentElement.setAttribute('data-theme',s);
-  document.getElementById('theme-btn').textContent = s==='dark' ? '☀️ Light' : '🌙 Dark';
+  document.getElementById('theme-btn').textContent=s==='dark'?'☀️ Light':'🌙 Dark';
 })();
 
-/* ── SYNC INDICATOR ─────────────────────────────────────── */
-onValue(ref(db,'.info/connected'), snap=>{
-  const on = snap.val();
-  document.getElementById('sync-dot').className = 'sync-dot'+(on?'':' offline');
-  document.getElementById('sync-label').textContent = on ? 'live sync' : 'offline';
+/* ══ SYNC ════════════════════════════════════════════════ */
+onValue(ref(db,'.info/connected'),snap=>{
+  const on=snap.val();
+  document.getElementById('sync-dot').className='sync-dot'+(on?'':' offline');
+  document.getElementById('sync-label').textContent=on?'live sync':'offline';
 });
 
-/* ══════════════════════════════════════════════════════════
-   MIXTEK BALANCE LOGIC
-   - fill:    balance = gallons_after (the tank level after fill)
-              delivered = gallons_after - gallons_before
-   - reading: balance = gallons_after (snapshot of current level)
-   The current balance is always the gallons_after of the
-   most recent entry regardless of type.
-   Total Received = sum of all (after - before) for fill entries only.
-   ══════════════════════════════════════════════════════════ */
-function calcMixtek(sorted){
-  sorted.forEach(e => {
-    if(e.type === 'fill'){
-      const before    = e.gallons_before || 0;
-      const after     = e.gallons_after  || 0;
-      const delivered = parseFloat((after - before).toFixed(3));
-      e.balance   = parseFloat(after.toFixed(3));
-      e.delivered = delivered > 0 ? delivered : 0;
-    } else if(e.type === 'reading'){
-      e.balance   = parseFloat((e.gallons_after||0).toFixed(3));
-      e.delivered = null;
-    }
-  });
-}
-
-function calcEntries(raw, name){
-  const sorted = Object.entries(raw||{})
-    .map(([id,v]) => ({id,...v}))
-    .sort((a,b) => a.ts - b.ts);
-  if(name === 'mixtek'){
-    calcMixtek(sorted);
-  } else if(name === 'martin'){
-    let r=0; sorted.forEach(e=>{ r+=(e.tons||0); e.balance=r; });
+/* ══ CALC ENTRIES ════════════════════════════════════════ */
+function calcEntries(raw,name){
+  const sorted=Object.entries(raw||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+  if(name==='mixtek'){
+    sorted.forEach(e=>{
+      if(e.type==='fill'){
+        const before=e.gallons_before||0,after=e.gallons_after||0;
+        e.delivered=parseFloat((after-before).toFixed(3));
+        e.balance=parseFloat(after.toFixed(3));
+      } else if(e.type==='reading'){
+        e.balance=parseFloat((e.gallons_after||0).toFixed(3));
+      } else if(e.type==='sale'){
+        // balance not recalculated from sales — sales are tracked separately
+        // balance stays as last fill/reading value
+        e.balance=null;
+      }
+    });
+  } else if(name==='martin'){
+    let r=0; sorted.forEach(e=>{r+=(e.tons||0);e.balance=r;});
   } else {
-    let r=0; sorted.forEach(e=>{ r+=e.type==='buy'?(e.tons||0):-(e.tons||0); e.balance=r; });
+    let r=0; sorted.forEach(e=>{r+=e.type==='buy'?(e.tons||0):-(e.tons||0);e.balance=r;});
   }
-  return sorted.reverse(); // newest first for display
+  return sorted.reverse();
 }
 
-/* ── FIREBASE LISTENERS — persistent, always on ─────────── */
+/* ══ LISTENERS ═══════════════════════════════════════════ */
 function initAllListeners(){
   ['monarch','martin','mixtek'].forEach(name=>{
-    onValue(dbRefs[name], snap=>{
-      const entries = calcEntries(snap.val(), name);
-      if(name === currentTracker){
-        allEntries = entries;
-        renderTable();
-        updateStats();
-      }
+    onValue(dbRefs[name],snap=>{
+      const entries=calcEntries(snap.val(),name);
+      if(name===currentTracker){allEntries=entries;renderTable();updateStats();}
     });
   });
 }
 
-/* ── SWITCH TRACKER ─────────────────────────────────────── */
+/* ══ SWITCH TRACKER ══════════════════════════════════════ */
 function switchTracker(name){
-  currentTracker = name;
-  allEntries = [];
-  document.getElementById('register-body').innerHTML =
+  currentTracker=name;allEntries=[];
+  document.getElementById('register-body').innerHTML=
     '<tr><td colspan="10"><div class="empty-state">Loading...</div></td></tr>';
   buildUI();
-  // Re-trigger the listener data for this tracker
-  onValue(dbRefs[name], snap=>{
-    const entries = calcEntries(snap.val(), name);
-    allEntries = entries;
-    renderTable();
-    updateStats();
-  }, { onlyOnce: true });
+  onValue(dbRefs[name],snap=>{
+    const entries=calcEntries(snap.val(),name);
+    allEntries=entries;renderTable();updateStats();
+  },{onlyOnce:true});
 }
-window.switchTracker = switchTracker;
+window.switchTracker=switchTracker;
 
-/* ── BUILD UI ───────────────────────────────────────────── */
+/* ══ BUILD UI ════════════════════════════════════════════ */
 function buildUI(){
-  const t = currentTracker;
+  const t=currentTracker;
 
   /* ── STATS ── */
-  if(t === 'monarch'){
-    document.getElementById('stats-bar').innerHTML = `
-      <div class="stats cols3" style="margin-bottom:20px;">
+  if(t==='monarch'){
+    document.getElementById('stats-bar').innerHTML=`
+      <div class="stats-primary cols3">
         <div class="stat-card green" id="stat-balance-card">
           <div class="stat-label">Current Balance</div>
           <div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div>
@@ -475,10 +448,11 @@ function buildUI(){
           <div class="stat-label">Total Used</div>
           <div class="stat-value" id="stat-out">—<span class="unit">ton</span></div>
         </div>
-      </div>`;
-  } else if(t === 'martin'){
-    document.getElementById('stats-bar').innerHTML = `
-      <div class="stats cols3" style="margin-bottom:20px;">
+      </div>
+      <div class="stats-mix" id="stats-mix"></div>`;
+  } else if(t==='martin'){
+    document.getElementById('stats-bar').innerHTML=`
+      <div class="stats-primary cols3">
         <div class="stat-card">
           <div class="stat-label">Total Tons Logged</div>
           <div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div>
@@ -491,11 +465,11 @@ function buildUI(){
           <div class="stat-label">Tracking Mode</div>
           <div class="stat-value" style="font-size:15px;padding-top:4px;">Log Only</div>
         </div>
-      </div>`;
+      </div>
+      <div class="stats-mix" id="stats-mix"></div>`;
   } else {
-    /* MixTek — 4 stat cards */
-    document.getElementById('stats-bar').innerHTML = `
-      <div class="stats cols4" style="margin-bottom:20px;">
+    document.getElementById('stats-bar').innerHTML=`
+      <div class="stats-primary cols5">
         <div class="stat-card blue" id="stat-balance-card">
           <div class="stat-label">Current Gallons</div>
           <div class="stat-value" id="stat-balance">—<span class="unit">gal</span></div>
@@ -503,6 +477,10 @@ function buildUI(){
         <div class="stat-card green">
           <div class="stat-label">Total Received</div>
           <div class="stat-value" id="stat-received">—<span class="unit">gal</span></div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Total Sold</div>
+          <div class="stat-value" id="stat-sold">—<span class="unit">gal</span></div>
         </div>
         <div class="stat-card gray">
           <div class="stat-label">Tank Capacity</div>
@@ -516,8 +494,8 @@ function buildUI(){
   }
 
   /* ── ENTRY PANELS ── */
-  if(t === 'monarch'){
-    document.getElementById('entry-area').innerHTML = `
+  if(t==='monarch'){
+    document.getElementById('entry-area').innerHTML=`
       <div class="entry-grid-2">
         <div class="entry-panel green-panel">
           <div class="panel-title green">Add Block Purchase</div>
@@ -544,8 +522,8 @@ function buildUI(){
               <div style="flex:1"><label class="field-label">Date</label>
                 <input type="date" id="use-date"/></div>
             </div>
-            <div><label class="field-label">Mix Type (optional)</label>
-              <input type="text" id="use-supplier" placeholder="e.g. 12.5mm NWEAR"/></div>
+            <div><label class="field-label">Mix Type</label>
+              <input type="text" id="use-mix" placeholder="e.g. 12.5mm NWEAR"/></div>
             <div><label class="field-label">Job / Location (optional)</label>
               <input type="text" id="use-note" placeholder="e.g. Main St parking lot"/></div>
             <button class="btn btn-red" onclick="submitMonarch('use')">− Record Usage</button>
@@ -554,8 +532,8 @@ function buildUI(){
       </div>`;
     setTodayDates(['buy-date','use-date']);
 
-  } else if(t === 'martin'){
-    document.getElementById('entry-area').innerHTML = `
+  } else if(t==='martin'){
+    document.getElementById('entry-area').innerHTML=`
       <div class="entry-grid-2">
         <div class="entry-panel green-panel">
           <div class="panel-title green">Log Tons Used</div>
@@ -566,7 +544,7 @@ function buildUI(){
               <div style="flex:1"><label class="field-label">Date</label>
                 <input type="date" id="mm-date"/></div>
             </div>
-            <div><label class="field-label">Mix Type (optional)</label>
+            <div><label class="field-label">Mix Type</label>
               <input type="text" id="mm-mix" placeholder="e.g. 9.5mm NWEAR"/></div>
             <div><label class="field-label">Job / Location (optional)</label>
               <input type="text" id="mm-note" placeholder="e.g. Hwy 29 lot"/></div>
@@ -577,24 +555,24 @@ function buildUI(){
           <div class="panel-title gray">About This Tracker</div>
           <p class="info-note">
             <strong>Martin Marietta</strong> is a usage log only.<br/><br/>
-            Tons are not purchased in blocks — entries record how much material
-            was used from Martin Marietta per job for reference and reporting.<br/><br/>
-            The running total shows cumulative tons logged over time.
+            Entries record how much material was used from Martin Marietta
+            per job. The mix type breakdown cards above update automatically
+            as you log entries.
           </p>
         </div>
       </div>`;
     setTodayDates(['mm-date']);
 
   } else {
-    document.getElementById('entry-area').innerHTML = `
-      <div class="entry-grid-2">
+    /* MixTek — 3 panels */
+    document.getElementById('entry-area').innerHTML=`
+      <div class="entry-grid-3">
 
-        <!-- FILL / DELIVERY -->
+        <!-- FILL -->
         <div class="entry-panel blue-panel">
-          <div class="panel-title blue">Record Tank Fill (MixTek Delivery)</div>
+          <div class="panel-title blue">Record Tank Fill (Delivery)</div>
           <div class="form-row">
-            <div><label class="field-label">Date</label>
-              <input type="date" id="fill-date"/></div>
+            <div><label class="field-label">Date</label><input type="date" id="fill-date"/></div>
             <div class="sub-section">
               <div class="sub-section-title blue">Before Fill</div>
               <div class="form-group-2">
@@ -634,12 +612,11 @@ function buildUI(){
           </div>
         </div>
 
-        <!-- CURRENT READING -->
+        <!-- READING -->
         <div class="entry-panel amber-panel">
           <div class="panel-title amber">Current Tank Reading</div>
           <div class="form-row">
-            <div><label class="field-label">Date</label>
-              <input type="date" id="read-date"/></div>
+            <div><label class="field-label">Date</label><input type="date" id="read-date"/></div>
             <div class="sub-section">
               <div class="sub-section-title amber">Tank Level Right Now</div>
               <div class="form-group-2">
@@ -656,139 +633,185 @@ function buildUI(){
               </div>
             </div>
             <div><label class="field-label">Note (optional)</label>
-              <input type="text" id="read-note" placeholder="e.g. morning check / pre-delivery / spot check"/></div>
+              <input type="text" id="read-note" placeholder="e.g. morning check / pre-delivery"/></div>
             <button class="btn btn-amber" onclick="submitReading()">◉ Record Reading</button>
-            <div style="padding:9px 11px;background:var(--bg3);border-radius:6px;border:1px solid var(--border);">
+            <div style="padding:9px;background:var(--bg3);border-radius:6px;border:1px solid var(--border);">
               <p style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;line-height:1.7;">
-                Records a snapshot of what is in the tank right now.<br/>
-                Use for morning checks, pre/post delivery confirmations, and spot checks.
+                Snapshot of current level.<br/>Use for morning checks,<br/>pre/post delivery confirmations.
               </p>
             </div>
           </div>
         </div>
+
+        <!-- CONTRACTOR SALE -->
+        <div class="entry-panel red-panel" style="border-color:var(--red-border);background:rgba(45,21,18,.3);">
+          <div class="panel-title red">Contractor Sale</div>
+          <div class="form-row">
+            <div><label class="field-label">Date</label><input type="date" id="sale-date"/></div>
+            <div><label class="field-label">Gallons Sold</label>
+              <input type="number" id="sale-gallons" placeholder="e.g. 500" min="0" step="0.1"/></div>
+            <div><label class="field-label">Sold To (Contractor Name)</label>
+              <input type="text" id="sale-buyer" placeholder="e.g. Smith Paving LLC"/></div>
+            <div><label class="field-label">Note (optional)</label>
+              <input type="text" id="sale-note" placeholder="e.g. Invoice #1042, job site Eau Claire"/></div>
+            <button class="btn btn-red" onclick="submitSale()">− Record Sale</button>
+          </div>
+        </div>
+
       </div>`;
-    setTodayDates(['fill-date','read-date']);
+    setTodayDates(['fill-date','read-date','sale-date']);
   }
 
   /* ── TABLE HEADERS ── */
-  if(t === 'monarch'){
-    document.getElementById('table-head').innerHTML =
-      '<th>Date</th><th>Type</th><th>Supplier / Mix</th><th class="right">Purchase (ton)</th><th class="right">Usage (ton)</th><th class="right">Balance (ton)</th><th>Note</th><th></th>';
-    document.getElementById('register-title').textContent = 'Transaction Register — Asphalt (Monarch)';
-  } else if(t === 'martin'){
-    document.getElementById('table-head').innerHTML =
-      '<th>Date</th><th>Type</th><th>Mix Type</th><th class="right">Tons Logged</th><th class="right">Running Total (ton)</th><th>Note</th><th></th>';
-    document.getElementById('register-title').textContent = 'Usage Log — Asphalt (Martin Marietta)';
+  if(t==='monarch'){
+    document.getElementById('table-head').innerHTML=
+      '<th>Date</th><th>Type</th><th>Supplier</th><th>Mix Type</th>'
+      +'<th class="right">Purchase (ton)</th><th class="right">Usage (ton)</th>'
+      +'<th class="right">Balance (ton)</th><th>Note</th><th></th>';
+    document.getElementById('register-title').textContent='Transaction Register — Asphalt (Monarch)';
+  } else if(t==='martin'){
+    document.getElementById('table-head').innerHTML=
+      '<th>Date</th><th>Type</th><th>Mix Type</th>'
+      +'<th class="right">Tons Logged</th><th class="right">Running Total (ton)</th>'
+      +'<th>Note</th><th></th>';
+    document.getElementById('register-title').textContent='Usage Log — Asphalt (Martin Marietta)';
   } else {
-    document.getElementById('table-head').innerHTML =
+    document.getElementById('table-head').innerHTML=
       '<th>Date</th><th>Type</th>'
       +'<th class="right">In Before</th><th class="right">Gal Before</th>'
       +'<th class="right">In After</th><th class="right">Gal After</th>'
-      +'<th class="right">Gal Received</th>'
+      +'<th class="right">Gal Received / Sold</th>'
       +'<th class="right">Balance (gal)</th>'
-      +'<th>Note</th><th></th>';
-    document.getElementById('register-title').textContent = 'Transaction Register — MixTek Sealer';
+      +'<th>Note / Buyer</th><th></th>';
+    document.getElementById('register-title').textContent='Transaction Register — MixTek Sealer';
   }
 
   renderTable();
   updateStats();
 }
 
-/* ── SUBMIT MONARCH ─────────────────────────────────────── */
+/* ══ SUBMIT MONARCH ══════════════════════════════════════ */
 function submitMonarch(type){
-  const tEl = document.getElementById(type==='buy'?'buy-tons':'use-tons');
-  const dEl = document.getElementById(type==='buy'?'buy-date':'use-date');
-  const sEl = document.getElementById(type==='buy'?'buy-supplier':'use-supplier');
-  const nEl = document.getElementById(type==='buy'?'buy-note':'use-note');
-  const tons = parseFloat(tEl.value);
-  if(!tons||tons<=0){ tEl.focus(); showToast('Enter a valid tonnage.','red'); return; }
-  push(dbRefs.monarch,{type,tons,date:dEl.value||today(),supplier:sEl.value.trim()||'Monarch',note:nEl.value.trim(),ts:Date.now()})
-    .then(()=>{tEl.value='';sEl.value='';nEl.value='';showToast(type==='buy'?'+ Purchase recorded.':'− Usage recorded.',type==='buy'?'green':'red');})
+  const tEl=document.getElementById(type==='buy'?'buy-tons':'use-tons');
+  const dEl=document.getElementById(type==='buy'?'buy-date':'use-date');
+  const sEl=document.getElementById(type==='buy'?'buy-supplier':null);
+  const mEl=document.getElementById(type==='buy'?null:'use-mix');
+  const nEl=document.getElementById(type==='buy'?'buy-note':'use-note');
+  const tons=parseFloat(tEl.value);
+  if(!tons||tons<=0){tEl.focus();showToast('Enter a valid tonnage.','red');return;}
+  const entry={type,tons,date:dEl.value||today(),note:nEl?nEl.value.trim():'',ts:Date.now()};
+  if(type==='buy') entry.supplier=(sEl?sEl.value.trim():'') ||'Monarch';
+  if(type==='use') entry.mix=(mEl?mEl.value.trim():'');
+  push(dbRefs.monarch,entry)
+    .then(()=>{
+      tEl.value='';
+      if(sEl) sEl.value='';
+      if(mEl) mEl.value='';
+      if(nEl) nEl.value='';
+      showToast(type==='buy'?'+ Purchase recorded.':'− Usage recorded.',type==='buy'?'green':'red');
+    })
     .catch(e=>showToast('Error: '+e.message,'red'));
 }
-window.submitMonarch = submitMonarch;
+window.submitMonarch=submitMonarch;
 
-/* ── SUBMIT MARTIN ──────────────────────────────────────── */
+/* ══ SUBMIT MARTIN ═══════════════════════════════════════ */
 function submitMartin(){
   const tEl=document.getElementById('mm-tons'),dEl=document.getElementById('mm-date'),
-        mEl=document.getElementById('mm-mix'), nEl=document.getElementById('mm-note');
+        mEl=document.getElementById('mm-mix'),nEl=document.getElementById('mm-note');
   const tons=parseFloat(tEl.value);
-  if(!tons||tons<=0){ tEl.focus(); showToast('Enter a valid tonnage.','red'); return; }
-  push(dbRefs.martin,{type:'log',tons,date:dEl.value||today(),supplier:mEl.value.trim()||'Martin Marietta',note:nEl.value.trim(),ts:Date.now()})
+  if(!tons||tons<=0){tEl.focus();showToast('Enter a valid tonnage.','red');return;}
+  push(dbRefs.martin,{type:'log',tons,date:dEl.value||today(),mix:mEl.value.trim(),note:nEl.value.trim(),ts:Date.now()})
     .then(()=>{tEl.value='';mEl.value='';nEl.value='';showToast('+ Entry logged.','green');})
     .catch(e=>showToast('Error: '+e.message,'red'));
 }
-window.submitMartin = submitMartin;
+window.submitMartin=submitMartin;
 
-/* ── SUBMIT FILL ────────────────────────────────────────── */
+/* ══ SUBMIT FILL ═════════════════════════════════════════ */
 function submitFill(){
-  const galB = parseFloat(document.getElementById('fill-gal-before').value)||0;
-  const galA = parseFloat(document.getElementById('fill-gal-after').value);
-  const inB  = parseFloat(document.getElementById('fill-in-before').value)||0;
-  const inA  = parseFloat(document.getElementById('fill-in-after').value)||0;
-  const note = document.getElementById('fill-note').value.trim();
-  const date = document.getElementById('fill-date').value||today();
-  if(!galA||galA<=0){ document.getElementById('fill-gal-after').focus(); showToast('Enter gallons after fill.','red'); return; }
-  const delivered = parseFloat((galA-galB).toFixed(3));
+  const galB=parseFloat(document.getElementById('fill-gal-before').value)||0;
+  const galA=parseFloat(document.getElementById('fill-gal-after').value);
+  const inB=parseFloat(document.getElementById('fill-in-before').value)||0;
+  const inA=parseFloat(document.getElementById('fill-in-after').value)||0;
+  const note=document.getElementById('fill-note').value.trim();
+  const date=document.getElementById('fill-date').value||today();
+  if(!galA||galA<=0){document.getElementById('fill-gal-after').focus();showToast('Enter gallons after fill.','red');return;}
+  const delivered=parseFloat((galA-galB).toFixed(3));
   push(dbRefs.mixtek,{type:'fill',gallons_before:galB,gallons_after:galA,inches_before:inB,inches_after:inA,delivered,date,note,ts:Date.now()})
     .then(()=>{
-      ['fill-gal-before','fill-gal-after','fill-in-before','fill-in-after'].forEach(id=>{
-        const el=document.getElementById(id); if(el){el.value='';el.removeAttribute('readonly');}
-      });
-      ['fill-hint-before','fill-hint-after'].forEach(id=>{
-        const el=document.getElementById(id); if(el){el.textContent='';el.className='tank-hint';}
-      });
+      ['fill-gal-before','fill-gal-after','fill-in-before','fill-in-after'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.removeAttribute('readonly');}});
+      ['fill-hint-before','fill-hint-after'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='';el.className='tank-hint';}});
       document.getElementById('fill-note').value='';
-      const badge=document.getElementById('received-badge'); if(badge) badge.classList.remove('show');
+      const badge=document.getElementById('received-badge');if(badge)badge.classList.remove('show');
       showToast('+ Fill recorded — '+delivered.toLocaleString('en-US',{maximumFractionDigits:3})+' gal received.','blue');
     })
     .catch(e=>showToast('Error: '+e.message,'red'));
 }
-window.submitFill = submitFill;
+window.submitFill=submitFill;
 
-/* ── SUBMIT READING ─────────────────────────────────────── */
+/* ══ SUBMIT READING ══════════════════════════════════════ */
 function submitReading(){
-  const gal  = parseFloat(document.getElementById('read-gallons').value);
-  const inch = parseFloat(document.getElementById('read-inches').value)||0;
-  const note = document.getElementById('read-note').value.trim();
-  const date = document.getElementById('read-date').value||today();
-  if(isNaN(gal)||gal<0){ document.getElementById('read-gallons').focus(); showToast('Enter a gallon reading.','red'); return; }
+  const gal=parseFloat(document.getElementById('read-gallons').value);
+  const inch=parseFloat(document.getElementById('read-inches').value)||0;
+  const note=document.getElementById('read-note').value.trim();
+  const date=document.getElementById('read-date').value||today();
+  if(isNaN(gal)||gal<0){document.getElementById('read-gallons').focus();showToast('Enter a gallon reading.','red');return;}
   push(dbRefs.mixtek,{type:'reading',gallons_after:gal,inches_after:inch,date,note,ts:Date.now()})
     .then(()=>{
-      ['read-gallons','read-inches'].forEach(id=>{
-        const el=document.getElementById(id); if(el){el.value='';el.removeAttribute('readonly');}
-      });
-      const hint=document.getElementById('read-hint'); if(hint){hint.textContent='';hint.className='tank-hint';}
+      ['read-gallons','read-inches'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.removeAttribute('readonly');}});
+      const hint=document.getElementById('read-hint');if(hint){hint.textContent='';hint.className='tank-hint';}
       document.getElementById('read-note').value='';
       showToast('◉ Reading recorded.','');
     })
     .catch(e=>showToast('Error: '+e.message,'red'));
 }
-window.submitReading = submitReading;
+window.submitReading=submitReading;
 
-/* ── RENDER TABLE ───────────────────────────────────────── */
+/* ══ SUBMIT SALE ═════════════════════════════════════════ */
+function submitSale(){
+  const gal=parseFloat(document.getElementById('sale-gallons').value);
+  const buyer=document.getElementById('sale-buyer').value.trim();
+  const note=document.getElementById('sale-note').value.trim();
+  const date=document.getElementById('sale-date').value||today();
+  if(!gal||gal<=0){document.getElementById('sale-gallons').focus();showToast('Enter gallons sold.','red');return;}
+  if(!buyer){document.getElementById('sale-buyer').focus();showToast('Enter contractor name.','red');return;}
+  push(dbRefs.mixtek,{type:'sale',gallons_sold:gal,buyer,note,date,ts:Date.now()})
+    .then(()=>{
+      document.getElementById('sale-gallons').value='';
+      document.getElementById('sale-buyer').value='';
+      document.getElementById('sale-note').value='';
+      showToast('− Sale recorded — '+gal.toLocaleString()+' gal sold to '+buyer+'.','red');
+    })
+    .catch(e=>showToast('Error: '+e.message,'red'));
+}
+window.submitSale=submitSale;
+
+/* ══ RENDER TABLE ════════════════════════════════════════ */
 function renderTable(){
-  const filter = (document.getElementById('filter-input')?.value||'').toLowerCase();
-  const tbody  = document.getElementById('register-body');
-  const shown  = filter
-    ? allEntries.filter(e=>(e.supplier||'').toLowerCase().includes(filter)||(e.note||'').toLowerCase().includes(filter))
+  const filter=(document.getElementById('filter-input')?.value||'').toLowerCase();
+  const tbody=document.getElementById('register-body');
+  const shown=filter
+    ? allEntries.filter(e=>
+        (e.supplier||e.mix||e.buyer||'').toLowerCase().includes(filter)||
+        (e.note||'').toLowerCase().includes(filter)||
+        (e.type||'').toLowerCase().includes(filter))
     : allEntries;
 
   if(!shown.length){
-    const cols = currentTracker==='mixtek' ? 10 : 8;
+    const cols=currentTracker==='mixtek'?10:9;
     tbody.innerHTML='<tr><td colspan="'+cols+'"><div class="empty-state">'
       +(filter?'No entries match that filter.':'No entries yet. Add one above.')
       +'</div></td></tr>';
     return;
   }
 
-  tbody.innerHTML = shown.map(e=>{
+  tbody.innerHTML=shown.map(e=>{
     if(currentTracker==='monarch'){
       const buy=e.type==='buy';
       return '<tr class="'+(buy?'row-buy':'row-use')+'">'
         +'<td>'+esc(e.date||'—')+'</td>'
         +'<td><span class="tag '+(buy?'tag-buy':'tag-use')+'">'+(buy?'Purchase':'Usage')+'</span></td>'
-        +'<td>'+esc(e.supplier||'—')+'</td>'
+        +'<td>'+esc(e.supplier||'Monarch')+'</td>'
+        +'<td>'+esc(e.mix||'—')+'</td>'
         +'<td class="right '+(buy?'amount-buy':'')+'">'+(buy?'+'+fmt(e.tons):'')+'</td>'
         +'<td class="right '+(!buy?'amount-use':'')+'">'+(!buy?'−'+fmt(e.tons):'')+'</td>'
         +'<td class="right balance-cell">'+fmt(e.balance)+'</td>'
@@ -800,7 +823,7 @@ function renderTable(){
       return '<tr class="row-log">'
         +'<td>'+esc(e.date||'—')+'</td>'
         +'<td><span class="tag tag-log">Log</span></td>'
-        +'<td>'+esc(e.supplier||'Martin Marietta')+'</td>'
+        +'<td>'+esc(e.mix||e.supplier||'—')+'</td>'
         +'<td class="right amount-buy">+'+fmt(e.tons)+'</td>'
         +'<td class="right balance-cell">'+fmt(e.balance)+'</td>'
         +'<td><span class="note-text">'+esc(e.note||'')+'</span></td>'
@@ -808,23 +831,20 @@ function renderTable(){
         +'</tr>';
 
     } else {
-      /* MixTek */
-      const fill    = e.type==='fill';
-      const reading = e.type==='reading';
-      const rowCls  = fill?'row-fill':'row-reading';
-      const tagCls  = fill?'tag-fill':'tag-reading';
-      const tagTxt  = fill?'Fill':'Reading';
-
-      const inBefore  = fill && e.inches_before  ? e.inches_before+'"'  : '—';
-      const galBefore = fill                      ? fmt(e.gallons_before||0) : '—';
-      const inAfter   = e.inches_after            ? e.inches_after+'"'   : '—';
-      const galAfter  = fmt(e.gallons_after||0);
-
-      /* Gallons Received column — only shows for fill rows */
-      const galReceived = fill
-        ? '<span class="amount-fill">+'+fmt(e.delivered||0)+'</span>'
-        : '<span style="color:var(--text3);font-size:10px;">snapshot</span>';
-
+      const fill=e.type==='fill', reading=e.type==='reading', sale=e.type==='sale';
+      const rowCls=fill?'row-fill':reading?'row-reading':'row-sale';
+      const tagCls=fill?'tag-fill':reading?'tag-reading':'tag-sale';
+      const tagTxt=fill?'Fill':reading?'Reading':'Sale';
+      const inBefore=fill&&e.inches_before?e.inches_before+'"':'—';
+      const galBefore=fill?fmt(e.gallons_before||0):'—';
+      const inAfter=(fill||reading)&&e.inches_after?e.inches_after+'"':'—';
+      const galAfter=(fill||reading)?fmt(e.gallons_after||0):'—';
+      let receivedSold='—';
+      if(fill) receivedSold='<span class="amount-fill">+'+fmt(e.delivered||0)+'</span>';
+      else if(sale) receivedSold='<span class="amount-sale">−'+fmt(e.gallons_sold||0)+'</span>';
+      else if(reading) receivedSold='<span style="color:var(--text3);font-size:10px;">snapshot</span>';
+      const balCell=sale?'<span style="color:var(--text3);font-size:10px;">—</span>':('<span class="balance-cell">'+fmt(e.balance)+'</span>');
+      const noteText=sale?esc(e.buyer||'')+(e.note?' · '+esc(e.note):''):esc(e.note||'');
       return '<tr class="'+rowCls+'">'
         +'<td>'+esc(e.date||'—')+'</td>'
         +'<td><span class="tag '+tagCls+'">'+tagTxt+'</span></td>'
@@ -832,131 +852,156 @@ function renderTable(){
         +'<td class="right">'+galBefore+'</td>'
         +'<td class="right">'+inAfter+'</td>'
         +'<td class="right">'+galAfter+'</td>'
-        +'<td class="right">'+galReceived+'</td>'
-        +'<td class="right balance-cell">'+fmt(e.balance)+'</td>'
-        +'<td><span class="note-text">'+esc(e.note||'')+'</span></td>'
+        +'<td class="right">'+receivedSold+'</td>'
+        +'<td class="right">'+balCell+'</td>'
+        +'<td><span class="note-text">'+noteText+'</span></td>'
         +'<td><button class="del-btn" id="del-'+e.id+'" onclick="twoStepDelete(event,\''+e.id+'\')">✕ Delete</button></td>'
         +'</tr>';
     }
   }).join('');
 }
 
-/* ── UPDATE STATS ───────────────────────────────────────── */
+/* ══ UPDATE STATS ════════════════════════════════════════ */
 function updateStats(){
   const t=currentTracker;
   if(t==='monarch'){
-    const totalIn  = allEntries.filter(e=>e.type==='buy').reduce((s,e)=>s+(e.tons||0),0);
-    const totalOut = allEntries.filter(e=>e.type==='use').reduce((s,e)=>s+(e.tons||0),0);
-    const bal      = allEntries.length ? allEntries[0].balance : 0;
+    const totalIn=allEntries.filter(e=>e.type==='buy').reduce((s,e)=>s+(e.tons||0),0);
+    const totalOut=allEntries.filter(e=>e.type==='use').reduce((s,e)=>s+(e.tons||0),0);
+    const bal=allEntries.length?allEntries[0].balance:0;
     setStat('stat-balance',fmt(bal),'ton');
     setStat('stat-in',fmt(totalIn),'ton');
     setStat('stat-out',fmt(totalOut),'ton');
     const card=document.getElementById('stat-balance-card');
-    if(card){
-      card.classList.remove('flash-amber','flash-red');
-      if(bal<=800) card.classList.add('flash-red');
-      else if(bal<=1500) card.classList.add('flash-amber');
+    if(card){card.classList.remove('flash-amber','flash-red');if(bal<=800)card.classList.add('flash-red');else if(bal<=1500)card.classList.add('flash-amber');}
+    // Mix type breakdown
+    const mixMap={};
+    allEntries.filter(e=>e.type==='use'&&e.mix).forEach(e=>{
+      const k=e.mix.trim(); if(!k) return;
+      mixMap[k]=(mixMap[k]||0)+(e.tons||0);
+    });
+    const mixEl=document.getElementById('stats-mix');
+    if(mixEl){
+      const keys=Object.keys(mixMap);
+      if(keys.length){
+        mixEl.innerHTML=keys.sort().map(k=>
+          '<div class="stat-card compact purple">'
+          +'<div class="stat-label">'+esc(k)+'</div>'
+          +'<div class="stat-value small">'+fmt(mixMap[k])+'<span class="unit">ton</span></div>'
+          +'<div class="mix-label">used this season</div>'
+          +'</div>'
+        ).join('');
+      } else {
+        mixEl.innerHTML='';
+      }
     }
+
   } else if(t==='martin'){
     const total=allEntries.reduce((s,e)=>s+(e.tons||0),0);
     setStat('stat-balance',fmt(total),'ton');
     setStat('stat-in',allEntries.length,'entries');
-  } else {
-    /* MixTek:
-       balance  = gallons_after of most recent entry (newest first → allEntries[0])
-       received = sum of delivered across all fill entries */
-    const bal      = allEntries.length ? allEntries[0].balance : 0;
-    const received = allEntries
-      .filter(e=>e.type==='fill')
-      .reduce((s,e)=>s+(e.delivered||0), 0);
-    const pct = Math.min(100, Math.round((bal/8000)*100));
-
-    setStat('stat-balance', fmt(bal),      'gal');
-    setStat('stat-received',fmt(received), 'gal');
-    setStat('stat-pct',     pct,           '%');
-
-    const card=document.getElementById('stat-balance-card');
-    if(card){
-      card.classList.remove('flash-sealer-amber','flash-sealer-red');
-      if(bal<=2000) card.classList.add('flash-sealer-red');
-      else if(bal<=3500) card.classList.add('flash-sealer-amber');
+    // Mix type breakdown
+    const mixMap={};
+    allEntries.forEach(e=>{
+      const k=(e.mix||e.supplier||'').trim(); if(!k||k==='Martin Marietta') return;
+      mixMap[k]=(mixMap[k]||0)+(e.tons||0);
+    });
+    const mixEl=document.getElementById('stats-mix');
+    if(mixEl){
+      const keys=Object.keys(mixMap);
+      if(keys.length){
+        mixEl.innerHTML=keys.sort().map(k=>
+          '<div class="stat-card compact purple">'
+          +'<div class="stat-label">'+esc(k)+'</div>'
+          +'<div class="stat-value small">'+fmt(mixMap[k])+'<span class="unit">ton</span></div>'
+          +'<div class="mix-label">logged this season</div>'
+          +'</div>'
+        ).join('');
+      } else {
+        mixEl.innerHTML='';
+      }
     }
+
+  } else {
+    const fills=allEntries.filter(e=>e.type==='fill');
+    const sales=allEntries.filter(e=>e.type==='sale');
+    const received=fills.reduce((s,e)=>s+(e.delivered||0),0);
+    const sold=sales.reduce((s,e)=>s+(e.gallons_sold||0),0);
+    // Current balance = gallons_after of most recent fill or reading
+    const latestLevel=allEntries.find(e=>e.type==='fill'||e.type==='reading');
+    const bal=latestLevel?(latestLevel.gallons_after||0):0;
+    const pct=Math.min(100,Math.round((bal/8000)*100));
+    setStat('stat-balance',fmt(bal),'gal');
+    setStat('stat-received',fmt(received),'gal');
+    setStat('stat-sold',fmt(sold),'gal');
+    setStat('stat-pct',pct,'%');
+    const card=document.getElementById('stat-balance-card');
+    if(card){card.classList.remove('flash-sealer-amber','flash-sealer-red');if(bal<=2000)card.classList.add('flash-sealer-red');else if(bal<=3500)card.classList.add('flash-sealer-amber');}
   }
 }
-function setStat(id,val,unit){
-  const el=document.getElementById(id);
-  if(el) el.innerHTML=val+'<span class="unit">'+unit+'</span>';
-}
+function setStat(id,val,unit){const el=document.getElementById(id);if(el)el.innerHTML=val+'<span class="unit">'+unit+'</span>';}
 
-/* ── TWO-STEP DELETE ────────────────────────────────────── */
+/* ══ TWO-STEP DELETE ═════════════════════════════════════ */
 function twoStepDelete(evt,id){
   evt.stopPropagation();
-  const btn=document.getElementById('del-'+id);
-  if(!btn) return;
+  const btn=document.getElementById('del-'+id);if(!btn)return;
   if(btn.classList.contains('confirm-step')){
-    clearTimeout(deleteTimers[id]); delete deleteTimers[id];
+    clearTimeout(deleteTimers[id]);delete deleteTimers[id];
     remove(ref(db,'ledger_'+currentTracker+'/'+id))
       .then(()=>showToast('Entry deleted.','red'))
       .catch(e=>showToast('Error: '+e.message,'red'));
   } else {
-    btn.classList.add('confirm-step'); btn.textContent='⚠ Confirm?';
-    deleteTimers[id]=setTimeout(()=>{
-      const b=document.getElementById('del-'+id);
-      if(b){ b.classList.remove('confirm-step'); b.textContent='✕ Delete'; }
-      delete deleteTimers[id];
-    },4000);
+    btn.classList.add('confirm-step');btn.textContent='⚠ Confirm?';
+    deleteTimers[id]=setTimeout(()=>{const b=document.getElementById('del-'+id);if(b){b.classList.remove('confirm-step');b.textContent='✕ Delete';}delete deleteTimers[id];},4000);
   }
 }
 window.twoStepDelete=twoStepDelete;
-
 function closeModal(){pendingDeleteId=null;document.getElementById('modal-bg').classList.remove('open');}
 function confirmDelete(){
-  if(!pendingDeleteId) return;
+  if(!pendingDeleteId)return;
   remove(ref(db,'ledger_'+currentTracker+'/'+pendingDeleteId))
     .then(()=>showToast('Entry deleted.','red')).catch(e=>showToast('Error: '+e.message,'red'));
   closeModal();
 }
-window.closeModal=closeModal; window.confirmDelete=confirmDelete;
+window.closeModal=closeModal;window.confirmDelete=confirmDelete;
 
-/* ── CSV EXPORT ─────────────────────────────────────────── */
+/* ══ CSV EXPORT ══════════════════════════════════════════ */
 function exportCSV(){
-  const t=currentTracker; let rows;
+  const t=currentTracker;let rows;
   if(t==='monarch'){
-    rows=[['Date','Type','Supplier','Note','Tons','Balance (ton)']];
-    [...allEntries].reverse().forEach(e=>rows.push([e.date,e.type==='buy'?'Purchase':'Usage',e.supplier||'',e.note||'',e.tons,e.balance]));
+    rows=[['Date','Type','Supplier','Mix Type','Note','Tons','Balance (ton)']];
+    [...allEntries].reverse().forEach(e=>rows.push([e.date,e.type==='buy'?'Purchase':'Usage',e.supplier||'',e.mix||'',e.note||'',e.tons,e.balance]));
   } else if(t==='martin'){
     rows=[['Date','Mix Type','Note','Tons Logged','Running Total (ton)']];
-    [...allEntries].reverse().forEach(e=>rows.push([e.date,e.supplier||'',e.note||'',e.tons,e.balance]));
+    [...allEntries].reverse().forEach(e=>rows.push([e.date,e.mix||e.supplier||'',e.note||'',e.tons,e.balance]));
   } else {
-    rows=[['Date','Type','Inches Before','Gal Before','Inches After','Gal After','Gal Received','Balance (gal)','Note']];
+    rows=[['Date','Type','Inches Before','Gal Before','Inches After','Gal After','Gal Received','Gal Sold','Balance (gal)','Note/Buyer']];
     [...allEntries].reverse().forEach(e=>rows.push([
-      e.date, e.type,
-      e.inches_before||'', e.gallons_before||'',
-      e.inches_after||'',  e.gallons_after||0,
+      e.date,e.type,
+      e.inches_before||'',e.gallons_before||'',
+      e.inches_after||'',e.gallons_after||0,
       e.type==='fill'?(e.delivered||0):'',
-      e.balance, e.note||''
+      e.type==='sale'?(e.gallons_sold||0):'',
+      e.balance||'',
+      e.type==='sale'?(e.buyer||'')+(e.note?' - '+e.note:''):(e.note||'')
     ]));
   }
   const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='amp-'+t+'-ledger.csv'; a.click();
-  URL.revokeObjectURL(url);
+  const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='amp-'+t+'-ledger.csv';a.click();URL.revokeObjectURL(url);
 }
 window.exportCSV=exportCSV;
 
-/* ── HELPERS ────────────────────────────────────────────── */
-function fmt(n){ if(n===undefined||n===null) return '—'; return Number(n).toLocaleString('en-US',{maximumFractionDigits:3}); }
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function today(){ return new Date().toISOString().slice(0,10); }
-function setTodayDates(ids){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.value=today(); }); }
+/* ══ HELPERS ═════════════════════════════════════════════ */
+function fmt(n){if(n===undefined||n===null)return'—';return Number(n).toLocaleString('en-US',{maximumFractionDigits:3});}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function today(){return new Date().toISOString().slice(0,10);}
+function setTodayDates(ids){ids.forEach(id=>{const el=document.getElementById(id);if(el)el.value=today();});}
 function showToast(msg,cls){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.className='show'+(cls?' '+cls:'');
-  clearTimeout(t._t); t._t=setTimeout(()=>{ t.className=''; },3200);
+  t.textContent=msg;t.className='show'+(cls?' '+cls:'');
+  clearTimeout(t._t);t._t=setTimeout(()=>{t.className='';},3200);
 }
 
-/* ── INIT ───────────────────────────────────────────────── */
 buildUI();
 initAllListeners();
 </script>
