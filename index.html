@@ -800,10 +800,104 @@ function submitFill(){
       document.getElementById('fill-note').value='';
       const badge=document.getElementById('received-badge');if(badge)badge.classList.remove('show');
       showToast('+ Fill recorded — '+delivered.toLocaleString('en-US',{maximumFractionDigits:3})+' gal received.','blue');
+      // Show print receipt button briefly
+      const existingBtn=document.getElementById('last-receipt-btn');
+      if(existingBtn) existingBtn.remove();
+      const receiptBtn=document.createElement('div');
+      receiptBtn.id='last-receipt-btn';
+      receiptBtn.style.cssText='display:flex;justify-content:flex-end;margin-top:8px;';
+      receiptBtn.innerHTML='<button class="btn btn-blue" onclick="printDeliveryReceipt('+galB+','+galA+','+inB+','+inA+','+delivered+',\''+date+'\',\''+note.replace(/'/g,"\\'")+'\')" style="gap:6px;">🖨 Print Delivery Receipt</button>';
+      // Insert after the fill panel
+      const fillPanel=document.querySelector('.entry-panel.blue-panel');
+      if(fillPanel&&fillPanel.parentNode) fillPanel.parentNode.insertBefore(receiptBtn, fillPanel.parentNode.children[3]||null);
     })
     .catch(e=>showToast('Error: '+e.message,'red'));
 }
 window.submitFill=submitFill;
+
+/* ══ PRINT DELIVERY RECEIPT ══════════════════════════ */
+function printDeliveryReceipt(galB, galA, inB, inA, delivered, date, note){
+  const dateDisp = formatDateDisplay(date);
+  const receiptHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"/>
+    <title>MixTek Delivery Receipt — ${dateDisp}</title>
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0;}
+      body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#111;padding:40px;background:#fff;max-width:600px;margin:0 auto;}
+      .header{border-bottom:3px solid #111;padding-bottom:16px;margin-bottom:24px;}
+      h1{font-size:22px;font-weight:700;margin-bottom:4px;}
+      .sub{font-size:12px;color:#555;}
+      .receipt-title{font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#1a6aaa;margin-bottom:20px;}
+      .meta{display:flex;gap:40px;margin-bottom:24px;}
+      .meta-item .label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-bottom:3px;}
+      .meta-item .value{font-size:14px;font-weight:600;color:#111;}
+      .readings{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+      .reading-box{border:1px solid #ddd;border-radius:8px;padding:16px;}
+      .reading-box.before{border-left:4px solid #1a6aaa;}
+      .reading-box.after{border-left:4px solid #2d7a0a;}
+      .reading-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:12px;}
+      .reading-label.before{color:#1a6aaa;}
+      .reading-label.after{color:#2d7a0a;}
+      .reading-row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;}
+      .reading-row .rl{color:#666;}
+      .reading-row .rv{font-weight:600;}
+      .delivered-box{background:#e8f5fa;border:2px solid #1a6aaa;border-radius:8px;padding:16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+      .delivered-label{font-size:11px;font-weight:700;color:#1a6aaa;text-transform:uppercase;letter-spacing:.05em;}
+      .delivered-value{font-size:28px;font-weight:700;color:#1a6aaa;}
+      .delivered-unit{font-size:14px;color:#555;margin-left:4px;}
+      .note-box{border:1px solid #ddd;border-radius:8px;padding:14px;margin-bottom:24px;}
+      .note-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-bottom:6px;}
+      .note-value{font-size:13px;color:#111;min-height:20px;}
+      .sig-area{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px;}
+      .sig-line{border-top:1px solid #999;padding-top:6px;font-size:10px;color:#888;}
+      .footer{margin-top:32px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:10px;text-align:center;}
+      @media print{body{padding:20px;}}
+    </style>
+  </head><body>
+    <div class="header">
+      <h1>AMP / Team Asphalt</h1>
+      <div class="sub">Spring Valley, WI · teamasphalt.com</div>
+    </div>
+    <div class="receipt-title">🛢 MixTek Sealer Delivery Receipt</div>
+    <div class="meta">
+      <div class="meta-item"><div class="label">Delivery Date</div><div class="value">${dateDisp}</div></div>
+      <div class="meta-item"><div class="label">Supplier</div><div class="value">MixTek</div></div>
+      <div class="meta-item"><div class="label">Tank Capacity</div><div class="value">8,000 gal</div></div>
+    </div>
+    <div class="readings">
+      <div class="reading-box before">
+        <div class="reading-label before">Before Fill</div>
+        <div class="reading-row"><span class="rl">Inches</span><span class="rv">${inB}"</span></div>
+        <div class="reading-row"><span class="rl">Gallons</span><span class="rv">${Number(galB).toLocaleString('en-US',{maximumFractionDigits:3})}</span></div>
+      </div>
+      <div class="reading-box after">
+        <div class="reading-label after">After Fill</div>
+        <div class="reading-row"><span class="rl">Inches</span><span class="rv">${inA}"</span></div>
+        <div class="reading-row"><span class="rl">Gallons</span><span class="rv">${Number(galA).toLocaleString('en-US',{maximumFractionDigits:3})}</span></div>
+      </div>
+    </div>
+    <div class="delivered-box">
+      <div class="delivered-label">Gallons Received This Delivery</div>
+      <div><span class="delivered-value">${Number(delivered).toLocaleString('en-US',{maximumFractionDigits:3})}</span><span class="delivered-unit">gal</span></div>
+    </div>
+    <div class="note-box">
+      <div class="note-label">Notes / Delivery Reference</div>
+      <div class="note-value">${note||'&nbsp;'}</div>
+    </div>
+    <div class="sig-area">
+      <div class="sig-line">Received by (AMP)</div>
+      <div class="sig-line">Driver / Supplier Rep</div>
+    </div>
+    <div class="footer">Printed ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} · AMP Materials Ledger</div>
+  </body></html>`;
+
+  const win = window.open('','_blank','width=700,height:750,scrollbars=yes');
+  if(!win){ showToast('Allow popups to print receipt.','red'); return; }
+  win.document.write(receiptHTML);
+  win.document.close();
+  win.focus();
+  setTimeout(()=>{ win.print(); }, 600);
+}
+window.printDeliveryReceipt=printDeliveryReceipt;
 
 /* ══ SUBMIT READING ══════════════════════════════════════ */
 function submitReading(){
@@ -1242,14 +1336,14 @@ function printReport(){
     <div class="footer">Printed ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} · AMP Materials Ledger</div>
   </body></html>`;
 
-  const frame = document.getElementById('report-print-frame');
-  frame.style.display='block';
-  frame.srcdoc = printHTML;
-  frame.onload = ()=>{
-    frame.contentWindow.focus();
-    frame.contentWindow.print();
-    setTimeout(()=>{ frame.style.display='none'; frame.srcdoc=''; },2000);
-  };
+  // Open print in a new window — stays open until user closes it manually
+  const printWin = window.open('','_blank','width=800,height=700,scrollbars=yes');
+  if(!printWin){ showToast('Allow popups for this site to print.','red'); return; }
+  printWin.document.write(printHTML);
+  printWin.document.close();
+  printWin.focus();
+  // Small delay so content renders before print dialog opens
+  setTimeout(()=>{ printWin.print(); }, 600);
 }
 window.printReport=printReport;
 
