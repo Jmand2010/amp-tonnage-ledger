@@ -267,6 +267,57 @@ tr:hover .del-btn{opacity:1;}
 
 <div id="toast"></div>
 
+<!-- ═══════════ CONTRACTOR SALES REPORT MODAL ═══════════ -->
+<div id="report-modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:700;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;">
+  <div id="report-modal" style="background:var(--bg2);border:1px solid var(--border2);border-radius:14px;width:100%;max-width:680px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5);">
+
+    <!-- Modal header -->
+    <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);">🛢 Contractor Sales Report — MixTek Sealer</span>
+      <button onclick="closeReport()" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;line-height:1;padding:2px 6px;border-radius:4px;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text3)'">✕</button>
+    </div>
+
+    <!-- Filters -->
+    <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:flex-end;">
+      <div>
+        <label style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px;">From Date</label>
+        <input type="date" id="rpt-from" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 10px;width:100%;outline:none;"/>
+      </div>
+      <div>
+        <label style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px;">To Date</label>
+        <input type="date" id="rpt-to" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 10px;width:100%;outline:none;"/>
+      </div>
+      <div>
+        <label style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px;">Contractor</label>
+        <select id="rpt-buyer" style="font-family:'IBM Plex Mono',monospace;font-size:13px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:7px 10px;border-radius:6px;width:100%;cursor:pointer;outline:none;">
+          <option value="all">All Contractors</option>
+        </select>
+      </div>
+      <button onclick="generateReport()" class="btn btn-blue" style="white-space:nowrap;height:36px;">▶ Run Report</button>
+    </div>
+
+    <!-- Report output -->
+    <div id="report-output" style="padding:1.5rem;">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text3);text-align:center;">Set filters above and click Run Report.</p>
+    </div>
+
+    <!-- Modal footer -->
+    <div style="padding:.875rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closeReport()" class="btn">Close</button>
+      <button onclick="printReport()" class="btn btn-green" id="rpt-print-btn" style="display:none;">⎙ Print Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- Print styles for report only -->
+<style>
+@media print {
+  body > *:not(#report-print-frame) { display:none!important; }
+}
+#report-print-frame { display:none; }
+</style>
+<iframe id="report-print-frame"></iframe>
+
 <!-- ════════════════════════════════════════════════════════
      PASTE YOUR FIREBASE CONFIG HERE — replace every value
      ════════════════════════════════════════════════════════ -->
@@ -275,13 +326,13 @@ import { initializeApp }                           from "https://www.gstatic.com
 import { getDatabase, ref, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBXrg5pV1f7HcEsJuOudSwunV-34JnTRv4",
-  authDomain: "amp-tonnage-ledger.firebaseapp.com",
-  databaseURL: "https://amp-tonnage-ledger-default-rtdb.firebaseio.com",
-  projectId: "amp-tonnage-ledger",
-  storageBucket: "amp-tonnage-ledger.firebasestorage.app",
-  messagingSenderId: "597914172038",
-  appId: "1:597914172038:web:130677ccb16088d870ef07"
+  apiKey:            "PASTE_YOUR_API_KEY_HERE",
+  authDomain:        "PASTE_YOUR_AUTH_DOMAIN_HERE",
+  databaseURL:       "PASTE_YOUR_DATABASE_URL_HERE",
+  projectId:         "PASTE_YOUR_PROJECT_ID_HERE",
+  storageBucket:     "PASTE_YOUR_STORAGE_BUCKET_HERE",
+  messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
+  appId:             "PASTE_YOUR_APP_ID_HERE"
 };
 /* ══════════════════════════════════════════════════════════ */
 
@@ -660,6 +711,12 @@ function buildUI(){
 
       </div>`;
     setTodayDates(['fill-date','read-date','sale-date']);
+
+    // Add report button below the three panels
+    const reportBtn = document.createElement('div');
+    reportBtn.style.cssText = 'display:flex;justify-content:flex-end;margin-bottom:20px;';
+    reportBtn.innerHTML = '<button class="btn btn-blue" onclick="openReport()" style="gap:8px;">📋 Contractor Sales Report</button>';
+    document.getElementById('entry-area').appendChild(reportBtn);
   }
 
   /* ── TABLE HEADERS ── */
@@ -1002,6 +1059,209 @@ function showToast(msg,cls){
   clearTimeout(t._t);t._t=setTimeout(()=>{t.className='';},3200);
 }
 
+/* ══ CONTRACTOR SALES REPORT ═════════════════════════ */
+function openReport(){
+  // Populate contractor dropdown from existing sale entries
+  const buyers = [...new Set(
+    allEntries.filter(e=>e.type==='sale'&&e.buyer).map(e=>e.buyer.trim())
+  )].sort();
+  const sel = document.getElementById('rpt-buyer');
+  sel.innerHTML = '<option value="all">All Contractors</option>';
+  buyers.forEach(b=>{
+    const opt=document.createElement('option');
+    opt.value=b; opt.textContent=b;
+    sel.appendChild(opt);
+  });
+  // Default date range: start of current year to today
+  const now = new Date();
+  document.getElementById('rpt-from').value = now.getFullYear()+'-01-01';
+  document.getElementById('rpt-to').value   = today();
+  document.getElementById('report-output').innerHTML =
+    '<p style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--text3);text-align:center;">Set filters above and click Run Report.</p>';
+  document.getElementById('rpt-print-btn').style.display='none';
+  document.getElementById('report-modal-bg').style.display='flex';
+}
+window.openReport=openReport;
+
+function closeReport(){
+  document.getElementById('report-modal-bg').style.display='none';
+}
+window.closeReport=closeReport;
+
+function generateReport(){
+  const from   = document.getElementById('rpt-from').value;
+  const to     = document.getElementById('rpt-to').value;
+  const buyer  = document.getElementById('rpt-buyer').value;
+
+  if(!from||!to){ showToast('Select both a from and to date.','red'); return; }
+  if(from>to){    showToast('From date must be before to date.','red'); return; }
+
+  // Filter entries
+  const sales = allEntries.filter(e=>{
+    if(e.type!=='sale') return false;
+    if(e.date < from || e.date > to) return false;
+    if(buyer!=='all' && (e.buyer||'').trim()!==buyer) return false;
+    return true;
+  }).slice().reverse(); // chronological order for report
+
+  const totalGal = sales.reduce((s,e)=>s+(e.gallons_sold||0),0);
+  const buyerLabel = buyer==='all'?'All Contractors':buyer;
+  const fromFmt = formatDateDisplay(from);
+  const toFmt   = formatDateDisplay(to);
+
+  if(!sales.length){
+    document.getElementById('report-output').innerHTML =
+      '<p style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--text3);text-align:center;padding:2rem 0;">No sales found for this contractor and date range.</p>';
+    document.getElementById('rpt-print-btn').style.display='none';
+    return;
+  }
+
+  // Group by buyer if "all" selected
+  const grouped={};
+  sales.forEach(e=>{
+    const k=(e.buyer||'Unknown').trim();
+    if(!grouped[k]) grouped[k]=[];
+    grouped[k].push(e);
+  });
+
+  let html = `
+    <div id="report-content" style="font-family:'IBM Plex Mono',monospace;">
+      <!-- Report header -->
+      <div style="border-bottom:2px solid var(--border2);padding-bottom:16px;margin-bottom:20px;">
+        <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;">AMP / Team Asphalt</div>
+        <div style="font-size:11px;color:var(--text3);">Spring Valley, WI · MixTek Sealer Sales Report</div>
+        <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+          <div>
+            <div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;">Contractor</div>
+            <div style="font-size:13px;color:var(--text);">${esc(buyerLabel)}</div>
+          </div>
+          <div>
+            <div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;">Date Range</div>
+            <div style="font-size:13px;color:var(--text);">${fromFmt} — ${toFmt}</div>
+          </div>
+          <div>
+            <div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;">Total Gallons Sold</div>
+            <div style="font-size:20px;font-weight:700;color:var(--red);">${fmt(totalGal)} <span style="font-size:12px;color:var(--text3);">gal</span></div>
+          </div>
+        </div>
+      </div>`;
+
+  // One table per contractor (or just one if specific buyer selected)
+  Object.entries(grouped).sort(([a],[b])=>a.localeCompare(b)).forEach(([bName, bSales])=>{
+    const bTotal = bSales.reduce((s,e)=>s+(e.gallons_sold||0),0);
+    html += `
+      <div style="margin-bottom:24px;">
+        ${buyer==='all'?`<div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:10px;padding:6px 10px;background:var(--bg3);border-radius:6px;border-left:3px solid var(--red);">${esc(bName)}</div>`:''}
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead>
+            <tr style="background:var(--bg3);">
+              <th style="padding:8px 12px;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;">Date</th>
+              <th style="padding:8px 12px;text-align:right;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;">Gallons Sold</th>
+              <th style="padding:8px 12px;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;">Note / Invoice</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${bSales.map((e,i)=>`
+              <tr style="border-top:1px solid var(--border);background:${i%2===0?'var(--bg2)':'var(--bg3)'};">
+                <td style="padding:9px 12px;color:var(--text);">${esc(e.date||'—')}</td>
+                <td style="padding:9px 12px;text-align:right;font-weight:600;color:var(--red);">−${fmt(e.gallons_sold||0)}</td>
+                <td style="padding:9px 12px;color:var(--text3);">${esc(e.note||'')}</td>
+              </tr>`).join('')}
+          </tbody>
+          <tfoot>
+            <tr style="border-top:2px solid var(--border2);">
+              <td style="padding:10px 12px;font-weight:600;color:var(--text);font-size:11px;">${buyer==='all'?esc(bName)+' Total':'Total'}</td>
+              <td style="padding:10px 12px;text-align:right;font-weight:700;color:var(--red);font-size:14px;">${fmt(bTotal)} <span style="font-size:10px;color:var(--text3);">gal</span></td>
+              <td style="padding:10px 12px;"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>`;
+  });
+
+  if(buyer==='all'&&Object.keys(grouped).length>1){
+    html += `
+      <div style="border-top:2px solid var(--border2);padding-top:14px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:12px;font-weight:600;color:var(--text);">Grand Total — All Contractors</span>
+        <span style="font-size:20px;font-weight:700;color:var(--red);">${fmt(totalGal)} <span style="font-size:12px;color:var(--text3);">gal</span></span>
+      </div>`;
+  }
+
+  html += '</div>';
+
+  document.getElementById('report-output').innerHTML = html;
+  document.getElementById('rpt-print-btn').style.display='inline-flex';
+}
+window.generateReport=generateReport;
+
+function printReport(){
+  const content = document.getElementById('report-content');
+  if(!content){ showToast('Run the report first.','red'); return; }
+
+  const from  = document.getElementById('rpt-from').value;
+  const to    = document.getElementById('rpt-to').value;
+  const buyer = document.getElementById('rpt-buyer').value;
+  const buyerLabel = buyer==='all'?'All Contractors':buyer;
+
+  const printHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"/>
+    <title>Sealer Sales Report — ${buyerLabel}</title>
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0;}
+      body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#111;padding:32px;background:#fff;}
+      h1{font-size:20px;font-weight:700;margin-bottom:4px;}
+      .sub{font-size:11px;color:#666;margin-bottom:20px;}
+      .meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;border-bottom:2px solid #ccc;padding-bottom:16px;margin-bottom:20px;}
+      .meta-label{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:3px;}
+      .meta-val{font-size:14px;font-weight:600;color:#111;}
+      .meta-val.big{font-size:20px;color:#c03820;}
+      table{width:100%;border-collapse:collapse;margin-bottom:20px;}
+      th{padding:8px 10px;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#666;background:#f0f0f0;font-weight:500;border-bottom:1px solid #ccc;}
+      th.right{text-align:right;}
+      td{padding:8px 10px;border-bottom:1px solid #e5e5e5;}
+      td.right{text-align:right;}
+      tr:nth-child(even) td{background:#f9f9f9;}
+      tfoot td{border-top:2px solid #ccc;font-weight:700;padding-top:10px;}
+      tfoot td.right{color:#c03820;font-size:14px;}
+      .contractor-head{font-size:12px;font-weight:700;color:#111;padding:6px 10px;background:#f0f0f0;border-left:3px solid #c03820;margin-bottom:8px;}
+      .grand-total{border-top:2px solid #ccc;padding-top:12px;display:flex;justify-content:space-between;align-items:center;}
+      .grand-total span:first-child{font-size:13px;font-weight:700;}
+      .grand-total span:last-child{font-size:20px;font-weight:700;color:#c03820;}
+      .footer{margin-top:32px;font-size:10px;color:#888;border-top:1px solid #ddd;padding-top:10px;}
+      @media print{body{padding:20px;}}
+    </style>
+  </head><body>
+    <h1>AMP / Team Asphalt</h1>
+    <div class="sub">Spring Valley, WI · MixTek Sealer Sales Report</div>
+    ${content.querySelector('.meta-grid') ? content.querySelector('.meta-grid').outerHTML : `
+    <div class="meta">
+      <div><div class="meta-label">Contractor</div><div class="meta-val">${buyerLabel}</div></div>
+      <div><div class="meta-label">Date Range</div><div class="meta-val">${formatDateDisplay(from)} — ${formatDateDisplay(to)}</div></div>
+      <div><div class="meta-label">Total Gallons Sold</div><div class="meta-val big">${document.querySelector('#report-content tfoot td.right, #report-content .grand-total span:last-child')?.textContent||'—'} gal</div></div>
+    </div>`}
+    ${content.innerHTML}
+    <div class="footer">Printed ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} · AMP Materials Ledger</div>
+  </body></html>`;
+
+  const frame = document.getElementById('report-print-frame');
+  frame.style.display='block';
+  frame.srcdoc = printHTML;
+  frame.onload = ()=>{
+    frame.contentWindow.focus();
+    frame.contentWindow.print();
+    setTimeout(()=>{ frame.style.display='none'; frame.srcdoc=''; },2000);
+  };
+}
+window.printReport=printReport;
+
+function formatDateDisplay(d){
+  if(!d) return '—';
+  const parts=d.split('-');
+  if(parts.length!==3) return d;
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[parseInt(parts[1])-1]+' '+parseInt(parts[2])+', '+parts[0];
+}
+
+/* ══ INIT ════════════════════════════════════════════ */
 buildUI();
 initAllListeners();
 </script>
