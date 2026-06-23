@@ -8,25 +8,25 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 [data-theme="dark"]{
-  --bg:#0f1115;--bg2:#181b21;--bg3:#1f232b;
-  --border:#2a2f3a;--border2:#353c4a;
+  --bg:#0f1115;--bg2:#181b21;--bg3:#1f232b;--border:#2a2f3a;--border2:#353c4a;
   --text:#e8eaf0;--text2:#8c92a4;--text3:#555d70;
   --green:#6fcf4a;--green-bg:#1a2d12;--green-border:#2f5220;
   --red:#f0634a;--red-bg:#2d1512;--red-border:#522520;
   --blue:#4ab4f0;--blue-bg:#0e2030;--blue-border:#1a4060;
   --amber:#f0b84a;--amber-bg:#2a1f08;--amber-border:#5a3e10;
   --purple:#b47ef0;--purple-bg:#1a1030;--purple-border:#4a2a80;
+  --teal:#4af0d0;--teal-bg:#0a2028;--teal-border:#1a5040;
   --shadow:rgba(0,0,0,.5);
 }
 [data-theme="light"]{
-  --bg:#f0f2f5;--bg2:#ffffff;--bg3:#e8eaef;
-  --border:#d8dce6;--border2:#c0c6d4;
+  --bg:#f0f2f5;--bg2:#ffffff;--bg3:#e8eaef;--border:#d8dce6;--border2:#c0c6d4;
   --text:#1a1d24;--text2:#5a6070;--text3:#9098aa;
   --green:#2d7a0a;--green-bg:#eaf5df;--green-border:#8fcc60;
   --red:#c03820;--red-bg:#fdeae5;--red-border:#f09070;
   --blue:#1a6aaa;--blue-bg:#e5f0fa;--blue-border:#70b0e0;
   --amber:#a06800;--amber-bg:#fdf3d8;--amber-border:#e0b050;
   --purple:#6a3ab0;--purple-bg:#f0eafa;--purple-border:#b090e0;
+  --teal:#0a7a60;--teal-bg:#e0f5f0;--teal-border:#60c0a0;
   --shadow:rgba(0,0,0,.12);
 }
 body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;transition:background .2s,color .2s;}
@@ -52,22 +52,24 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5
 .btn-amber:hover{filter:brightness(1.12);}
 .btn-purple{background:var(--purple-bg);border-color:var(--purple-border);color:var(--purple);}
 .btn-purple:hover{filter:brightness(1.12);}
+.btn-teal{background:var(--teal-bg);border-color:var(--teal-border);color:var(--teal);}
+.btn-teal:hover{filter:brightness(1.12);}
 .tracker-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:.6rem 1.5rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .tracker-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);white-space:nowrap;}
 select{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 12px;border-radius:6px;cursor:pointer;outline:none;}
 select:focus{border-color:var(--text2);}
 main{max-width:1200px;margin:0 auto;padding:1.5rem;}
-/* ── STATS ── */
 .stats-primary{display:grid;gap:10px;margin-bottom:10px;}
-.stats-primary.cols3{grid-template-columns:repeat(3,1fr);}
-.stats-primary.cols4{grid-template-columns:repeat(4,1fr);}
-.stats-primary.cols5{grid-template-columns:repeat(5,1fr);}
-.stats-mix{display:grid;gap:10px;margin-bottom:20px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+.cols2{grid-template-columns:repeat(2,1fr);}
+.cols3{grid-template-columns:repeat(3,1fr);}
+.cols4{grid-template-columns:repeat(4,1fr);}
+.cols5{grid-template-columns:repeat(5,1fr);}
+.stats-mix{display:grid;gap:10px;margin-bottom:20px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
 .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;transition:background .3s;}
 .stat-card.compact{padding:.8rem 1rem;}
 .stat-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .stat-value{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;color:var(--text);line-height:1;}
-.stat-value.small{font-size:18px;}
+.stat-value.sm{font-size:18px;}
 .stat-value .unit{font-size:11px;color:var(--text3);margin-left:3px;}
 .stat-card.green .stat-value{color:var(--green);}
 .stat-card.red   .stat-value{color:var(--red);}
@@ -75,25 +77,26 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem;}
 .stat-card.amber .stat-value{color:var(--amber);}
 .stat-card.gray  .stat-value{color:var(--text2);}
 .stat-card.purple .stat-value{color:var(--purple);}
-.mix-label{font-size:9px;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-/* ── ALERT FLASH ── */
-@keyframes flashAmber{0%,100%{background:var(--bg2)}50%{background:rgba(240,184,74,.15)}}
-@keyframes flashRed{0%,100%{background:var(--bg2)}50%{background:rgba(240,99,74,.20)}}
-@keyframes flashSA{0%,100%{background:var(--bg2)}50%{background:rgba(240,184,74,.18)}}
-@keyframes flashSR{0%,100%{background:var(--bg2)}50%{background:rgba(240,99,74,.22)}}
-.flash-amber{animation:flashAmber 2.2s ease-in-out infinite;}.flash-amber .stat-value{color:var(--amber)!important;}
-.flash-red{animation:flashRed 2.2s ease-in-out infinite;}.flash-red .stat-value{color:var(--red)!important;}
-.flash-sealer-amber{animation:flashSA 2.2s ease-in-out infinite;}.flash-sealer-amber .stat-value{color:var(--amber)!important;}
-.flash-sealer-red{animation:flashSR 2.2s ease-in-out infinite;}.flash-sealer-red .stat-value{color:var(--red)!important;}
-/* ── ENTRY PANELS ── */
+.stat-card.teal  .stat-value{color:var(--teal);}
+.mix-label{font-size:9px;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-top:3px;}
+@keyframes fA{0%,100%{background:var(--bg2)}50%{background:rgba(240,184,74,.15)}}
+@keyframes fR{0%,100%{background:var(--bg2)}50%{background:rgba(240,99,74,.20)}}
+@keyframes fSA{0%,100%{background:var(--bg2)}50%{background:rgba(240,184,74,.18)}}
+@keyframes fSR{0%,100%{background:var(--bg2)}50%{background:rgba(240,99,74,.22)}}
+.flash-amber{animation:fA 2.2s ease-in-out infinite;}.flash-amber .stat-value{color:var(--amber)!important;}
+.flash-red{animation:fR 2.2s ease-in-out infinite;}.flash-red .stat-value{color:var(--red)!important;}
+.flash-sa{animation:fSA 2.2s ease-in-out infinite;}.flash-sa .stat-value{color:var(--amber)!important;}
+.flash-sr{animation:fSR 2.2s ease-in-out infinite;}.flash-sr .stat-value{color:var(--red)!important;}
 .entry-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
 .entry-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
+.entry-grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
 .entry-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;}
 .entry-panel.green-panel{border-color:var(--green-border);}
-.entry-panel.red-panel{border-color:var(--red-border);}
+.entry-panel.red-panel{border-color:var(--red-border);background:rgba(45,21,18,.3);}
 .entry-panel.blue-panel{border-color:var(--blue-border);}
 .entry-panel.amber-panel{border-color:var(--amber-border);}
-.entry-panel.purple-panel{border-color:var(--purple-border);background:rgba(26,16,48,.4);}
+.entry-panel.purple-panel{border-color:var(--purple-border);}
+.entry-panel.teal-panel{border-color:var(--teal-border);}
 .entry-panel.info-panel{border-color:var(--border2);background:var(--bg3);}
 .panel-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
 .panel-title::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;}
@@ -102,14 +105,16 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem;}
 .panel-title.blue{color:var(--blue)}.panel-title.blue::before{background:var(--blue);}
 .panel-title.amber{color:var(--amber)}.panel-title.amber::before{background:var(--amber);}
 .panel-title.purple{color:var(--purple)}.panel-title.purple::before{background:var(--purple);}
+.panel-title.teal{color:var(--teal)}.panel-title.teal::before{background:var(--teal);}
 .panel-title.gray{color:var(--text3)}.panel-title.gray::before{background:var(--text3);}
 .form-row{display:flex;flex-direction:column;gap:7px;}
 .form-group{display:flex;gap:7px;}
 .form-group-2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.form-group-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;}
 label.field-label{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;margin-bottom:2px;display:block;}
-input[type="number"],input[type="text"],input[type="date"]{background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 11px;width:100%;transition:border-color .15s;outline:none;}
+input[type="number"],input[type="text"],input[type="date"],select.form-select{background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 11px;width:100%;transition:border-color .15s;outline:none;}
 input::placeholder{color:var(--text3);}
-input:focus{border-color:var(--text2);}
+input:focus,select.form-select:focus{border-color:var(--text2);}
 input[readonly]{color:var(--green);border-color:var(--green-border);background:var(--green-bg);cursor:default;}
 @keyframes autofillPop{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
 .autofilled{animation:autofillPop .3s ease;}
@@ -125,7 +130,7 @@ input[readonly]{color:var(--green);border-color:var(--green-border);background:v
 .received-badge.show{display:block;}
 .info-note{font-size:12px;color:var(--text2);line-height:1.7;font-family:'IBM Plex Sans',sans-serif;}
 .info-note strong{color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;}
-/* ── REGISTER ── */
+.report-btn-bar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:20px;flex-wrap:wrap;}
 .register{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
 .register-header{padding:.75rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
 .register-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);}
@@ -142,7 +147,7 @@ tr.row-use{background:var(--bg2);}
 tr.row-log{background:var(--bg2);}
 tr.row-fill{background:var(--blue-bg);}
 tr.row-reading{background:var(--amber-bg);}
-tr.row-sale{background:rgba(45,21,18,.6);}
+tr.row-sale{background:rgba(45,21,18,.5);}
 tr.row-buy:hover,tr.row-use:hover,tr.row-log:hover,tr.row-fill:hover,tr.row-reading:hover,tr.row-sale:hover{filter:brightness(1.08);}
 .tag{display:inline-block;font-size:9px;letter-spacing:.06em;padding:2px 6px;border-radius:3px;text-transform:uppercase;}
 .tag-buy{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
@@ -163,12 +168,22 @@ tr:hover .del-btn{opacity:1;}
 .del-btn.confirm-step{color:var(--red);background:var(--red-bg);border-color:var(--red);opacity:1;animation:pulseBorder .7s ease-in-out infinite;}
 @keyframes pulseBorder{0%,100%{box-shadow:0 0 0 0 rgba(240,99,74,0)}50%{box-shadow:0 0 0 3px rgba(240,99,74,.4)}}
 .empty-state{padding:2.5rem;text-align:center;color:var(--text3);font-family:'IBM Plex Mono',monospace;font-size:12px;}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;align-items:center;justify-content:center;}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;}
 .modal-bg.open{display:flex;}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:1.75rem;max-width:340px;width:90%;text-align:center;}
-.modal h3{font-family:'IBM Plex Mono',monospace;font-size:13px;margin-bottom:8px;}
-.modal p{font-size:12px;color:var(--text2);margin-bottom:1.25rem;}
-.modal-actions{display:flex;gap:10px;justify-content:center;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;width:100%;max-width:360px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5);}
+.modal-hd{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);}
+.modal-hd h3{font-family:'IBM Plex Mono',monospace;font-size:13px;margin-bottom:8px;}
+.modal-hd p{font-size:12px;color:var(--text2);}
+.modal-actions{display:flex;gap:10px;justify-content:center;padding:1.25rem 1.5rem;}
+.report-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;width:100%;max-width:720px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5);}
+.report-hd{padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.report-hd-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);}
+.report-close-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;line-height:1;padding:2px 6px;border-radius:4px;}
+.report-close-btn:hover{color:var(--text);background:var(--bg3);}
+.report-filters{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:flex-end;}
+.report-filter-label{font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px;}
+.report-output{padding:1.5rem;}
+.report-ft{padding:.875rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);opacity:0;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:10px 22px;border-radius:8px;box-shadow:0 6px 20px var(--shadow);transition:all .22s;z-index:800;white-space:nowrap;}
 #toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 #toast.green{border-color:var(--green-border);color:var(--green);}
@@ -179,46 +194,35 @@ tr:hover .del-btn{opacity:1;}
 @keyframes spin{to{transform:rotate(360deg)}}
 #loading-screen p{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text3);}
 @media print{
-  body{background:#fff;color:#000;}
-  header,.tracker-bar .btn,.header-right,.del-btn,.filter-bar button,#loading-screen{display:none!important;}
-  .stats-primary,.stats-mix,.register{break-inside:avoid;}
-  .stat-card{background:#f5f5f5!important;border:1px solid #ccc;animation:none!important;}
-  .stat-label,.stat-value{color:#000!important;}
-  .register{background:#fff;border:1px solid #ccc;}
-  table{font-size:11px;}th{background:#eee;color:#333;}td{border-top:1px solid #ddd;}
-  tr.row-buy{background:#f0f7ea!important;}tr.row-use,tr.row-log{background:#fff!important;}
-  tr.row-fill{background:#e8f2fc!important;}tr.row-reading{background:#fef8e8!important;}
-  tr.row-sale{background:#fde8e3!important;}
-  main{padding:0;max-width:100%;}.entry-grid-2,.entry-grid-3{display:none;}
+  body>*:not(#print-frame){display:none!important;}
 }
+#print-frame{display:none;}
 @media(max-width:900px){
-  .entry-grid-3{grid-template-columns:1fr 1fr;}
-  .stats-primary.cols4,.stats-primary.cols5{grid-template-columns:repeat(2,1fr);}
+  .entry-grid-3,.entry-grid-4{grid-template-columns:1fr 1fr;}
+  .cols4,.cols5{grid-template-columns:repeat(2,1fr);}
+  .report-filters{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:600px){
-  .entry-grid-2,.entry-grid-3,.stats-primary{grid-template-columns:1fr;}
+  .entry-grid-2,.entry-grid-3,.entry-grid-4,.stats-primary{grid-template-columns:1fr;}
   main{padding:1rem;}
   header,.tracker-bar{padding:0 1rem;}
 }
 </style>
 </head>
 <body>
-
 <div id="loading-screen"><div class="spinner"></div><p>Connecting to database...</p></div>
 
 <header>
   <div class="logo">
     <div class="logo-mark">AMP</div>
-    <div>
-      <div class="logo-text">Materials Ledger</div>
-      <div class="logo-sub">Team Asphalt · Spring Valley, WI</div>
-    </div>
+    <div><div class="logo-text">Materials Ledger</div><div class="logo-sub">Team Asphalt · Spring Valley, WI</div></div>
   </div>
   <div class="header-right">
     <div class="sync-dot" id="sync-dot"></div>
     <span class="sync-label" id="sync-label">connecting...</span>
     <button class="btn" onclick="window.print()">⎙ Print</button>
     <button class="btn" onclick="exportCSV()">↓ CSV</button>
+    <button class="btn" onclick="openSeasonSummary()">📊 Season Summary</button>
     <button class="btn" id="theme-btn" onclick="toggleTheme()">☀️ Light</button>
   </div>
 </header>
@@ -229,12 +233,15 @@ tr:hover .del-btn{opacity:1;}
     <option value="monarch">🏗  Asphalt — Monarch</option>
     <option value="martin"> 🏗  Asphalt — Martin Marietta</option>
     <option value="mixtek"> 🛢  Sealer — MixTek (8,000 gal tank)</option>
+    <option value="crackfill">🧱  Crackfill — Deery</option>
+    <option value="paint">🎨  Traffic Paint</option>
   </select>
 </div>
 
 <main>
   <div id="stats-bar"></div>
   <div id="entry-area"></div>
+  <div class="report-btn-bar" id="report-btn-bar"></div>
   <div class="register">
     <div class="register-header">
       <span class="register-title" id="register-title">Transaction Register</span>
@@ -243,21 +250,17 @@ tr:hover .del-btn{opacity:1;}
         <button class="btn" onclick="document.getElementById('filter-input').value='';renderTable();">✕ Clear</button>
       </div>
     </div>
-    <div style="overflow-x:auto;">
-      <table>
-        <thead><tr id="table-head"></tr></thead>
-        <tbody id="register-body">
-          <tr><td colspan="9"><div class="empty-state">Connecting to database...</div></td></tr>
-        </tbody>
-      </table>
-    </div>
+    <div style="overflow-x:auto;"><table><thead><tr id="table-head"></tr></thead><tbody id="register-body"><tr><td colspan="10"><div class="empty-state">Connecting to database...</div></td></tr></tbody></table></div>
   </div>
 </main>
 
+<!-- Delete modal -->
 <div class="modal-bg" id="modal-bg">
   <div class="modal">
-    <h3>⚠ Delete this entry?</h3>
-    <p>This will permanently remove the transaction.<br/>All balances recalculate automatically.<br/><br/><strong>This cannot be undone.</strong></p>
+    <div class="modal-hd">
+      <h3>⚠ Delete this entry?</h3>
+      <p>This will permanently remove the transaction. All balances recalculate automatically. <strong>This cannot be undone.</strong></p>
+    </div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal()">Cancel — Keep It</button>
       <button class="btn btn-red" onclick="confirmDelete()">Yes, Delete It</button>
@@ -265,148 +268,84 @@ tr:hover .del-btn{opacity:1;}
   </div>
 </div>
 
-<div id="toast"></div>
-
-<!-- ═══════════ CONTRACTOR SALES REPORT MODAL ═══════════ -->
-<div id="report-modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:700;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;">
-  <div id="report-modal" style="background:var(--bg2);border:1px solid var(--border2);border-radius:14px;width:100%;max-width:680px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5);">
-
-    <!-- Modal header -->
-    <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);">🛢 Contractor Sales Report — MixTek Sealer</span>
-      <button onclick="closeReport()" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;line-height:1;padding:2px 6px;border-radius:4px;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text3)'">✕</button>
+<!-- Report modal -->
+<div class="modal-bg" id="report-modal-bg">
+  <div class="report-modal">
+    <div class="report-hd">
+      <span class="report-hd-title" id="report-modal-title">Report</span>
+      <button class="report-close-btn" onclick="closeReport()">✕</button>
     </div>
-
-    <!-- Filters -->
-    <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:flex-end;">
-      <div>
-        <label style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px;">From Date</label>
-        <input type="date" id="rpt-from" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 10px;width:100%;outline:none;"/>
-      </div>
-      <div>
-        <label style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px;">To Date</label>
-        <input type="date" id="rpt-to" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 10px;width:100%;outline:none;"/>
-      </div>
-      <div>
-        <label style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px;">Contractor</label>
-        <select id="rpt-buyer" style="font-family:'IBM Plex Mono',monospace;font-size:13px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:7px 10px;border-radius:6px;width:100%;cursor:pointer;outline:none;">
-          <option value="all">All Contractors</option>
-        </select>
-      </div>
-      <button onclick="generateReport()" class="btn btn-blue" style="white-space:nowrap;height:36px;">▶ Run Report</button>
-    </div>
-
-    <!-- Report output -->
-    <div id="report-output" style="padding:1.5rem;">
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text3);text-align:center;">Set filters above and click Run Report.</p>
-    </div>
-
-    <!-- Modal footer -->
-    <div style="padding:.875rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;">
-      <button onclick="closeReport()" class="btn">Close</button>
-      <button onclick="printReport()" class="btn btn-green" id="rpt-print-btn" style="display:none;">⎙ Print Report</button>
+    <div class="report-filters" id="report-filters"></div>
+    <div class="report-output" id="report-output"><p style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text3);text-align:center;">Set filters above and click Run Report.</p></div>
+    <div class="report-ft">
+      <button class="btn" onclick="closeReport()">Close</button>
+      <button class="btn btn-green" id="rpt-print-btn" style="display:none;" onclick="printCurrentReport()">⎙ Print Report</button>
     </div>
   </div>
 </div>
 
-<!-- Print styles for report only -->
-<style>
-@media print {
-  body > *:not(#report-print-frame) { display:none!important; }
-}
-#report-print-frame { display:none; }
-</style>
-<iframe id="report-print-frame"></iframe>
+<div id="toast"></div>
+<iframe id="print-frame" style="display:none;"></iframe>
 
 <!-- ════════════════════════════════════════════════════════
-     PASTE YOUR FIREBASE CONFIG HERE — replace every value
+     PASTE YOUR FIREBASE CONFIG HERE
      ════════════════════════════════════════════════════════ -->
 <script type="module">
 import { initializeApp }                           from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBXrg5pV1f7HcEsJuOudSwunV-34JnTRv4",
-  authDomain: "amp-tonnage-ledger.firebaseapp.com",
-  databaseURL: "https://amp-tonnage-ledger-default-rtdb.firebaseio.com",
-  projectId: "amp-tonnage-ledger",
-  storageBucket: "amp-tonnage-ledger.firebasestorage.app",
-  messagingSenderId: "597914172038",
-  appId: "1:597914172038:web:130677ccb16088d870ef07"
+  apiKey:            "PASTE_YOUR_API_KEY_HERE",
+  authDomain:        "PASTE_YOUR_AUTH_DOMAIN_HERE",
+  databaseURL:       "PASTE_YOUR_DATABASE_URL_HERE",
+  projectId:         "PASTE_YOUR_PROJECT_ID_HERE",
+  storageBucket:     "PASTE_YOUR_STORAGE_BUCKET_HERE",
+  messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
+  appId:             "PASTE_YOUR_APP_ID_HERE"
 };
-/* ══════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════ */
 
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
-document.getElementById('loading-screen').style.display = 'none';
+document.getElementById('loading-screen').style.display='none';
 
-const dbRefs = {
-  monarch: ref(db,'ledger_monarch'),
-  martin:  ref(db,'ledger_martin'),
-  mixtek:  ref(db,'ledger_mixtek'),
+// All tracker refs
+const dbRefs={
+  monarch:   ref(db,'ledger_monarch'),
+  martin:    ref(db,'ledger_martin'),
+  mixtek:    ref(db,'ledger_mixtek'),
+  crackfill: ref(db,'ledger_crackfill'),
+  paint:     ref(db,'ledger_paint'),
 };
 
-let currentTracker  = 'monarch';
-let allEntries      = [];
-let pendingDeleteId = null;
-let deleteTimers    = {};
+let currentTracker='monarch';
+let allEntries=[];
+let allData={monarch:[],martin:[],mixtek:[],crackfill:[],paint:[]};
+let pendingDeleteId=null;
+let deleteTimers={};
+let lastReportHTML='';
+let lastReportTitle='';
 
 /* ══ TANK CHART ══════════════════════════════════════════ */
-const TANK = {
-   1:14.151,   2:39.898,   3:73.064,   4:112.13,
-   5:156.202,  6:204.667,  7:257.068,  8:313.043,
-   9:372.299, 10:434.586, 11:499.692, 12:567.429,
-  13:637.631, 14:710.15,  15:784.851, 16:861.61,
-  17:940.313, 18:1020.855,19:1103.138,20:1187.068,
-  21:1272.56, 22:1359.531,23:1447.902,24:1537.6,
-  25:1628.552,26:1720.691,27:1813.951,28:1908.268,
-  29:2003.582,30:2099.832,31:2196.962,32:2294.915,
-  33:2393.636,34:2493.072,35:2593.171,36:2693.882,
-  37:2795.153,38:2896.937,39:2999.183,40:3101.844,
-  41:3204.873,42:3308.222,43:3411.844,44:3515.695,
-  45:3619.727,46:3723.895,47:3828.154,48:3932.458,
-  49:4036.762,50:4141.021,51:4245.189,52:4349.221,
-  53:4453.072,54:4556.694,55:4660.043,56:4763.072,
-  57:4865.733,58:4967.979,59:5069.763,60:5171.034,
-  61:5271.745,62:5371.844,63:5471.28, 64:5570.001,
-  65:5667.954,66:5765.084,67:5861.334,68:5956.648,
-  69:6050.965,70:6144.225,71:6236.364,72:6327.316,
-  73:6417.014,74:6505.385,75:6592.356,76:6677.848,
-  77:6761.778,78:6844.061,79:6924.603,80:7003.306,
-  81:7080.065,82:7154.766,83:7227.285,84:7297.487,
-  85:7365.224,86:7430.33, 87:7492.617,88:7551.873,
-  89:7607.848,90:7660.249,91:7708.714,92:7752.786,
-  93:7791.852,94:7825.018,95:7850.765,96:7864.916
-};
-function tankGal(inches){
-  const i=Math.round(parseFloat(inches));
-  return (i>=1&&i<=96)?TANK[i]:null;
-}
+const TANK={1:14.151,2:39.898,3:73.064,4:112.13,5:156.202,6:204.667,7:257.068,8:313.043,9:372.299,10:434.586,11:499.692,12:567.429,13:637.631,14:710.15,15:784.851,16:861.61,17:940.313,18:1020.855,19:1103.138,20:1187.068,21:1272.56,22:1359.531,23:1447.902,24:1537.6,25:1628.552,26:1720.691,27:1813.951,28:1908.268,29:2003.582,30:2099.832,31:2196.962,32:2294.915,33:2393.636,34:2493.072,35:2593.171,36:2693.882,37:2795.153,38:2896.937,39:2999.183,40:3101.844,41:3204.873,42:3308.222,43:3411.844,44:3515.695,45:3619.727,46:3723.895,47:3828.154,48:3932.458,49:4036.762,50:4141.021,51:4245.189,52:4349.221,53:4453.072,54:4556.694,55:4660.043,56:4763.072,57:4865.733,58:4967.979,59:5069.763,60:5171.034,61:5271.745,62:5371.844,63:5471.28,64:5570.001,65:5667.954,66:5765.084,67:5861.334,68:5956.648,69:6050.965,70:6144.225,71:6236.364,72:6327.316,73:6417.014,74:6505.385,75:6592.356,76:6677.848,77:6761.778,78:6844.061,79:6924.603,80:7003.306,81:7080.065,82:7154.766,83:7227.285,84:7297.487,85:7365.224,86:7430.33,87:7492.617,88:7551.873,89:7607.848,90:7660.249,91:7708.714,92:7752.786,93:7791.852,94:7825.018,95:7850.765,96:7864.916};
+function tankGal(i){const v=Math.round(parseFloat(i));return(v>=1&&v<=96)?TANK[v]:null;}
 function tankLookup(inId,galId,hintId){
   const inEl=document.getElementById(inId),galEl=document.getElementById(galId),hint=hintId?document.getElementById(hintId):null;
   if(!inEl||!galEl)return;
   const v=inEl.value;
   if(v===''||isNaN(parseFloat(v))){galEl.value='';galEl.removeAttribute('readonly');if(hint){hint.textContent='';hint.className='tank-hint';}updateReceivedBadge();return;}
   const g=tankGal(v);
-  if(g!==null){
-    galEl.value=g;galEl.setAttribute('readonly','readonly');galEl.classList.add('autofilled');setTimeout(()=>galEl.classList.remove('autofilled'),400);
-    if(hint){hint.textContent='✓ '+parseFloat(v)+'" = '+g.toLocaleString('en-US',{maximumFractionDigits:3})+' gal';hint.className='tank-hint found';}
-  } else {
-    galEl.value='';galEl.removeAttribute('readonly');
-    if(hint){hint.textContent='⚠ Valid range 1–96". Enter gallons manually if needed.';hint.className='tank-hint notfound';}
-  }
+  if(g!==null){galEl.value=g;galEl.setAttribute('readonly','readonly');galEl.classList.add('autofilled');setTimeout(()=>galEl.classList.remove('autofilled'),400);if(hint){hint.textContent='✓ '+parseFloat(v)+'" = '+g.toLocaleString('en-US',{maximumFractionDigits:3})+' gal';hint.className='tank-hint found';}}
+  else{galEl.value='';galEl.removeAttribute('readonly');if(hint){hint.textContent='⚠ Valid range 1–96". Enter gallons manually.';hint.className='tank-hint notfound';}}
   updateReceivedBadge();
 }
 window.tankLookup=tankLookup;
 function updateReceivedBadge(){
   const badge=document.getElementById('received-badge');if(!badge)return;
-  const before=parseFloat(document.getElementById('fill-gal-before')?.value)||0;
-  const after=parseFloat(document.getElementById('fill-gal-after')?.value)||0;
-  if(after>0&&after>=before){
-    const r=parseFloat((after-before).toFixed(3));
-    badge.textContent='📦 Gallons received from MixTek: '+r.toLocaleString('en-US',{maximumFractionDigits:3});
-    badge.classList.add('show');
-  } else {badge.classList.remove('show');}
+  const b=parseFloat(document.getElementById('fill-gal-before')?.value)||0;
+  const a=parseFloat(document.getElementById('fill-gal-after')?.value)||0;
+  if(a>0&&a>=b){const r=parseFloat((a-b).toFixed(3));badge.textContent='📦 Gallons received from MixTek: '+r.toLocaleString('en-US',{maximumFractionDigits:3});badge.classList.add('show');}
+  else badge.classList.remove('show');
 }
 window.updateReceivedBadge=updateReceivedBadge;
 
@@ -418,11 +357,7 @@ function toggleTheme(){
   localStorage.setItem('amp-theme',next);
 }
 window.toggleTheme=toggleTheme;
-(function(){
-  const s=localStorage.getItem('amp-theme')||'dark';
-  document.documentElement.setAttribute('data-theme',s);
-  document.getElementById('theme-btn').textContent=s==='dark'?'☀️ Light':'🌙 Dark';
-})();
+(function(){const s=localStorage.getItem('amp-theme')||'dark';document.documentElement.setAttribute('data-theme',s);document.getElementById('theme-btn').textContent=s==='dark'?'☀️ Light':'🌙 Dark';})();
 
 /* ══ SYNC ════════════════════════════════════════════════ */
 onValue(ref(db,'.info/connected'),snap=>{
@@ -431,36 +366,53 @@ onValue(ref(db,'.info/connected'),snap=>{
   document.getElementById('sync-label').textContent=on?'live sync':'offline';
 });
 
+/* ══ PAINT COLORS ════════════════════════════════════════ */
+const PAINT_COLORS=['Yellow','White','Blue','Green','Red','Blackout'];
+
 /* ══ CALC ENTRIES ════════════════════════════════════════ */
 function calcEntries(raw,name){
   const sorted=Object.entries(raw||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
   if(name==='mixtek'){
     sorted.forEach(e=>{
-      if(e.type==='fill'){
-        const before=e.gallons_before||0,after=e.gallons_after||0;
-        e.delivered=parseFloat((after-before).toFixed(3));
-        e.balance=parseFloat(after.toFixed(3));
-      } else if(e.type==='reading'){
-        e.balance=parseFloat((e.gallons_after||0).toFixed(3));
-      } else if(e.type==='sale'){
-        // balance not recalculated from sales — sales are tracked separately
-        // balance stays as last fill/reading value
-        e.balance=null;
-      }
+      if(e.type==='fill'){const b=e.gallons_before||0,a=e.gallons_after||0;e.delivered=parseFloat((a-b).toFixed(3));e.balance=parseFloat(a.toFixed(3));}
+      else if(e.type==='reading'){e.balance=parseFloat((e.gallons_after||0).toFixed(3));}
+      else{e.balance=null;}
     });
   } else if(name==='martin'){
-    let r=0; sorted.forEach(e=>{r+=(e.tons||0);e.balance=r;});
-  } else {
-    let r=0; sorted.forEach(e=>{r+=e.type==='buy'?(e.tons||0):-(e.tons||0);e.balance=r;});
+    let r=0;sorted.forEach(e=>{r+=(e.tons||0);e.balance=r;});
+  } else if(name==='monarch'){
+    let r=0;sorted.forEach(e=>{r+=e.type==='buy'?(e.tons||0):-(e.tons||0);e.balance=r;});
+  } else if(name==='crackfill'){
+    // Track two products separately
+    const bal={rubber:0,fiber:0};
+    sorted.forEach(e=>{
+      const prod=e.product||'rubber';
+      if(e.type==='buy') bal[prod]+=(e.blocks||0);
+      else if(e.type==='use'||e.type==='sale') bal[prod]-=(e.blocks||0);
+      e.balance_rubber=bal.rubber;
+      e.balance_fiber=bal.fiber;
+      e.balance=bal[prod];
+    });
+  } else if(name==='paint'){
+    // Track each color separately
+    const bal={};PAINT_COLORS.forEach(c=>{bal[c]=0;});
+    sorted.forEach(e=>{
+      const col=e.color||'Yellow';
+      if(e.type==='buy') bal[col]+=(e.gallons||0);
+      else if(e.type==='use'||e.type==='sale') bal[col]-=(e.gallons||0);
+      e.balance=bal[col];
+      e.balances={...bal};
+    });
   }
   return sorted.reverse();
 }
 
 /* ══ LISTENERS ═══════════════════════════════════════════ */
 function initAllListeners(){
-  ['monarch','martin','mixtek'].forEach(name=>{
+  Object.keys(dbRefs).forEach(name=>{
     onValue(dbRefs[name],snap=>{
       const entries=calcEntries(snap.val(),name);
+      allData[name]=entries;
       if(name===currentTracker){allEntries=entries;renderTable();updateStats();}
     });
   });
@@ -469,285 +421,211 @@ function initAllListeners(){
 /* ══ SWITCH TRACKER ══════════════════════════════════════ */
 function switchTracker(name){
   currentTracker=name;allEntries=[];
-  document.getElementById('register-body').innerHTML=
-    '<tr><td colspan="10"><div class="empty-state">Loading...</div></td></tr>';
+  document.getElementById('register-body').innerHTML='<tr><td colspan="10"><div class="empty-state">Loading...</div></td></tr>';
   buildUI();
-  onValue(dbRefs[name],snap=>{
-    const entries=calcEntries(snap.val(),name);
-    allEntries=entries;renderTable();updateStats();
-  },{onlyOnce:true});
+  onValue(dbRefs[name],snap=>{const entries=calcEntries(snap.val(),name);allEntries=entries;allData[name]=entries;renderTable();updateStats();},{onlyOnce:true});
 }
 window.switchTracker=switchTracker;
 
 /* ══ BUILD UI ════════════════════════════════════════════ */
 function buildUI(){
   const t=currentTracker;
-
-  /* ── STATS ── */
-  if(t==='monarch'){
-    document.getElementById('stats-bar').innerHTML=`
-      <div class="stats-primary cols3">
-        <div class="stat-card green" id="stat-balance-card">
-          <div class="stat-label">Current Balance</div>
-          <div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Total Purchased</div>
-          <div class="stat-value" id="stat-in">—<span class="unit">ton</span></div>
-        </div>
-        <div class="stat-card red">
-          <div class="stat-label">Total Used</div>
-          <div class="stat-value" id="stat-out">—<span class="unit">ton</span></div>
-        </div>
-      </div>
-      <div class="stats-mix" id="stats-mix"></div>`;
-  } else if(t==='martin'){
-    document.getElementById('stats-bar').innerHTML=`
-      <div class="stats-primary cols3">
-        <div class="stat-card">
-          <div class="stat-label">Total Tons Logged</div>
-          <div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Total Entries</div>
-          <div class="stat-value" id="stat-in">—<span class="unit">entries</span></div>
-        </div>
-        <div class="stat-card gray">
-          <div class="stat-label">Tracking Mode</div>
-          <div class="stat-value" style="font-size:15px;padding-top:4px;">Log Only</div>
-        </div>
-      </div>
-      <div class="stats-mix" id="stats-mix"></div>`;
-  } else {
-    document.getElementById('stats-bar').innerHTML=`
-      <div class="stats-primary cols5">
-        <div class="stat-card blue" id="stat-balance-card">
-          <div class="stat-label">Current Gallons</div>
-          <div class="stat-value" id="stat-balance">—<span class="unit">gal</span></div>
-        </div>
-        <div class="stat-card green">
-          <div class="stat-label">Total Received</div>
-          <div class="stat-value" id="stat-received">—<span class="unit">gal</span></div>
-        </div>
-        <div class="stat-card red">
-          <div class="stat-label">Total Sold</div>
-          <div class="stat-value" id="stat-sold">—<span class="unit">gal</span></div>
-        </div>
-        <div class="stat-card gray">
-          <div class="stat-label">Tank Capacity</div>
-          <div class="stat-value">8,000<span class="unit">gal</span></div>
-        </div>
-        <div class="stat-card amber">
-          <div class="stat-label">% Full</div>
-          <div class="stat-value" id="stat-pct">—<span class="unit">%</span></div>
-        </div>
-      </div>`;
-  }
-
-  /* ── ENTRY PANELS ── */
-  if(t==='monarch'){
-    document.getElementById('entry-area').innerHTML=`
-      <div class="entry-grid-2">
-        <div class="entry-panel green-panel">
-          <div class="panel-title green">Add Block Purchase</div>
-          <div class="form-row">
-            <div class="form-group">
-              <div style="flex:1"><label class="field-label">Tons Purchased</label>
-                <input type="number" id="buy-tons" placeholder="e.g. 5000" min="0" step="0.1"/></div>
-              <div style="flex:1"><label class="field-label">Date</label>
-                <input type="date" id="buy-date"/></div>
-            </div>
-            <div><label class="field-label">Supplier</label>
-              <input type="text" id="buy-supplier" placeholder="Monarch"/></div>
-            <div><label class="field-label">Note / PO # (optional)</label>
-              <input type="text" id="buy-note" placeholder="e.g. PO-2025-01"/></div>
-            <button class="btn btn-green" onclick="submitMonarch('buy')">＋ Add Purchase</button>
-          </div>
-        </div>
-        <div class="entry-panel red-panel">
-          <div class="panel-title red">Record Usage</div>
-          <div class="form-row">
-            <div class="form-group">
-              <div style="flex:1"><label class="field-label">Tons Used</label>
-                <input type="number" id="use-tons" placeholder="e.g. 280" min="0" step="0.1"/></div>
-              <div style="flex:1"><label class="field-label">Date</label>
-                <input type="date" id="use-date"/></div>
-            </div>
-            <div><label class="field-label">Mix Type</label>
-              <input type="text" id="use-mix" placeholder="e.g. 12.5mm NWEAR"/></div>
-            <div><label class="field-label">Job / Location (optional)</label>
-              <input type="text" id="use-note" placeholder="e.g. Main St parking lot"/></div>
-            <button class="btn btn-red" onclick="submitMonarch('use')">− Record Usage</button>
-          </div>
-        </div>
-      </div>`;
-    setTodayDates(['buy-date','use-date']);
-
-  } else if(t==='martin'){
-    document.getElementById('entry-area').innerHTML=`
-      <div class="entry-grid-2">
-        <div class="entry-panel green-panel">
-          <div class="panel-title green">Log Tons Used</div>
-          <div class="form-row">
-            <div class="form-group">
-              <div style="flex:1"><label class="field-label">Tons Used</label>
-                <input type="number" id="mm-tons" placeholder="e.g. 310" min="0" step="0.1"/></div>
-              <div style="flex:1"><label class="field-label">Date</label>
-                <input type="date" id="mm-date"/></div>
-            </div>
-            <div><label class="field-label">Mix Type</label>
-              <input type="text" id="mm-mix" placeholder="e.g. 9.5mm NWEAR"/></div>
-            <div><label class="field-label">Job / Location (optional)</label>
-              <input type="text" id="mm-note" placeholder="e.g. Hwy 29 lot"/></div>
-            <button class="btn btn-green" onclick="submitMartin()">＋ Log Entry</button>
-          </div>
-        </div>
-        <div class="entry-panel info-panel">
-          <div class="panel-title gray">About This Tracker</div>
-          <p class="info-note">
-            <strong>Martin Marietta</strong> is a usage log only.<br/><br/>
-            Entries record how much material was used from Martin Marietta
-            per job. The mix type breakdown cards above update automatically
-            as you log entries.
-          </p>
-        </div>
-      </div>`;
-    setTodayDates(['mm-date']);
-
-  } else {
-    /* MixTek — 3 panels */
-    document.getElementById('entry-area').innerHTML=`
-      <div class="entry-grid-3">
-
-        <!-- FILL -->
-        <div class="entry-panel blue-panel">
-          <div class="panel-title blue">Record Tank Fill (Delivery)</div>
-          <div class="form-row">
-            <div><label class="field-label">Date</label><input type="date" id="fill-date"/></div>
-            <div class="sub-section">
-              <div class="sub-section-title blue">Before Fill</div>
-              <div class="form-group-2">
-                <div>
-                  <label class="field-label">Inches Before</label>
-                  <input type="number" id="fill-in-before" placeholder="e.g. 31" min="1" max="96" step="1"
-                    oninput="tankLookup('fill-in-before','fill-gal-before','fill-hint-before')"/>
-                  <div class="tank-hint" id="fill-hint-before"></div>
-                </div>
-                <div>
-                  <label class="field-label">Gallons Before</label>
-                  <input type="number" id="fill-gal-before" placeholder="auto-fills" min="0" step="0.001"
-                    oninput="updateReceivedBadge()"/>
-                </div>
-              </div>
-            </div>
-            <div class="sub-section">
-              <div class="sub-section-title green">After Fill</div>
-              <div class="form-group-2">
-                <div>
-                  <label class="field-label">Inches After</label>
-                  <input type="number" id="fill-in-after" placeholder="e.g. 74" min="1" max="96" step="1"
-                    oninput="tankLookup('fill-in-after','fill-gal-after','fill-hint-after')"/>
-                  <div class="tank-hint" id="fill-hint-after"></div>
-                </div>
-                <div>
-                  <label class="field-label">Gallons After</label>
-                  <input type="number" id="fill-gal-after" placeholder="auto-fills" min="0" step="0.001"
-                    oninput="updateReceivedBadge()"/>
-                </div>
-              </div>
-            </div>
-            <div class="received-badge" id="received-badge"></div>
-            <div><label class="field-label">Note (optional)</label>
-              <input type="text" id="fill-note" placeholder="e.g. MixTek delivery #4421"/></div>
-            <button class="btn btn-blue" onclick="submitFill()">＋ Record Fill</button>
-          </div>
-        </div>
-
-        <!-- READING -->
-        <div class="entry-panel amber-panel">
-          <div class="panel-title amber">Current Tank Reading</div>
-          <div class="form-row">
-            <div><label class="field-label">Date</label><input type="date" id="read-date"/></div>
-            <div class="sub-section">
-              <div class="sub-section-title amber">Tank Level Right Now</div>
-              <div class="form-group-2">
-                <div>
-                  <label class="field-label">Inches</label>
-                  <input type="number" id="read-inches" placeholder="e.g. 36" min="1" max="96" step="1"
-                    oninput="tankLookup('read-inches','read-gallons','read-hint')"/>
-                  <div class="tank-hint" id="read-hint"></div>
-                </div>
-                <div>
-                  <label class="field-label">Gallons</label>
-                  <input type="number" id="read-gallons" placeholder="auto-fills" min="0" step="0.001"/>
-                </div>
-              </div>
-            </div>
-            <div><label class="field-label">Note (optional)</label>
-              <input type="text" id="read-note" placeholder="e.g. morning check / pre-delivery"/></div>
-            <button class="btn btn-amber" onclick="submitReading()">◉ Record Reading</button>
-            <div style="padding:9px;background:var(--bg3);border-radius:6px;border:1px solid var(--border);">
-              <p style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;line-height:1.7;">
-                Snapshot of current level.<br/>Use for morning checks,<br/>pre/post delivery confirmations.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- CONTRACTOR SALE -->
-        <div class="entry-panel red-panel" style="border-color:var(--red-border);background:rgba(45,21,18,.3);">
-          <div class="panel-title red">Contractor Sale</div>
-          <div class="form-row">
-            <div><label class="field-label">Date</label><input type="date" id="sale-date"/></div>
-            <div><label class="field-label">Gallons Sold</label>
-              <input type="number" id="sale-gallons" placeholder="e.g. 500" min="0" step="0.1"/></div>
-            <div><label class="field-label">Sold To (Contractor Name)</label>
-              <input type="text" id="sale-buyer" placeholder="e.g. Smith Paving LLC"/></div>
-            <div><label class="field-label">Note (optional)</label>
-              <input type="text" id="sale-note" placeholder="e.g. Invoice #1042, job site Eau Claire"/></div>
-            <button class="btn btn-red" onclick="submitSale()">− Record Sale</button>
-          </div>
-        </div>
-
-      </div>`;
-    setTodayDates(['fill-date','read-date','sale-date']);
-
-    // Add report button below the three panels
-    const reportBtn = document.createElement('div');
-    reportBtn.style.cssText = 'display:flex;justify-content:flex-end;margin-bottom:20px;';
-    reportBtn.innerHTML = '<button class="btn btn-blue" onclick="openReport()" style="gap:8px;">📋 Contractor Sales Report</button>';
-    document.getElementById('entry-area').appendChild(reportBtn);
-  }
-
-  /* ── TABLE HEADERS ── */
-  if(t==='monarch'){
-    document.getElementById('table-head').innerHTML=
-      '<th>Date</th><th>Type</th><th>Supplier</th><th>Mix Type</th>'
-      +'<th class="right">Purchase (ton)</th><th class="right">Usage (ton)</th>'
-      +'<th class="right">Balance (ton)</th><th>Note</th><th></th>';
-    document.getElementById('register-title').textContent='Transaction Register — Asphalt (Monarch)';
-  } else if(t==='martin'){
-    document.getElementById('table-head').innerHTML=
-      '<th>Date</th><th>Type</th><th>Mix Type</th>'
-      +'<th class="right">Tons Logged</th><th class="right">Running Total (ton)</th>'
-      +'<th>Note</th><th></th>';
-    document.getElementById('register-title').textContent='Usage Log — Asphalt (Martin Marietta)';
-  } else {
-    document.getElementById('table-head').innerHTML=
-      '<th>Date</th><th>Type</th>'
-      +'<th class="right">In Before</th><th class="right">Gal Before</th>'
-      +'<th class="right">In After</th><th class="right">Gal After</th>'
-      +'<th class="right">Gal Received / Sold</th>'
-      +'<th class="right">Balance (gal)</th>'
-      +'<th>Note / Buyer</th><th></th>';
-    document.getElementById('register-title').textContent='Transaction Register — MixTek Sealer';
-  }
-
+  buildStats(t);
+  buildEntryPanels(t);
+  buildReportButtons(t);
+  buildTableHead(t);
+  document.getElementById('filter-input').value='';
   renderTable();
   updateStats();
 }
 
-/* ══ SUBMIT MONARCH ══════════════════════════════════════ */
+function buildStats(t){
+  let html='';
+  if(t==='monarch'){
+    html=`<div class="stats-primary cols3"><div class="stat-card green" id="stat-balance-card"><div class="stat-label">Current Balance</div><div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div></div><div class="stat-card"><div class="stat-label">Total Purchased</div><div class="stat-value" id="stat-in">—<span class="unit">ton</span></div></div><div class="stat-card red"><div class="stat-label">Total Used</div><div class="stat-value" id="stat-out">—<span class="unit">ton</span></div></div></div><div class="stats-mix" id="stats-mix"></div>`;
+  } else if(t==='martin'){
+    html=`<div class="stats-primary cols3"><div class="stat-card"><div class="stat-label">Total Tons Logged</div><div class="stat-value" id="stat-balance">—<span class="unit">ton</span></div></div><div class="stat-card"><div class="stat-label">Total Entries</div><div class="stat-value" id="stat-in">—<span class="unit">entries</span></div></div><div class="stat-card gray"><div class="stat-label">Tracking Mode</div><div class="stat-value" style="font-size:15px;padding-top:4px;">Log Only</div></div></div><div class="stats-mix" id="stats-mix"></div>`;
+  } else if(t==='mixtek'){
+    html=`<div class="stats-primary cols5"><div class="stat-card blue" id="stat-balance-card"><div class="stat-label">Current Gallons</div><div class="stat-value" id="stat-balance">—<span class="unit">gal</span></div></div><div class="stat-card green"><div class="stat-label">Total Received</div><div class="stat-value" id="stat-received">—<span class="unit">gal</span></div></div><div class="stat-card red"><div class="stat-label">Total Sold</div><div class="stat-value" id="stat-sold">—<span class="unit">gal</span></div></div><div class="stat-card gray"><div class="stat-label">Tank Capacity</div><div class="stat-value">8,000<span class="unit">gal</span></div></div><div class="stat-card amber"><div class="stat-label">% Full</div><div class="stat-value" id="stat-pct">—<span class="unit">%</span></div></div></div>`;
+  } else if(t==='crackfill'){
+    html=`<div class="stats-primary cols4"><div class="stat-card green" id="stat-rubber-card"><div class="stat-label">Rubber — Balance</div><div class="stat-value" id="stat-rubber">—<span class="unit">blocks</span></div></div><div class="stat-card teal" id="stat-fiber-card"><div class="stat-label">Mod. Fiber/Rubber — Balance</div><div class="stat-value" id="stat-fiber">—<span class="unit">blocks</span></div></div><div class="stat-card"><div class="stat-label">Block Weight</div><div class="stat-value gray" style="font-size:15px;padding-top:4px;">30 lb / block</div></div><div class="stat-card purple"><div class="stat-label">Total Sold</div><div class="stat-value" id="stat-crack-sold">—<span class="unit">blocks</span></div></div></div>`;
+  } else {
+    // Paint — one card per color
+    html=`<div class="stats-primary" style="grid-template-columns:repeat(6,1fr);">`+
+      PAINT_COLORS.map(c=>`<div class="stat-card compact" id="stat-paint-${c.toLowerCase()}"><div class="stat-label">${c}</div><div class="stat-value sm" id="val-paint-${c.toLowerCase()}">—<span class="unit">gal</span></div><div class="mix-label">balance</div></div>`).join('')+
+      `</div>`;
+  }
+  document.getElementById('stats-bar').innerHTML=html;
+}
+
+function buildEntryPanels(t){
+  let html='';
+  if(t==='monarch'){
+    html=`<div class="entry-grid-2">
+      <div class="entry-panel green-panel"><div class="panel-title green">Add Block Purchase</div><div class="form-row">
+        <div class="form-group"><div style="flex:1"><label class="field-label">Tons Purchased</label><input type="number" id="buy-tons" placeholder="e.g. 5000" min="0" step="0.1"/></div><div style="flex:1"><label class="field-label">Date</label><input type="date" id="buy-date"/></div></div>
+        <div><label class="field-label">Supplier</label><input type="text" id="buy-supplier" placeholder="Monarch"/></div>
+        <div><label class="field-label">Note / PO # (optional)</label><input type="text" id="buy-note" placeholder="e.g. PO-2025-01"/></div>
+        <button class="btn btn-green" onclick="submitMonarch('buy')">＋ Add Purchase</button>
+      </div></div>
+      <div class="entry-panel red-panel"><div class="panel-title red">Record Usage</div><div class="form-row">
+        <div class="form-group"><div style="flex:1"><label class="field-label">Tons Used</label><input type="number" id="use-tons" placeholder="e.g. 280" min="0" step="0.1"/></div><div style="flex:1"><label class="field-label">Date</label><input type="date" id="use-date"/></div></div>
+        <div><label class="field-label">Mix Type</label><input type="text" id="use-mix" placeholder="e.g. 12.5mm NWEAR"/></div>
+        <div><label class="field-label">Job / Location (optional)</label><input type="text" id="use-note" placeholder="e.g. Main St parking lot"/></div>
+        <button class="btn btn-red" onclick="submitMonarch('use')">− Record Usage</button>
+      </div></div>
+    </div>`;
+    setTodayDates(['buy-date','use-date']);
+  } else if(t==='martin'){
+    html=`<div class="entry-grid-2">
+      <div class="entry-panel green-panel"><div class="panel-title green">Log Tons Used</div><div class="form-row">
+        <div class="form-group"><div style="flex:1"><label class="field-label">Tons Used</label><input type="number" id="mm-tons" placeholder="e.g. 310" min="0" step="0.1"/></div><div style="flex:1"><label class="field-label">Date</label><input type="date" id="mm-date"/></div></div>
+        <div><label class="field-label">Mix Type</label><input type="text" id="mm-mix" placeholder="e.g. 9.5mm NWEAR"/></div>
+        <div><label class="field-label">Job / Location (optional)</label><input type="text" id="mm-note" placeholder="e.g. Hwy 29 lot"/></div>
+        <button class="btn btn-green" onclick="submitMartin()">＋ Log Entry</button>
+      </div></div>
+      <div class="entry-panel info-panel"><div class="panel-title gray">About This Tracker</div><p class="info-note"><strong>Martin Marietta</strong> is a usage log only. Entries record how much material was used per job. Mix type breakdown cards update automatically as you log entries.</p></div>
+    </div>`;
+    setTodayDates(['mm-date']);
+  } else if(t==='mixtek'){
+    html=`<div class="entry-grid-3">
+      <div class="entry-panel blue-panel"><div class="panel-title blue">Record Tank Fill (Delivery)</div><div class="form-row">
+        <div><label class="field-label">Date</label><input type="date" id="fill-date"/></div>
+        <div class="sub-section"><div class="sub-section-title blue">Before Fill</div><div class="form-group-2">
+          <div><label class="field-label">Inches Before</label><input type="number" id="fill-in-before" placeholder="e.g. 31" min="1" max="96" step="1" oninput="tankLookup('fill-in-before','fill-gal-before','fill-hint-before')"/><div class="tank-hint" id="fill-hint-before"></div></div>
+          <div><label class="field-label">Gallons Before</label><input type="number" id="fill-gal-before" placeholder="auto-fills" min="0" step="0.001" oninput="updateReceivedBadge()"/></div>
+        </div></div>
+        <div class="sub-section"><div class="sub-section-title green">After Fill</div><div class="form-group-2">
+          <div><label class="field-label">Inches After</label><input type="number" id="fill-in-after" placeholder="e.g. 74" min="1" max="96" step="1" oninput="tankLookup('fill-in-after','fill-gal-after','fill-hint-after')"/><div class="tank-hint" id="fill-hint-after"></div></div>
+          <div><label class="field-label">Gallons After</label><input type="number" id="fill-gal-after" placeholder="auto-fills" min="0" step="0.001" oninput="updateReceivedBadge()"/></div>
+        </div></div>
+        <div class="received-badge" id="received-badge"></div>
+        <div><label class="field-label">Note (optional)</label><input type="text" id="fill-note" placeholder="e.g. MixTek delivery #4421"/></div>
+        <button class="btn btn-blue" onclick="submitFill()">＋ Record Fill</button>
+      </div></div>
+      <div class="entry-panel amber-panel"><div class="panel-title amber">Current Tank Reading</div><div class="form-row">
+        <div><label class="field-label">Date</label><input type="date" id="read-date"/></div>
+        <div class="sub-section"><div class="sub-section-title amber">Tank Level Right Now</div><div class="form-group-2">
+          <div><label class="field-label">Inches</label><input type="number" id="read-inches" placeholder="e.g. 36" min="1" max="96" step="1" oninput="tankLookup('read-inches','read-gallons','read-hint')"/><div class="tank-hint" id="read-hint"></div></div>
+          <div><label class="field-label">Gallons</label><input type="number" id="read-gallons" placeholder="auto-fills" min="0" step="0.001"/></div>
+        </div></div>
+        <div><label class="field-label">Note (optional)</label><input type="text" id="read-note" placeholder="e.g. morning check / pre-delivery"/></div>
+        <button class="btn btn-amber" onclick="submitReading()">◉ Record Reading</button>
+        <div style="padding:9px;background:var(--bg3);border-radius:6px;border:1px solid var(--border);"><p style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;line-height:1.7;">Snapshot of current level. Use for morning checks and pre/post delivery confirmations.</p></div>
+      </div></div>
+      <div class="entry-panel red-panel"><div class="panel-title red">Contractor Sale</div><div class="form-row">
+        <div><label class="field-label">Date</label><input type="date" id="sale-date"/></div>
+        <div><label class="field-label">Gallons Sold</label><input type="number" id="sale-gallons" placeholder="e.g. 500" min="0" step="0.1"/></div>
+        <div><label class="field-label">Sold To (Contractor Name)</label><input type="text" id="sale-buyer" placeholder="e.g. Smith Paving LLC"/></div>
+        <div><label class="field-label">Note / Invoice # (optional)</label><input type="text" id="sale-note" placeholder="e.g. Invoice #1042"/></div>
+        <button class="btn btn-red" onclick="submitSale('mixtek')">− Record Sale</button>
+      </div></div>
+    </div>`;
+    setTodayDates(['fill-date','read-date','sale-date']);
+  } else if(t==='crackfill'){
+    html=`<div class="entry-grid-4">
+      <div class="entry-panel green-panel"><div class="panel-title green">Purchase Blocks</div><div class="form-row">
+        <div><label class="field-label">Date</label><input type="date" id="cf-buy-date"/></div>
+        <div><label class="field-label">Product</label><select class="form-select" id="cf-buy-product"><option value="rubber">Rubber</option><option value="fiber">Modified Fiber/Rubber</option></select></div>
+        <div><label class="field-label">Blocks Purchased</label><input type="number" id="cf-buy-blocks" placeholder="e.g. 100" min="0" step="1"/></div>
+        <div><label class="field-label">Note / PO # (optional)</label><input type="text" id="cf-buy-note" placeholder="e.g. Deery order #221"/></div>
+        <button class="btn btn-green" onclick="submitCrackfill('buy')">＋ Add Purchase</button>
+      </div></div>
+      <div class="entry-panel amber-panel"><div class="panel-title amber">Record Usage</div><div class="form-row">
+        <div><label class="field-label">Date</label><input type="date" id="cf-use-date"/></div>
+        <div><label class="field-label">Product</label><select class="form-select" id="cf-use-product"><option value="rubber">Rubber</option><option value="fiber">Modified Fiber/Rubber</option></select></div>
+        <div><label class="field-label">Blocks Used</label><input type="number" id="cf-use-blocks" placeholder="e.g. 20" min="0" step="1"/></div>
+        <div><label class="field-label">Linear Feet Sealed (optional)</label><input type="number" id="cf-use-lf" placeholder="e.g. 450" min="0" step="1"/></div>
+        <div><label class="field-label">Job / Location (optional)</label><input type="text" id="cf-use-note" placeholder="e.g. Hwy 29 cracks"/></div>
+        <button class="btn btn-amber" onclick="submitCrackfill('use')">− Record Usage</button>
+      </div></div>
+      <div class="entry-panel red-panel"><div class="panel-title red">Contractor Sale</div><div class="form-row">
+        <div><label class="field-label">Date</label><input type="date" id="cf-sale-date"/></div>
+        <div><label class="field-label">Product</label><select class="form-select" id="cf-sale-product"><option value="rubber">Rubber</option><option value="fiber">Modified Fiber/Rubber</option></select></div>
+        <div><label class="field-label">Blocks Sold</label><input type="number" id="cf-sale-blocks" placeholder="e.g. 50" min="0" step="1"/></div>
+        <div><label class="field-label">Sold To (Contractor Name)</label><input type="text" id="cf-sale-buyer" placeholder="e.g. Smith Paving LLC"/></div>
+        <div><label class="field-label">Note / Invoice # (optional)</label><input type="text" id="cf-sale-note" placeholder="e.g. Invoice #1043"/></div>
+        <button class="btn btn-red" onclick="submitCrackfill('sale')">− Record Sale</button>
+      </div></div>
+      <div class="entry-panel info-panel"><div class="panel-title gray">Crackfill Info</div><p class="info-note"><strong>Deery Rubber Blocks</strong><br/>30 lb per block<br/><br/>Two products tracked separately:<br/>• Rubber<br/>• Modified Fiber/Rubber<br/><br/>Balance flashes amber at 20 blocks, red at 10 blocks.<br/><br/>Linear feet logged with usage entries for coverage tracking.</p></div>
+    </div>`;
+    setTodayDates(['cf-buy-date','cf-use-date','cf-sale-date']);
+  } else {
+    // Paint
+    html=`<div class="entry-grid-3">
+      <div class="entry-panel green-panel"><div class="panel-title green">Purchase Paint</div><div class="form-row">
+        <div><label class="field-label">Date</label><input type="date" id="pt-buy-date"/></div>
+        <div><label class="field-label">Color</label><select class="form-select" id="pt-buy-color">${PAINT_COLORS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+        <div><label class="field-label">Gallons Purchased</label><input type="number" id="pt-buy-gallons" placeholder="e.g. 50" min="0" step="0.1"/></div>
+        <div><label class="field-label">Note / Supplier (optional)</label><input type="text" id="pt-buy-note" placeholder="e.g. Sherwin-Williams PO #22"/></div>
+        <button class="btn btn-green" onclick="submitPaint('buy')">＋ Add Purchase</button>
+      </div></div>
+      <div class="entry-panel amber-panel"><div class="panel-title amber">Record Usage</div><div class="form-row">
+        <div><label class="field-label">Date</label><input type="date" id="pt-use-date"/></div>
+        <div><label class="field-label">Color</label><select class="form-select" id="pt-use-color">${PAINT_COLORS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+        <div><label class="field-label">Gallons Used</label><input type="number" id="pt-use-gallons" placeholder="e.g. 5" min="0" step="0.1"/></div>
+        <div><label class="field-label">Job / Location (optional)</label><input type="text" id="pt-use-note" placeholder="e.g. Nilssen's lot striping"/></div>
+        <button class="btn btn-amber" onclick="submitPaint('use')">− Record Usage</button>
+      </div></div>
+      <div class="entry-panel red-panel"><div class="panel-title red">Contractor Sale</div><div class="form-row">
+        <div><label class="field-label">Date</label><input type="date" id="pt-sale-date"/></div>
+        <div><label class="field-label">Color</label><select class="form-select" id="pt-sale-color">${PAINT_COLORS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+        <div><label class="field-label">Gallons Sold</label><input type="number" id="pt-sale-gallons" placeholder="e.g. 10" min="0" step="0.1"/></div>
+        <div><label class="field-label">Sold To (Contractor Name)</label><input type="text" id="pt-sale-buyer" placeholder="e.g. Smith Striping Co"/></div>
+        <div><label class="field-label">Note / Invoice # (optional)</label><input type="text" id="pt-sale-note" placeholder="e.g. Invoice #1044"/></div>
+        <button class="btn btn-red" onclick="submitPaint('sale')">− Record Sale</button>
+      </div></div>
+    </div>`;
+    setTodayDates(['pt-buy-date','pt-use-date','pt-sale-date']);
+  }
+  document.getElementById('entry-area').innerHTML=html;
+}
+
+function buildReportButtons(t){
+  const bar=document.getElementById('report-btn-bar');
+  let btns='';
+  if(t==='monarch'){
+    btns=`<button class="btn btn-green" onclick="openReport('monarch-purchases')">📋 Purchase History</button>
+          <button class="btn btn-red" onclick="openReport('monarch-usage')">📋 Usage Report</button>`;
+  } else if(t==='martin'){
+    btns=`<button class="btn btn-blue" onclick="openReport('martin-usage')">📋 Usage Report</button>`;
+  } else if(t==='mixtek'){
+    btns=`<button class="btn btn-blue" onclick="openReport('mixtek-deliveries')">📋 Delivery History</button>
+          <button class="btn btn-red" onclick="openReport('mixtek-sales')">📋 Contractor Sales</button>`;
+  } else if(t==='crackfill'){
+    btns=`<button class="btn btn-green" onclick="openReport('cf-purchases')">📋 Purchase History</button>
+          <button class="btn btn-amber" onclick="openReport('cf-usage')">📋 Usage Report</button>
+          <button class="btn btn-red" onclick="openReport('cf-sales')">📋 Contractor Sales</button>`;
+  } else if(t==='paint'){
+    btns=`<button class="btn btn-green" onclick="openReport('paint-purchases')">📋 Purchase History</button>
+          <button class="btn btn-amber" onclick="openReport('paint-usage')">📋 Usage Report</button>
+          <button class="btn btn-red" onclick="openReport('paint-sales')">📋 Contractor Sales</button>`;
+  }
+  bar.innerHTML=btns;
+}
+
+function buildTableHead(t){
+  const rt=document.getElementById('register-title');
+  const th=document.getElementById('table-head');
+  if(t==='monarch'){
+    rt.textContent='Transaction Register — Asphalt (Monarch)';
+    th.innerHTML='<th>Date</th><th>Type</th><th>Supplier</th><th>Mix Type</th><th class="right">Purchase (ton)</th><th class="right">Usage (ton)</th><th class="right">Balance (ton)</th><th>Note</th><th></th>';
+  } else if(t==='martin'){
+    rt.textContent='Usage Log — Asphalt (Martin Marietta)';
+    th.innerHTML='<th>Date</th><th>Type</th><th>Mix Type</th><th class="right">Tons Logged</th><th class="right">Running Total (ton)</th><th>Note</th><th></th>';
+  } else if(t==='mixtek'){
+    rt.textContent='Transaction Register — MixTek Sealer';
+    th.innerHTML='<th>Date</th><th>Type</th><th class="right">In Before</th><th class="right">Gal Before</th><th class="right">In After</th><th class="right">Gal After</th><th class="right">Gal Received / Sold</th><th class="right">Balance (gal)</th><th>Note / Buyer</th><th></th>';
+  } else if(t==='crackfill'){
+    rt.textContent='Transaction Register — Crackfill (Deery)';
+    th.innerHTML='<th>Date</th><th>Type</th><th>Product</th><th class="right">Blocks</th><th class="right">Lbs</th><th class="right">Lin. Ft</th><th class="right">Balance (blocks)</th><th>Note / Buyer</th><th></th>';
+  } else {
+    rt.textContent='Transaction Register — Traffic Paint';
+    th.innerHTML='<th>Date</th><th>Type</th><th>Color</th><th class="right">Gallons</th><th class="right">Color Balance (gal)</th><th>Note / Buyer</th><th></th>';
+  }
+}
+
+/* ══ SUBMIT FUNCTIONS ════════════════════════════════════ */
 function submitMonarch(type){
   const tEl=document.getElementById(type==='buy'?'buy-tons':'use-tons');
   const dEl=document.getElementById(type==='buy'?'buy-date':'use-date');
@@ -757,33 +635,20 @@ function submitMonarch(type){
   const tons=parseFloat(tEl.value);
   if(!tons||tons<=0){tEl.focus();showToast('Enter a valid tonnage.','red');return;}
   const entry={type,tons,date:dEl.value||today(),note:nEl?nEl.value.trim():'',ts:Date.now()};
-  if(type==='buy') entry.supplier=(sEl?sEl.value.trim():'') ||'Monarch';
-  if(type==='use') entry.mix=(mEl?mEl.value.trim():'');
-  push(dbRefs.monarch,entry)
-    .then(()=>{
-      tEl.value='';
-      if(sEl) sEl.value='';
-      if(mEl) mEl.value='';
-      if(nEl) nEl.value='';
-      showToast(type==='buy'?'+ Purchase recorded.':'− Usage recorded.',type==='buy'?'green':'red');
-    })
-    .catch(e=>showToast('Error: '+e.message,'red'));
+  if(type==='buy') entry.supplier=(sEl?sEl.value.trim():'')||'Monarch';
+  if(type==='use') entry.mix=mEl?mEl.value.trim():'';
+  push(dbRefs.monarch,entry).then(()=>{tEl.value='';if(sEl)sEl.value='';if(mEl)mEl.value='';if(nEl)nEl.value='';showToast(type==='buy'?'+ Purchase recorded.':'− Usage recorded.',type==='buy'?'green':'red');}).catch(e=>showToast('Error: '+e.message,'red'));
 }
 window.submitMonarch=submitMonarch;
 
-/* ══ SUBMIT MARTIN ═══════════════════════════════════════ */
 function submitMartin(){
-  const tEl=document.getElementById('mm-tons'),dEl=document.getElementById('mm-date'),
-        mEl=document.getElementById('mm-mix'),nEl=document.getElementById('mm-note');
+  const tEl=document.getElementById('mm-tons'),dEl=document.getElementById('mm-date'),mEl=document.getElementById('mm-mix'),nEl=document.getElementById('mm-note');
   const tons=parseFloat(tEl.value);
   if(!tons||tons<=0){tEl.focus();showToast('Enter a valid tonnage.','red');return;}
-  push(dbRefs.martin,{type:'log',tons,date:dEl.value||today(),mix:mEl.value.trim(),note:nEl.value.trim(),ts:Date.now()})
-    .then(()=>{tEl.value='';mEl.value='';nEl.value='';showToast('+ Entry logged.','green');})
-    .catch(e=>showToast('Error: '+e.message,'red'));
+  push(dbRefs.martin,{type:'log',tons,date:dEl.value||today(),mix:mEl.value.trim(),note:nEl.value.trim(),ts:Date.now()}).then(()=>{tEl.value='';mEl.value='';nEl.value='';showToast('+ Entry logged.','green');}).catch(e=>showToast('Error: '+e.message,'red'));
 }
 window.submitMartin=submitMartin;
 
-/* ══ SUBMIT FILL ═════════════════════════════════════════ */
 function submitFill(){
   const galB=parseFloat(document.getElementById('fill-gal-before').value)||0;
   const galA=parseFloat(document.getElementById('fill-gal-after').value);
@@ -793,221 +658,126 @@ function submitFill(){
   const date=document.getElementById('fill-date').value||today();
   if(!galA||galA<=0){document.getElementById('fill-gal-after').focus();showToast('Enter gallons after fill.','red');return;}
   const delivered=parseFloat((galA-galB).toFixed(3));
-  push(dbRefs.mixtek,{type:'fill',gallons_before:galB,gallons_after:galA,inches_before:inB,inches_after:inA,delivered,date,note,ts:Date.now()})
-    .then(()=>{
-      ['fill-gal-before','fill-gal-after','fill-in-before','fill-in-after'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.removeAttribute('readonly');}});
-      ['fill-hint-before','fill-hint-after'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='';el.className='tank-hint';}});
-      document.getElementById('fill-note').value='';
-      const badge=document.getElementById('received-badge');if(badge)badge.classList.remove('show');
-      showToast('+ Fill recorded — '+delivered.toLocaleString('en-US',{maximumFractionDigits:3})+' gal received.','blue');
-      // Show print receipt button briefly
-      const existingBtn=document.getElementById('last-receipt-btn');
-      if(existingBtn) existingBtn.remove();
-      const receiptBtn=document.createElement('div');
-      receiptBtn.id='last-receipt-btn';
-      receiptBtn.style.cssText='display:flex;justify-content:flex-end;margin-top:8px;';
-      receiptBtn.innerHTML='<button class="btn btn-blue" onclick="printDeliveryReceipt('+galB+','+galA+','+inB+','+inA+','+delivered+',\''+date+'\',\''+note.replace(/'/g,"\\'")+'\')" style="gap:6px;">🖨 Print Delivery Receipt</button>';
-      // Insert after the fill panel
-      const fillPanel=document.querySelector('.entry-panel.blue-panel');
-      if(fillPanel&&fillPanel.parentNode) fillPanel.parentNode.insertBefore(receiptBtn, fillPanel.parentNode.children[3]||null);
-    })
-    .catch(e=>showToast('Error: '+e.message,'red'));
+  push(dbRefs.mixtek,{type:'fill',gallons_before:galB,gallons_after:galA,inches_before:inB,inches_after:inA,delivered,date,note,ts:Date.now()}).then(()=>{
+    ['fill-gal-before','fill-gal-after','fill-in-before','fill-in-after'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.removeAttribute('readonly');}});
+    ['fill-hint-before','fill-hint-after'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='';el.className='tank-hint';}});
+    document.getElementById('fill-note').value='';
+    const badge=document.getElementById('received-badge');if(badge)badge.classList.remove('show');
+    showToast('+ Fill recorded — '+delivered.toLocaleString('en-US',{maximumFractionDigits:3})+' gal received.','blue');
+    // Offer delivery receipt
+    showDeliveryReceiptOffer(galB,galA,inB,inA,delivered,date,note);
+  }).catch(e=>showToast('Error: '+e.message,'red'));
 }
 window.submitFill=submitFill;
 
-/* ══ PRINT DELIVERY RECEIPT ══════════════════════════ */
-function printDeliveryReceipt(galB, galA, inB, inA, delivered, date, note){
-  const dateDisp = formatDateDisplay(date);
-  const receiptHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"/>
-    <title>MixTek Delivery Receipt — ${dateDisp}</title>
-    <style>
-      *{box-sizing:border-box;margin:0;padding:0;}
-      body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#111;padding:40px;background:#fff;max-width:600px;margin:0 auto;}
-      .header{border-bottom:3px solid #111;padding-bottom:16px;margin-bottom:24px;}
-      h1{font-size:22px;font-weight:700;margin-bottom:4px;}
-      .sub{font-size:12px;color:#555;}
-      .receipt-title{font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#1a6aaa;margin-bottom:20px;}
-      .meta{display:flex;gap:40px;margin-bottom:24px;}
-      .meta-item .label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-bottom:3px;}
-      .meta-item .value{font-size:14px;font-weight:600;color:#111;}
-      .readings{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
-      .reading-box{border:1px solid #ddd;border-radius:8px;padding:16px;}
-      .reading-box.before{border-left:4px solid #1a6aaa;}
-      .reading-box.after{border-left:4px solid #2d7a0a;}
-      .reading-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:12px;}
-      .reading-label.before{color:#1a6aaa;}
-      .reading-label.after{color:#2d7a0a;}
-      .reading-row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;}
-      .reading-row .rl{color:#666;}
-      .reading-row .rv{font-weight:600;}
-      .delivered-box{background:#e8f5fa;border:2px solid #1a6aaa;border-radius:8px;padding:16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
-      .delivered-label{font-size:11px;font-weight:700;color:#1a6aaa;text-transform:uppercase;letter-spacing:.05em;}
-      .delivered-value{font-size:28px;font-weight:700;color:#1a6aaa;}
-      .delivered-unit{font-size:14px;color:#555;margin-left:4px;}
-      .note-box{border:1px solid #ddd;border-radius:8px;padding:14px;margin-bottom:24px;}
-      .note-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-bottom:6px;}
-      .note-value{font-size:13px;color:#111;min-height:20px;}
-      .sig-area{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px;}
-      .sig-line{border-top:1px solid #999;padding-top:6px;font-size:10px;color:#888;}
-      .footer{margin-top:32px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:10px;text-align:center;}
-      @media print{body{padding:20px;}}
-    </style>
-  </head><body>
-    <div class="header">
-      <h1>AMP / Team Asphalt</h1>
-      <div class="sub">Spring Valley, WI · teamasphalt.com</div>
-    </div>
-    <div class="receipt-title">🛢 MixTek Sealer Delivery Receipt</div>
-    <div class="meta">
-      <div class="meta-item"><div class="label">Delivery Date</div><div class="value">${dateDisp}</div></div>
-      <div class="meta-item"><div class="label">Supplier</div><div class="value">MixTek</div></div>
-      <div class="meta-item"><div class="label">Tank Capacity</div><div class="value">8,000 gal</div></div>
-    </div>
-    <div class="readings">
-      <div class="reading-box before">
-        <div class="reading-label before">Before Fill</div>
-        <div class="reading-row"><span class="rl">Inches</span><span class="rv">${inB}"</span></div>
-        <div class="reading-row"><span class="rl">Gallons</span><span class="rv">${Number(galB).toLocaleString('en-US',{maximumFractionDigits:3})}</span></div>
-      </div>
-      <div class="reading-box after">
-        <div class="reading-label after">After Fill</div>
-        <div class="reading-row"><span class="rl">Inches</span><span class="rv">${inA}"</span></div>
-        <div class="reading-row"><span class="rl">Gallons</span><span class="rv">${Number(galA).toLocaleString('en-US',{maximumFractionDigits:3})}</span></div>
-      </div>
-    </div>
-    <div class="delivered-box">
-      <div class="delivered-label">Gallons Received This Delivery</div>
-      <div><span class="delivered-value">${Number(delivered).toLocaleString('en-US',{maximumFractionDigits:3})}</span><span class="delivered-unit">gal</span></div>
-    </div>
-    <div class="note-box">
-      <div class="note-label">Notes / Delivery Reference</div>
-      <div class="note-value">${note||'&nbsp;'}</div>
-    </div>
-    <div class="sig-area">
-      <div class="sig-line">Received by (AMP)</div>
-      <div class="sig-line">Driver / Supplier Rep</div>
-    </div>
-    <div class="footer">Printed ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} · AMP Materials Ledger</div>
-  </body></html>`;
-
-  const win = window.open('','_blank','width=700,height:750,scrollbars=yes');
-  if(!win){ showToast('Allow popups to print receipt.','red'); return; }
-  win.document.write(receiptHTML);
-  win.document.close();
-  win.focus();
-  setTimeout(()=>{ win.print(); }, 600);
+function showDeliveryReceiptOffer(galB,galA,inB,inA,delivered,date,note){
+  const old=document.getElementById('receipt-offer');if(old)old.remove();
+  const div=document.createElement('div');
+  div.id='receipt-offer';
+  div.style.cssText='margin:0 0 20px;display:flex;justify-content:flex-end;';
+  div.innerHTML=`<button class="btn btn-blue" onclick="printDeliveryReceipt(${galB},${galA},${inB},${inA},${delivered},'${date}','${note.replace(/'/g,"\\'")}')">🖨 Print Delivery Receipt</button>`;
+  document.getElementById('report-btn-bar').parentNode.insertBefore(div,document.getElementById('report-btn-bar'));
 }
-window.printDeliveryReceipt=printDeliveryReceipt;
 
-/* ══ SUBMIT READING ══════════════════════════════════════ */
 function submitReading(){
   const gal=parseFloat(document.getElementById('read-gallons').value);
   const inch=parseFloat(document.getElementById('read-inches').value)||0;
   const note=document.getElementById('read-note').value.trim();
   const date=document.getElementById('read-date').value||today();
   if(isNaN(gal)||gal<0){document.getElementById('read-gallons').focus();showToast('Enter a gallon reading.','red');return;}
-  push(dbRefs.mixtek,{type:'reading',gallons_after:gal,inches_after:inch,date,note,ts:Date.now()})
-    .then(()=>{
-      ['read-gallons','read-inches'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.removeAttribute('readonly');}});
-      const hint=document.getElementById('read-hint');if(hint){hint.textContent='';hint.className='tank-hint';}
-      document.getElementById('read-note').value='';
-      showToast('◉ Reading recorded.','');
-    })
-    .catch(e=>showToast('Error: '+e.message,'red'));
+  push(dbRefs.mixtek,{type:'reading',gallons_after:gal,inches_after:inch,date,note,ts:Date.now()}).then(()=>{
+    ['read-gallons','read-inches'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.removeAttribute('readonly');}});
+    const hint=document.getElementById('read-hint');if(hint){hint.textContent='';hint.className='tank-hint';}
+    document.getElementById('read-note').value='';
+    showToast('◉ Reading recorded.','');
+  }).catch(e=>showToast('Error: '+e.message,'red'));
 }
 window.submitReading=submitReading;
 
-/* ══ SUBMIT SALE ═════════════════════════════════════════ */
-function submitSale(){
-  const gal=parseFloat(document.getElementById('sale-gallons').value);
-  const buyer=document.getElementById('sale-buyer').value.trim();
-  const note=document.getElementById('sale-note').value.trim();
-  const date=document.getElementById('sale-date').value||today();
-  if(!gal||gal<=0){document.getElementById('sale-gallons').focus();showToast('Enter gallons sold.','red');return;}
-  if(!buyer){document.getElementById('sale-buyer').focus();showToast('Enter contractor name.','red');return;}
-  push(dbRefs.mixtek,{type:'sale',gallons_sold:gal,buyer,note,date,ts:Date.now()})
-    .then(()=>{
-      document.getElementById('sale-gallons').value='';
-      document.getElementById('sale-buyer').value='';
-      document.getElementById('sale-note').value='';
-      showToast('− Sale recorded — '+gal.toLocaleString()+' gal sold to '+buyer+'.','red');
-    })
-    .catch(e=>showToast('Error: '+e.message,'red'));
+function submitSale(tracker){
+  const galEl=document.getElementById('sale-gallons'),buyerEl=document.getElementById('sale-buyer'),noteEl=document.getElementById('sale-note'),dateEl=document.getElementById('sale-date');
+  const gal=parseFloat(galEl.value);
+  if(!gal||gal<=0){galEl.focus();showToast('Enter gallons sold.','red');return;}
+  if(!buyerEl.value.trim()){buyerEl.focus();showToast('Enter contractor name.','red');return;}
+  push(dbRefs[tracker],{type:'sale',gallons_sold:gal,buyer:buyerEl.value.trim(),note:noteEl.value.trim(),date:dateEl.value||today(),ts:Date.now()}).then(()=>{galEl.value='';buyerEl.value='';noteEl.value='';showToast('− Sale recorded.','red');}).catch(e=>showToast('Error: '+e.message,'red'));
 }
 window.submitSale=submitSale;
+
+function submitCrackfill(type){
+  const dateEl=document.getElementById('cf-'+type+'-date');
+  const prodEl=document.getElementById('cf-'+type+'-product');
+  const blocksEl=document.getElementById('cf-'+type+'-blocks');
+  const blocks=parseFloat(blocksEl.value);
+  if(!blocks||blocks<=0){blocksEl.focus();showToast('Enter number of blocks.','red');return;}
+  const entry={type,product:prodEl.value,blocks,date:dateEl.value||today(),ts:Date.now()};
+  if(type==='use'){const lfEl=document.getElementById('cf-use-lf');const nEl=document.getElementById('cf-use-note');entry.linear_feet=parseFloat(lfEl.value)||0;entry.note=nEl.value.trim();lfEl.value='';nEl.value='';}
+  if(type==='sale'){const buyerEl=document.getElementById('cf-sale-buyer');const nEl=document.getElementById('cf-sale-note');if(!buyerEl.value.trim()){buyerEl.focus();showToast('Enter contractor name.','red');return;}entry.buyer=buyerEl.value.trim();entry.note=nEl.value.trim();buyerEl.value='';nEl.value='';}
+  if(type==='buy'){const nEl=document.getElementById('cf-buy-note');entry.note=nEl.value.trim();nEl.value='';}
+  push(dbRefs.crackfill,entry).then(()=>{blocksEl.value='';showToast(type==='buy'?'+ Blocks purchased.':type==='sale'?'− Sale recorded.':'− Usage recorded.',type==='buy'?'green':'red');}).catch(e=>showToast('Error: '+e.message,'red'));
+}
+window.submitCrackfill=submitCrackfill;
+
+function submitPaint(type){
+  const dateEl=document.getElementById('pt-'+type+'-date');
+  const colorEl=document.getElementById('pt-'+type+'-color');
+  const galEl=document.getElementById('pt-'+type+'-gallons');
+  const gal=parseFloat(galEl.value);
+  if(!gal||gal<=0){galEl.focus();showToast('Enter gallons.','red');return;}
+  const entry={type,color:colorEl.value,gallons:gal,date:dateEl.value||today(),ts:Date.now()};
+  if(type==='use'){const nEl=document.getElementById('pt-use-note');entry.note=nEl.value.trim();nEl.value='';}
+  if(type==='sale'){const buyerEl=document.getElementById('pt-sale-buyer');const nEl=document.getElementById('pt-sale-note');if(!buyerEl.value.trim()){buyerEl.focus();showToast('Enter contractor name.','red');return;}entry.buyer=buyerEl.value.trim();entry.note=nEl.value.trim();buyerEl.value='';nEl.value='';}
+  if(type==='buy'){const nEl=document.getElementById('pt-buy-note');entry.note=nEl.value.trim();nEl.value='';}
+  push(dbRefs.paint,entry).then(()=>{galEl.value='';showToast(type==='buy'?'+ Purchase recorded.':type==='sale'?'− Sale recorded.':'− Usage recorded.',type==='buy'?'green':'red');}).catch(e=>showToast('Error: '+e.message,'red'));
+}
+window.submitPaint=submitPaint;
 
 /* ══ RENDER TABLE ════════════════════════════════════════ */
 function renderTable(){
   const filter=(document.getElementById('filter-input')?.value||'').toLowerCase();
   const tbody=document.getElementById('register-body');
-  const shown=filter
-    ? allEntries.filter(e=>
-        (e.supplier||e.mix||e.buyer||'').toLowerCase().includes(filter)||
-        (e.note||'').toLowerCase().includes(filter)||
-        (e.type||'').toLowerCase().includes(filter))
-    : allEntries;
-
-  if(!shown.length){
-    const cols=currentTracker==='mixtek'?10:9;
-    tbody.innerHTML='<tr><td colspan="'+cols+'"><div class="empty-state">'
-      +(filter?'No entries match that filter.':'No entries yet. Add one above.')
-      +'</div></td></tr>';
-    return;
-  }
+  const t=currentTracker;
+  const shown=filter?allEntries.filter(e=>(e.supplier||e.mix||e.buyer||e.color||e.product||'').toLowerCase().includes(filter)||(e.note||'').toLowerCase().includes(filter)):allEntries;
+  if(!shown.length){tbody.innerHTML='<tr><td colspan="10"><div class="empty-state">'+(filter?'No entries match.':'No entries yet. Add one above.')+'</div></td></tr>';return;}
 
   tbody.innerHTML=shown.map(e=>{
-    if(currentTracker==='monarch'){
+    const delBtn=`<button class="del-btn" id="del-${e.id}" onclick="twoStepDelete(event,'${e.id}')">✕ Delete</button>`;
+    if(t==='monarch'){
       const buy=e.type==='buy';
-      return '<tr class="'+(buy?'row-buy':'row-use')+'">'
-        +'<td>'+esc(e.date||'—')+'</td>'
-        +'<td><span class="tag '+(buy?'tag-buy':'tag-use')+'">'+(buy?'Purchase':'Usage')+'</span></td>'
-        +'<td>'+esc(e.supplier||'Monarch')+'</td>'
-        +'<td>'+esc(e.mix||'—')+'</td>'
-        +'<td class="right '+(buy?'amount-buy':'')+'">'+(buy?'+'+fmt(e.tons):'')+'</td>'
-        +'<td class="right '+(!buy?'amount-use':'')+'">'+(!buy?'−'+fmt(e.tons):'')+'</td>'
-        +'<td class="right balance-cell">'+fmt(e.balance)+'</td>'
-        +'<td><span class="note-text">'+esc(e.note||'')+'</span></td>'
-        +'<td><button class="del-btn" id="del-'+e.id+'" onclick="twoStepDelete(event,\''+e.id+'\')">✕ Delete</button></td>'
-        +'</tr>';
-
-    } else if(currentTracker==='martin'){
-      return '<tr class="row-log">'
-        +'<td>'+esc(e.date||'—')+'</td>'
-        +'<td><span class="tag tag-log">Log</span></td>'
-        +'<td>'+esc(e.mix||e.supplier||'—')+'</td>'
-        +'<td class="right amount-buy">+'+fmt(e.tons)+'</td>'
-        +'<td class="right balance-cell">'+fmt(e.balance)+'</td>'
-        +'<td><span class="note-text">'+esc(e.note||'')+'</span></td>'
-        +'<td><button class="del-btn" id="del-'+e.id+'" onclick="twoStepDelete(event,\''+e.id+'\')">✕ Delete</button></td>'
-        +'</tr>';
-
-    } else {
-      const fill=e.type==='fill', reading=e.type==='reading', sale=e.type==='sale';
+      return `<tr class="${buy?'row-buy':'row-use'}"><td>${esc(e.date||'—')}</td><td><span class="tag ${buy?'tag-buy':'tag-use'}">${buy?'Purchase':'Usage'}</span></td><td>${esc(e.supplier||'Monarch')}</td><td>${esc(e.mix||'—')}</td><td class="right ${buy?'amount-buy':''}">${buy?'+'+fmt(e.tons):''}</td><td class="right ${!buy?'amount-use':''}"> ${!buy?'−'+fmt(e.tons):''}</td><td class="right balance-cell">${fmt(e.balance)}</td><td><span class="note-text">${esc(e.note||'')}</span></td><td>${delBtn}</td></tr>`;
+    } else if(t==='martin'){
+      return `<tr class="row-log"><td>${esc(e.date||'—')}</td><td><span class="tag tag-log">Log</span></td><td>${esc(e.mix||'—')}</td><td class="right amount-buy">+${fmt(e.tons)}</td><td class="right balance-cell">${fmt(e.balance)}</td><td><span class="note-text">${esc(e.note||'')}</span></td><td>${delBtn}</td></tr>`;
+    } else if(t==='mixtek'){
+      const fill=e.type==='fill',reading=e.type==='reading',sale=e.type==='sale';
       const rowCls=fill?'row-fill':reading?'row-reading':'row-sale';
       const tagCls=fill?'tag-fill':reading?'tag-reading':'tag-sale';
       const tagTxt=fill?'Fill':reading?'Reading':'Sale';
-      const inBefore=fill&&e.inches_before?e.inches_before+'"':'—';
-      const galBefore=fill?fmt(e.gallons_before||0):'—';
-      const inAfter=(fill||reading)&&e.inches_after?e.inches_after+'"':'—';
-      const galAfter=(fill||reading)?fmt(e.gallons_after||0):'—';
-      let receivedSold='—';
-      if(fill) receivedSold='<span class="amount-fill">+'+fmt(e.delivered||0)+'</span>';
-      else if(sale) receivedSold='<span class="amount-sale">−'+fmt(e.gallons_sold||0)+'</span>';
-      else if(reading) receivedSold='<span style="color:var(--text3);font-size:10px;">snapshot</span>';
-      const balCell=sale?'<span style="color:var(--text3);font-size:10px;">—</span>':('<span class="balance-cell">'+fmt(e.balance)+'</span>');
-      const noteText=sale?esc(e.buyer||'')+(e.note?' · '+esc(e.note):''):esc(e.note||'');
-      return '<tr class="'+rowCls+'">'
-        +'<td>'+esc(e.date||'—')+'</td>'
-        +'<td><span class="tag '+tagCls+'">'+tagTxt+'</span></td>'
-        +'<td class="right">'+inBefore+'</td>'
-        +'<td class="right">'+galBefore+'</td>'
-        +'<td class="right">'+inAfter+'</td>'
-        +'<td class="right">'+galAfter+'</td>'
-        +'<td class="right">'+receivedSold+'</td>'
-        +'<td class="right">'+balCell+'</td>'
-        +'<td><span class="note-text">'+noteText+'</span></td>'
-        +'<td><button class="del-btn" id="del-'+e.id+'" onclick="twoStepDelete(event,\''+e.id+'\')">✕ Delete</button></td>'
-        +'</tr>';
+      const inB=fill&&e.inches_before?e.inches_before+'"':'—';
+      const galB=fill?fmt(e.gallons_before||0):'—';
+      const inA=(fill||reading)&&e.inches_after?e.inches_after+'"':'—';
+      const galA=(fill||reading)?fmt(e.gallons_after||0):'—';
+      const rcvd=fill?`<span class="amount-fill">+${fmt(e.delivered||0)}</span>`:sale?`<span class="amount-sale">−${fmt(e.gallons_sold||0)}</span>`:`<span style="color:var(--text3);font-size:10px;">snapshot</span>`;
+      const bal=sale?'—':fmt(e.balance);
+      const noteText=sale?esc((e.buyer||'')+(e.note?' · '+e.note:'')):esc(e.note||'');
+      return `<tr class="${rowCls}"><td>${esc(e.date||'—')}</td><td><span class="tag ${tagCls}">${tagTxt}</span></td><td class="right">${inB}</td><td class="right">${galB}</td><td class="right">${inA}</td><td class="right">${galA}</td><td class="right">${rcvd}</td><td class="right balance-cell">${bal}</td><td><span class="note-text">${noteText}</span></td><td>${delBtn}</td></tr>`;
+    } else if(t==='crackfill'){
+      const buy=e.type==='buy',sale=e.type==='sale',use=e.type==='use';
+      const rowCls=buy?'row-buy':sale?'row-sale':'row-use';
+      const tagCls=buy?'tag-buy':sale?'tag-sale':'tag-use';
+      const tagTxt=buy?'Purchase':sale?'Sale':'Usage';
+      const prodLabel=e.product==='fiber'?'Mod. Fiber/Rubber':'Rubber';
+      const blocks=buy?`<span class="amount-buy">+${fmt(e.blocks)}</span>`:sale||use?`<span class="amount-${sale?'sale':'use'}">−${fmt(e.blocks)}</span>`:'—';
+      const lbs=fmt((e.blocks||0)*30);
+      const lf=use&&e.linear_feet?fmt(e.linear_feet)+' ft':'—';
+      const noteText=sale?esc((e.buyer||'')+(e.note?' · '+e.note:'')):esc(e.note||'');
+      return `<tr class="${rowCls}"><td>${esc(e.date||'—')}</td><td><span class="tag ${tagCls}">${tagTxt}</span></td><td>${prodLabel}</td><td class="right">${blocks}</td><td class="right">${lbs} lb</td><td class="right">${lf}</td><td class="right balance-cell">${fmt(e.balance)}</td><td><span class="note-text">${noteText}</span></td><td>${delBtn}</td></tr>`;
+    } else {
+      const buy=e.type==='buy',sale=e.type==='sale';
+      const rowCls=buy?'row-buy':sale?'row-sale':'row-use';
+      const tagCls=buy?'tag-buy':sale?'tag-sale':'tag-use';
+      const tagTxt=buy?'Purchase':sale?'Sale':'Usage';
+      const gals=buy?`<span class="amount-buy">+${fmt(e.gallons)}</span>`:sale?`<span class="amount-sale">−${fmt(e.gallons)}</span>`:`<span class="amount-use">−${fmt(e.gallons)}</span>`;
+      const noteText=sale?esc((e.buyer||'')+(e.note?' · '+e.note:'')):esc(e.note||'');
+      return `<tr class="${rowCls}"><td>${esc(e.date||'—')}</td><td><span class="tag ${tagCls}">${tagTxt}</span></td><td>${esc(e.color||'—')}</td><td class="right">${gals}</td><td class="right balance-cell">${fmt(e.balance)}</td><td><span class="note-text">${noteText}</span></td><td>${delBtn}</td></tr>`;
     }
   }).join('');
 }
@@ -1019,87 +789,63 @@ function updateStats(){
     const totalIn=allEntries.filter(e=>e.type==='buy').reduce((s,e)=>s+(e.tons||0),0);
     const totalOut=allEntries.filter(e=>e.type==='use').reduce((s,e)=>s+(e.tons||0),0);
     const bal=allEntries.length?allEntries[0].balance:0;
-    setStat('stat-balance',fmt(bal),'ton');
-    setStat('stat-in',fmt(totalIn),'ton');
-    setStat('stat-out',fmt(totalOut),'ton');
+    setStat('stat-balance',fmt(bal),'ton');setStat('stat-in',fmt(totalIn),'ton');setStat('stat-out',fmt(totalOut),'ton');
     const card=document.getElementById('stat-balance-card');
     if(card){card.classList.remove('flash-amber','flash-red');if(bal<=800)card.classList.add('flash-red');else if(bal<=1500)card.classList.add('flash-amber');}
-    // Mix type breakdown
+    // Mix breakdown
     const mixMap={};
-    allEntries.filter(e=>e.type==='use'&&e.mix).forEach(e=>{
-      const k=e.mix.trim(); if(!k) return;
-      mixMap[k]=(mixMap[k]||0)+(e.tons||0);
-    });
-    const mixEl=document.getElementById('stats-mix');
-    if(mixEl){
-      const keys=Object.keys(mixMap);
-      if(keys.length){
-        mixEl.innerHTML=keys.sort().map(k=>
-          '<div class="stat-card compact purple">'
-          +'<div class="stat-label">'+esc(k)+'</div>'
-          +'<div class="stat-value small">'+fmt(mixMap[k])+'<span class="unit">ton</span></div>'
-          +'<div class="mix-label">used this season</div>'
-          +'</div>'
-        ).join('');
-      } else {
-        mixEl.innerHTML='';
-      }
-    }
-
+    allEntries.filter(e=>e.type==='use'&&e.mix&&e.mix.trim()).forEach(e=>{const k=e.mix.trim();mixMap[k]=(mixMap[k]||0)+(e.tons||0);});
+    const mx=document.getElementById('stats-mix');
+    if(mx) mx.innerHTML=Object.keys(mixMap).sort().map(k=>`<div class="stat-card compact purple"><div class="stat-label">${esc(k)}</div><div class="stat-value sm">${fmt(mixMap[k])}<span class="unit">ton</span></div><div class="mix-label">used this season</div></div>`).join('');
   } else if(t==='martin'){
     const total=allEntries.reduce((s,e)=>s+(e.tons||0),0);
-    setStat('stat-balance',fmt(total),'ton');
-    setStat('stat-in',allEntries.length,'entries');
-    // Mix type breakdown
+    setStat('stat-balance',fmt(total),'ton');setStat('stat-in',allEntries.length,'entries');
     const mixMap={};
-    allEntries.forEach(e=>{
-      const k=(e.mix||e.supplier||'').trim(); if(!k||k==='Martin Marietta') return;
-      mixMap[k]=(mixMap[k]||0)+(e.tons||0);
-    });
-    const mixEl=document.getElementById('stats-mix');
-    if(mixEl){
-      const keys=Object.keys(mixMap);
-      if(keys.length){
-        mixEl.innerHTML=keys.sort().map(k=>
-          '<div class="stat-card compact purple">'
-          +'<div class="stat-label">'+esc(k)+'</div>'
-          +'<div class="stat-value small">'+fmt(mixMap[k])+'<span class="unit">ton</span></div>'
-          +'<div class="mix-label">logged this season</div>'
-          +'</div>'
-        ).join('');
-      } else {
-        mixEl.innerHTML='';
-      }
-    }
-
-  } else {
+    allEntries.filter(e=>e.mix&&e.mix.trim()).forEach(e=>{const k=e.mix.trim();mixMap[k]=(mixMap[k]||0)+(e.tons||0);});
+    const mx=document.getElementById('stats-mix');
+    if(mx) mx.innerHTML=Object.keys(mixMap).sort().map(k=>`<div class="stat-card compact purple"><div class="stat-label">${esc(k)}</div><div class="stat-value sm">${fmt(mixMap[k])}<span class="unit">ton</span></div><div class="mix-label">logged this season</div></div>`).join('');
+  } else if(t==='mixtek'){
     const fills=allEntries.filter(e=>e.type==='fill');
     const sales=allEntries.filter(e=>e.type==='sale');
     const received=fills.reduce((s,e)=>s+(e.delivered||0),0);
     const sold=sales.reduce((s,e)=>s+(e.gallons_sold||0),0);
-    // Current balance = gallons_after of most recent fill or reading
-    const latestLevel=allEntries.find(e=>e.type==='fill'||e.type==='reading');
-    const bal=latestLevel?(latestLevel.gallons_after||0):0;
+    const latest=allEntries.find(e=>e.type==='fill'||e.type==='reading');
+    const bal=latest?(latest.gallons_after||0):0;
     const pct=Math.min(100,Math.round((bal/8000)*100));
-    setStat('stat-balance',fmt(bal),'gal');
-    setStat('stat-received',fmt(received),'gal');
-    setStat('stat-sold',fmt(sold),'gal');
-    setStat('stat-pct',pct,'%');
+    setStat('stat-balance',fmt(bal),'gal');setStat('stat-received',fmt(received),'gal');setStat('stat-sold',fmt(sold),'gal');setStat('stat-pct',pct,'%');
     const card=document.getElementById('stat-balance-card');
-    if(card){card.classList.remove('flash-sealer-amber','flash-sealer-red');if(bal<=2000)card.classList.add('flash-sealer-red');else if(bal<=3500)card.classList.add('flash-sealer-amber');}
+    if(card){card.classList.remove('flash-sa','flash-sr');if(bal<=2000)card.classList.add('flash-sr');else if(bal<=3500)card.classList.add('flash-sa');}
+  } else if(t==='crackfill'){
+    const rubberBal=allEntries.length?allEntries[0].balance_rubber:0;
+    const fiberBal=allEntries.length?allEntries[0].balance_fiber:0;
+    const totalSold=allEntries.filter(e=>e.type==='sale').reduce((s,e)=>s+(e.blocks||0),0);
+    setStat('stat-rubber',fmt(rubberBal),'blocks');setStat('stat-fiber',fmt(fiberBal),'blocks');setStat('stat-crack-sold',fmt(totalSold),'blocks');
+    // Alert flashing
+    ['rubber','fiber'].forEach(p=>{
+      const bal=p==='rubber'?rubberBal:fiberBal;
+      const card=document.getElementById('stat-'+p+'-card');
+      if(card){card.classList.remove('flash-amber','flash-red');if(bal<=10)card.classList.add('flash-red');else if(bal<=20)card.classList.add('flash-amber');}
+    });
+  } else {
+    // Paint — balance per color
+    const balances={};PAINT_COLORS.forEach(c=>{balances[c]=0;});
+    allEntries.forEach(e=>{
+      if(!e.color) return;
+      if(e.type==='buy') balances[e.color]=(balances[e.color]||0)+(e.gallons||0);
+      else balances[e.color]=(balances[e.color]||0)-(e.gallons||0);
+    });
+    PAINT_COLORS.forEach(c=>{const el=document.getElementById('val-paint-'+c.toLowerCase());if(el)el.innerHTML=fmt(balances[c])+'<span class="unit">gal</span>';});
   }
 }
 function setStat(id,val,unit){const el=document.getElementById(id);if(el)el.innerHTML=val+'<span class="unit">'+unit+'</span>';}
 
-/* ══ TWO-STEP DELETE ═════════════════════════════════════ */
+/* ══ DELETE ══════════════════════════════════════════════ */
 function twoStepDelete(evt,id){
   evt.stopPropagation();
   const btn=document.getElementById('del-'+id);if(!btn)return;
   if(btn.classList.contains('confirm-step')){
     clearTimeout(deleteTimers[id]);delete deleteTimers[id];
-    remove(ref(db,'ledger_'+currentTracker+'/'+id))
-      .then(()=>showToast('Entry deleted.','red'))
-      .catch(e=>showToast('Error: '+e.message,'red'));
+    remove(ref(db,'ledger_'+currentTracker+'/'+id)).then(()=>showToast('Entry deleted.','red')).catch(e=>showToast('Error: '+e.message,'red'));
   } else {
     btn.classList.add('confirm-step');btn.textContent='⚠ Confirm?';
     deleteTimers[id]=setTimeout(()=>{const b=document.getElementById('del-'+id);if(b){b.classList.remove('confirm-step');b.textContent='✕ Delete';}delete deleteTimers[id];},4000);
@@ -1107,35 +853,255 @@ function twoStepDelete(evt,id){
 }
 window.twoStepDelete=twoStepDelete;
 function closeModal(){pendingDeleteId=null;document.getElementById('modal-bg').classList.remove('open');}
-function confirmDelete(){
-  if(!pendingDeleteId)return;
-  remove(ref(db,'ledger_'+currentTracker+'/'+pendingDeleteId))
-    .then(()=>showToast('Entry deleted.','red')).catch(e=>showToast('Error: '+e.message,'red'));
-  closeModal();
-}
+function confirmDelete(){if(!pendingDeleteId)return;remove(ref(db,'ledger_'+currentTracker+'/'+pendingDeleteId)).then(()=>showToast('Entry deleted.','red')).catch(e=>showToast('Error: '+e.message,'red'));closeModal();}
 window.closeModal=closeModal;window.confirmDelete=confirmDelete;
+
+/* ══ REPORTS ═════════════════════════════════════════════ */
+const REPORT_CONFIGS={
+  'monarch-purchases':{title:'Asphalt Purchase History — Monarch',filters:'date+all',dataKey:'monarch',filterFn:e=>e.type==='buy'},
+  'monarch-usage':    {title:'Asphalt Usage Report — Monarch',    filters:'date+mix',dataKey:'monarch',filterFn:e=>e.type==='use'},
+  'martin-usage':     {title:'Asphalt Usage Report — Martin Marietta',filters:'date+mix',dataKey:'martin',filterFn:e=>true},
+  'mixtek-deliveries':{title:'MixTek Sealer Delivery History',    filters:'date+all',dataKey:'mixtek',filterFn:e=>e.type==='fill'},
+  'mixtek-sales':     {title:'MixTek Contractor Sales Report',    filters:'date+buyer',dataKey:'mixtek',filterFn:e=>e.type==='sale'},
+  'cf-purchases':     {title:'Crackfill Purchase History — Deery',filters:'date+product',dataKey:'crackfill',filterFn:e=>e.type==='buy'},
+  'cf-usage':         {title:'Crackfill Usage Report — Deery',    filters:'date+product',dataKey:'crackfill',filterFn:e=>e.type==='use'},
+  'cf-sales':         {title:'Crackfill Contractor Sales — Deery',filters:'date+buyer+product',dataKey:'crackfill',filterFn:e=>e.type==='sale'},
+  'paint-purchases':  {title:'Traffic Paint Purchase History',     filters:'date+color',dataKey:'paint',filterFn:e=>e.type==='buy'},
+  'paint-usage':      {title:'Traffic Paint Usage Report',         filters:'date+color',dataKey:'paint',filterFn:e=>e.type==='use'},
+  'paint-sales':      {title:'Traffic Paint Contractor Sales',     filters:'date+buyer+color',dataKey:'paint',filterFn:e=>e.type==='sale'},
+};
+let currentReportKey='';
+
+function openReport(key){
+  currentReportKey=key;
+  const cfg=REPORT_CONFIGS[key];
+  document.getElementById('report-modal-title').textContent='📋 '+cfg.title;
+  document.getElementById('rpt-print-btn').style.display='none';
+  document.getElementById('report-output').innerHTML='<p style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--text3);text-align:center;">Set filters above and click Run Report.</p>';
+  // Build filters
+  const data=allData[cfg.dataKey]||[];
+  const buyers=[...new Set(data.filter(e=>e.buyer).map(e=>e.buyer.trim()))].sort();
+  const mixes=[...new Set(data.filter(e=>e.mix&&e.mix.trim()).map(e=>e.mix.trim()))].sort();
+  let filterHTML=`
+    <div><label class="report-filter-label">From Date</label><input type="date" id="rpt-from" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 10px;width:100%;outline:none;" value="${new Date().getFullYear()}-01-01"/></div>
+    <div><label class="report-filter-label">To Date</label><input type="date" id="rpt-to" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 10px;width:100%;outline:none;" value="${today()}"/></div>`;
+  if(cfg.filters.includes('buyer')){
+    filterHTML+=`<div><label class="report-filter-label">Contractor</label><select id="rpt-buyer" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 10px;width:100%;outline:none;cursor:pointer;"><option value="all">All Contractors</option>${buyers.map(b=>`<option>${esc(b)}</option>`).join('')}</select></div>`;
+  }
+  if(cfg.filters.includes('mix')){
+    filterHTML+=`<div><label class="report-filter-label">Mix Type</label><select id="rpt-mix" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 10px;width:100%;outline:none;cursor:pointer;"><option value="all">All Mix Types</option>${mixes.map(m=>`<option>${esc(m)}</option>`).join('')}</select></div>`;
+  }
+  if(cfg.filters.includes('product')){
+    filterHTML+=`<div><label class="report-filter-label">Product</label><select id="rpt-product" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 10px;width:100%;outline:none;cursor:pointer;"><option value="all">Both Products</option><option value="rubber">Rubber</option><option value="fiber">Modified Fiber/Rubber</option></select></div>`;
+  }
+  if(cfg.filters.includes('color')){
+    filterHTML+=`<div><label class="report-filter-label">Color</label><select id="rpt-color" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 10px;width:100%;outline:none;cursor:pointer;"><option value="all">All Colors</option>${PAINT_COLORS.map(c=>`<option>${c}</option>`).join('')}</select></div>`;
+  }
+  filterHTML+=`<div style="display:flex;align-items:flex-end;"><button class="btn btn-blue" onclick="generateReport()" style="height:36px;white-space:nowrap;">▶ Run Report</button></div>`;
+  document.getElementById('report-filters').innerHTML=filterHTML;
+  document.getElementById('report-filters').style.gridTemplateColumns='1fr 1fr'+
+    (cfg.filters.includes('buyer')||cfg.filters.includes('mix')||cfg.filters.includes('product')||cfg.filters.includes('color')?' 1fr':'')+' auto';
+  document.getElementById('report-modal-bg').classList.add('open');
+}
+window.openReport=openReport;
+
+function closeReport(){document.getElementById('report-modal-bg').classList.remove('open');}
+window.closeReport=closeReport;
+
+function generateReport(){
+  const cfg=REPORT_CONFIGS[currentReportKey];
+  const from=document.getElementById('rpt-from')?.value||'';
+  const to=document.getElementById('rpt-to')?.value||'';
+  const buyer=document.getElementById('rpt-buyer')?.value||'all';
+  const mix=document.getElementById('rpt-mix')?.value||'all';
+  const product=document.getElementById('rpt-product')?.value||'all';
+  const color=document.getElementById('rpt-color')?.value||'all';
+  if(!from||!to){showToast('Select both dates.','red');return;}
+  if(from>to){showToast('From date must be before to date.','red');return;}
+  let data=(allData[cfg.dataKey]||[]).filter(cfg.filterFn).filter(e=>(!e.date||e.date>=from)&&(!e.date||e.date<=to)).slice().reverse();
+  if(buyer!=='all') data=data.filter(e=>(e.buyer||'').trim()===buyer);
+  if(mix!=='all') data=data.filter(e=>(e.mix||'').trim()===mix);
+  if(product!=='all') data=data.filter(e=>(e.product||'rubber')===product);
+  if(color!=='all') data=data.filter(e=>(e.color||'')=== color);
+
+  if(!data.length){document.getElementById('report-output').innerHTML='<p style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--text3);text-align:center;padding:2rem 0;">No entries found for this filter combination.</p>';document.getElementById('rpt-print-btn').style.display='none';return;}
+
+  const html=buildReportHTML(currentReportKey,cfg,data,from,to,buyer,mix,product,color);
+  document.getElementById('report-output').innerHTML=html;
+  document.getElementById('rpt-print-btn').style.display='inline-flex';
+  lastReportHTML=html;
+  lastReportTitle=cfg.title;
+}
+window.generateReport=generateReport;
+
+function buildReportHTML(key,cfg,data,from,to,buyer,mix,product,color){
+  const fromD=fmtDate(from),toD=fmtDate(to);
+  let summaryLine='';
+  let tableHead='',tableRows='',totalLine='';
+
+  if(key==='monarch-purchases'){
+    const total=data.reduce((s,e)=>s+(e.tons||0),0);
+    summaryLine=`${data.length} purchase${data.length===1?'':'s'} · ${fmt(total)} ton total`;
+    tableHead='<th>Date</th><th>Supplier</th><th class="right">Tons</th><th>Note / PO #</th>';
+    tableRows=data.map((e,i)=>`<tr style="background:${i%2===0?'#f9f9f9':'#fff'}"><td>${esc(e.date||'—')}</td><td>${esc(e.supplier||'Monarch')}</td><td style="text-align:right;color:#2d7a0a;font-weight:600;">+${fmt(e.tons)}</td><td>${esc(e.note||'')}</td></tr>`).join('');
+    totalLine=`<tr style="border-top:2px solid #ccc;font-weight:700;"><td colspan="2">Total Purchased</td><td style="text-align:right;color:#2d7a0a;font-size:16px;">+${fmt(total)} ton</td><td></td></tr>`;
+  } else if(key==='monarch-usage'||key==='martin-usage'){
+    const total=data.reduce((s,e)=>s+(e.tons||0),0);
+    const mixBreak={};data.forEach(e=>{if(e.mix&&e.mix.trim()){const k=e.mix.trim();mixBreak[k]=(mixBreak[k]||0)+(e.tons||0);}});
+    summaryLine=`${data.length} entr${data.length===1?'y':'ies'} · ${fmt(total)} ton total`;
+    tableHead='<th>Date</th><th>Mix Type</th><th class="right">Tons</th><th>Note / Job</th>';
+    tableRows=data.map((e,i)=>`<tr style="background:${i%2===0?'#f9f9f9':'#fff'}"><td>${esc(e.date||'—')}</td><td>${esc(e.mix||'—')}</td><td style="text-align:right;color:#c03820;font-weight:600;">−${fmt(e.tons)}</td><td>${esc(e.note||'')}</td></tr>`).join('');
+    totalLine=`<tr style="border-top:2px solid #ccc;font-weight:700;"><td colspan="2">Total Used</td><td style="text-align:right;color:#c03820;font-size:16px;">−${fmt(total)} ton</td><td></td></tr>`;
+    if(Object.keys(mixBreak).length>1){
+      totalLine+=`<tr><td colspan="4" style="padding-top:12px;"><strong>By Mix Type:</strong> `+Object.entries(mixBreak).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>`${esc(k)}: ${fmt(v)} ton`).join(' · ')+`</td></tr>`;
+    }
+  } else if(key==='mixtek-deliveries'){
+    const total=data.reduce((s,e)=>s+(e.delivered||0),0);
+    summaryLine=`${data.length} deliver${data.length===1?'y':'ies'} · ${fmt(total)} gal total received`;
+    tableHead='<th>Date</th><th class="right">In Before</th><th class="right">Gal Before</th><th class="right">In After</th><th class="right">Gal After</th><th class="right">Gal Received</th><th>Note</th>';
+    tableRows=data.map((e,i)=>`<tr style="background:${i%2===0?'#e8f2fc':'#fff'}"><td>${esc(e.date||'—')}</td><td style="text-align:right;">${e.inches_before||0}"</td><td style="text-align:right;">${fmt(e.gallons_before||0)}</td><td style="text-align:right;">${e.inches_after||0}"</td><td style="text-align:right;">${fmt(e.gallons_after||0)}</td><td style="text-align:right;color:#1a6aaa;font-weight:600;">+${fmt(e.delivered||0)}</td><td>${esc(e.note||'')}</td></tr>`).join('');
+    totalLine=`<tr style="border-top:2px solid #ccc;font-weight:700;"><td colspan="5">Total Received</td><td style="text-align:right;color:#1a6aaa;font-size:16px;">+${fmt(total)} gal</td><td></td></tr>`;
+  } else if(key==='mixtek-sales'||key==='cf-sales'||key==='paint-sales'){
+    const isGal=key==='mixtek-sales'||key==='paint-sales';
+    const isCF=key==='cf-sales';
+    const getAmt=e=>isGal?(e.gallons_sold||0):isCF?(e.blocks||0):(e.gallons||0);
+    const unit=isGal?'gal':isCF?'blocks':'gal';
+    const total=data.reduce((s,e)=>s+getAmt(e),0);
+    const grouped={};data.forEach(e=>{const k=(e.buyer||'Unknown').trim();if(!grouped[k])grouped[k]=[];grouped[k].push(e);});
+    summaryLine=`${data.length} sale${data.length===1?'':'s'} · ${fmt(total)} ${unit} total`;
+    tableHead=`<th>Date</th><th>Contractor</th>${isCF?'<th>Product</th>':key==='paint-sales'?'<th>Color</th>':''}<th class="right">${unit==='blocks'?'Blocks':'Gallons'}</th><th>Note / Invoice</th>`;
+    tableRows=Object.entries(grouped).sort(([a],[b])=>a.localeCompare(b)).map(([bName,bData])=>{
+      const bTotal=bData.reduce((s,e)=>s+getAmt(e),0);
+      return bData.map((e,i)=>`<tr style="background:${i%2===0?'#fde8e3':'#fff'}"><td>${esc(e.date||'—')}</td><td>${esc(bName)}</td>${isCF?`<td>${e.product==='fiber'?'Mod. Fiber/Rubber':'Rubber'}</td>`:key==='paint-sales'?`<td>${esc(e.color||'—')}</td>`:''}<td style="text-align:right;color:#c03820;font-weight:600;">−${fmt(getAmt(e))} ${unit}</td><td>${esc(e.note||'')}</td></tr>`).join('')+
+      (buyer==='all'&&Object.keys(grouped).length>1?`<tr style="background:#f5d0cc;"><td colspan="${isCF||key==='paint-sales'?5:4}" style="text-align:right;font-weight:700;">${esc(bName)} Subtotal</td><td style="text-align:right;color:#c03820;font-weight:700;">${fmt(bTotal)} ${unit}</td></tr>`:'');
+    }).join('');
+    totalLine=`<tr style="border-top:2px solid #ccc;font-weight:700;"><td colspan="${isCF||key==='paint-sales'?4:3}">Grand Total Sold</td><td style="text-align:right;color:#c03820;font-size:16px;">−${fmt(total)} ${unit}</td><td></td></tr>`;
+  } else if(key==='cf-purchases'||key==='cf-usage'){
+    const isUse=key==='cf-usage';
+    const total=data.reduce((s,e)=>s+(e.blocks||0),0);
+    const totalLbs=total*30;
+    const totalLF=isUse?data.reduce((s,e)=>s+(e.linear_feet||0),0):0;
+    summaryLine=`${data.length} entr${data.length===1?'y':'ies'} · ${fmt(total)} blocks (${fmt(totalLbs)} lbs)`;
+    tableHead=`<th>Date</th><th>Product</th><th class="right">Blocks</th><th class="right">Weight (lbs)</th>${isUse?'<th class="right">Lin. Ft</th>':'<th>Note</th>'}${isUse?'<th>Note / Job</th>':''}`;
+    tableRows=data.map((e,i)=>`<tr style="background:${i%2===0?'#f9f9f9':'#fff'}"><td>${esc(e.date||'—')}</td><td>${e.product==='fiber'?'Mod. Fiber/Rubber':'Rubber'}</td><td style="text-align:right;color:${isUse?'#c03820':'#2d7a0a'};font-weight:600;">${isUse?'−':'+'}${fmt(e.blocks)}</td><td style="text-align:right;">${fmt((e.blocks||0)*30)} lbs</td>${isUse?`<td style="text-align:right;">${e.linear_feet?fmt(e.linear_feet)+' ft':'—'}</td>`:''}<td>${esc(e.note||'')}</td></tr>`).join('');
+    totalLine=`<tr style="border-top:2px solid #ccc;font-weight:700;"><td colspan="2">Total ${isUse?'Used':'Purchased'}</td><td style="text-align:right;color:${isUse?'#c03820':'#2d7a0a'};font-size:15px;">${isUse?'−':'+'}${fmt(total)} blocks</td><td style="text-align:right;">${fmt(totalLbs)} lbs</td>${isUse?`<td style="text-align:right;">${totalLF?fmt(totalLF)+' ft':'—'}</td>`:''}<td></td></tr>`;
+  } else if(key==='paint-purchases'||key==='paint-usage'){
+    const isUse=key==='paint-usage';
+    const total=data.reduce((s,e)=>s+(e.gallons||0),0);
+    summaryLine=`${data.length} entr${data.length===1?'y':'ies'} · ${fmt(total)} gal total`;
+    tableHead=`<th>Date</th><th>Color</th><th class="right">Gallons</th><th>Note</th>`;
+    tableRows=data.map((e,i)=>`<tr style="background:${i%2===0?'#f9f9f9':'#fff'}"><td>${esc(e.date||'—')}</td><td>${esc(e.color||'—')}</td><td style="text-align:right;color:${isUse?'#c03820':'#2d7a0a'};font-weight:600;">${isUse?'−':'+'}${fmt(e.gallons)}</td><td>${esc(e.note||'')}</td></tr>`).join('');
+    totalLine=`<tr style="border-top:2px solid #ccc;font-weight:700;"><td colspan="2">Total ${isUse?'Used':'Purchased'}</td><td style="text-align:right;color:${isUse?'#c03820':'#2d7a0a'};font-size:16px;">${isUse?'−':'+'}${fmt(total)} gal</td><td></td></tr>`;
+  }
+
+  return `<div id="report-content" style="font-family:'IBM Plex Mono',monospace;">
+    <div style="border-bottom:2px solid var(--border2);padding-bottom:14px;margin-bottom:18px;">
+      <div style="font-size:17px;font-weight:600;color:var(--text);margin-bottom:2px;">AMP / Team Asphalt</div>
+      <div style="font-size:10px;color:var(--text3);">Spring Valley, WI</div>
+      <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <div><div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;">Report</div><div style="font-size:12px;color:var(--text);">${esc(cfg.title)}</div></div>
+        <div><div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;">Date Range</div><div style="font-size:12px;color:var(--text);">${fromD} — ${toD}</div></div>
+        <div><div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;">Summary</div><div style="font-size:12px;color:var(--text);">${summaryLine}</div></div>
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead><tr style="background:var(--bg3);">${tableHead.split('<th').map(p=>p?'<th style="padding:8px 12px;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;white-space:nowrap;'+( p.includes('right')?' text-align:right;':'')+'"'+p.replace('class="right"',''):'').join('')}</tr></thead>
+        <tbody>${tableRows}</tbody>
+        <tfoot>${totalLine}</tfoot>
+      </table>
+    </div>
+  </div>`;
+}
+
+function printCurrentReport(){
+  const content=document.getElementById('report-content');
+  if(!content){showToast('Run the report first.','red');return;}
+  const printHTML=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>${lastReportTitle}</title>
+    <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#111;padding:32px;background:#fff;}h1{font-size:20px;font-weight:700;margin-bottom:4px;}.sub{font-size:11px;color:#666;margin-bottom:20px;}.meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;border-bottom:2px solid #ccc;padding-bottom:14px;margin-bottom:18px;}.meta .lbl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:3px;}.meta .val{font-size:13px;font-weight:600;}table{width:100%;border-collapse:collapse;}th{padding:8px 10px;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#666;background:#f0f0f0;font-weight:500;border-bottom:1px solid #ccc;}td{padding:8px 10px;border-bottom:1px solid #e5e5e5;}tr:nth-child(even) td{background:#f9f9f9;}tfoot td{border-top:2px solid #ccc;font-weight:700;padding-top:10px;}.footer{margin-top:28px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:10px;text-align:center;}@media print{body{padding:20px;}}</style>
+    </head><body>
+    <h1>AMP / Team Asphalt</h1><div class="sub">Spring Valley, WI · ${esc(lastReportTitle)}</div>
+    ${content.innerHTML.replace(/var\(--[^)]+\)/g,'inherit').replace(/style="[^"]*color:var[^"]*"/g,'style=""')}
+    <div class="footer">Printed ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} · AMP Materials Ledger</div>
+    </body></html>`;
+  const win=window.open('','_blank','width=820,height=750,scrollbars=yes');
+  if(!win){showToast('Allow popups to print.','red');return;}
+  win.document.write(printHTML);win.document.close();win.focus();
+  setTimeout(()=>win.print(),600);
+}
+window.printCurrentReport=printCurrentReport;
+
+/* ══ DELIVERY RECEIPT ════════════════════════════════════ */
+function printDeliveryReceipt(galB,galA,inB,inA,delivered,date,note){
+  const receiptHTML=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>MixTek Delivery Receipt — ${fmtDate(date)}</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#111;padding:40px;background:#fff;max-width:600px;margin:0 auto;}.header{border-bottom:3px solid #111;padding-bottom:16px;margin-bottom:24px;}h1{font-size:22px;font-weight:700;margin-bottom:4px;}.sub{font-size:11px;color:#555;}.receipt-title{font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#1a6aaa;margin-bottom:20px;}.meta{display:flex;gap:40px;margin-bottom:24px;}.meta .lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-bottom:3px;}.meta .val{font-size:14px;font-weight:600;}.readings{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}.rb{border:1px solid #ddd;border-radius:8px;padding:16px;}.rb.before{border-left:4px solid #1a6aaa;}.rb.after{border-left:4px solid #2d7a0a;}.rb-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:12px;}.rb-lbl.b{color:#1a6aaa;}.rb-lbl.a{color:#2d7a0a;}.rr{display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;}.rl{color:#666;}.rv{font-weight:600;}.delbox{background:#e8f2fc;border:2px solid #1a6aaa;border-radius:8px;padding:16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}.del-lbl{font-size:11px;font-weight:700;color:#1a6aaa;text-transform:uppercase;letter-spacing:.05em;}.del-val{font-size:28px;font-weight:700;color:#1a6aaa;}.del-unit{font-size:14px;color:#555;margin-left:4px;}.notebox{border:1px solid #ddd;border-radius:8px;padding:14px;margin-bottom:24px;}.note-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-bottom:6px;}.sigarea{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px;}.sig-line{border-top:1px solid #999;padding-top:6px;font-size:10px;color:#888;}.footer{margin-top:32px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:10px;text-align:center;}@media print{body{padding:20px;}}</style>
+  </head><body>
+  <div class="header"><h1>AMP / Team Asphalt</h1><div class="sub">Spring Valley, WI · teamasphalt.com</div></div>
+  <div class="receipt-title">🛢 MixTek Sealer Delivery Receipt</div>
+  <div class="meta"><div><div class="lbl">Delivery Date</div><div class="val">${fmtDate(date)}</div></div><div><div class="lbl">Supplier</div><div class="val">MixTek</div></div><div><div class="lbl">Tank Capacity</div><div class="val">8,000 gal</div></div></div>
+  <div class="readings">
+    <div class="rb before"><div class="rb-lbl b">Before Fill</div><div class="rr"><span class="rl">Inches</span><span class="rv">${inB}"</span></div><div class="rr"><span class="rl">Gallons</span><span class="rv">${Number(galB).toLocaleString('en-US',{maximumFractionDigits:3})}</span></div></div>
+    <div class="rb after"><div class="rb-lbl a">After Fill</div><div class="rr"><span class="rl">Inches</span><span class="rv">${inA}"</span></div><div class="rr"><span class="rl">Gallons</span><span class="rv">${Number(galA).toLocaleString('en-US',{maximumFractionDigits:3})}</span></div></div>
+  </div>
+  <div class="delbox"><div class="del-lbl">Gallons Received This Delivery</div><div><span class="del-val">${Number(delivered).toLocaleString('en-US',{maximumFractionDigits:3})}</span><span class="del-unit">gal</span></div></div>
+  <div class="notebox"><div class="note-lbl">Notes / Delivery Reference</div><div style="font-size:13px;color:#111;min-height:20px;">${note||'&nbsp;'}</div></div>
+  <div class="sigarea"><div class="sig-line">Received by (AMP)</div><div class="sig-line">Driver / Supplier Rep</div></div>
+  <div class="footer">Printed ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} · AMP Materials Ledger</div>
+  </body></html>`;
+  const win=window.open('','_blank','width=700,height=750,scrollbars=yes');
+  if(!win){showToast('Allow popups to print receipt.','red');return;}
+  win.document.write(receiptHTML);win.document.close();win.focus();setTimeout(()=>win.print(),600);
+}
+window.printDeliveryReceipt=printDeliveryReceipt;
+
+/* ══ SEASON SUMMARY REPORT ═══════════════════════════════ */
+function openSeasonSummary(){
+  const year=new Date().getFullYear();
+  const from=year+'-01-01', to=today();
+  // Gather totals from all trackers
+  const monBuy=allData.monarch.filter(e=>e.type==='buy').reduce((s,e)=>s+(e.tons||0),0);
+  const monUse=allData.monarch.filter(e=>e.type==='use').reduce((s,e)=>s+(e.tons||0),0);
+  const monBal=allData.monarch.length?allData.monarch[0].balance:0;
+  const marTotal=allData.martin.reduce((s,e)=>s+(e.tons||0),0);
+  const mxRcv=allData.mixtek.filter(e=>e.type==='fill').reduce((s,e)=>s+(e.delivered||0),0);
+  const mxSold=allData.mixtek.filter(e=>e.type==='sale').reduce((s,e)=>s+(e.gallons_sold||0),0);
+  const mxLat=allData.mixtek.find(e=>e.type==='fill'||e.type==='reading');
+  const mxBal=mxLat?(mxLat.gallons_after||0):0;
+  const cfRubBuy=allData.crackfill.filter(e=>e.type==='buy'&&e.product==='rubber').reduce((s,e)=>s+(e.blocks||0),0);
+  const cfFibBuy=allData.crackfill.filter(e=>e.type==='buy'&&e.product==='fiber').reduce((s,e)=>s+(e.blocks||0),0);
+  const cfRubUse=allData.crackfill.filter(e=>e.type==='use'&&e.product==='rubber').reduce((s,e)=>s+(e.blocks||0),0);
+  const cfFibUse=allData.crackfill.filter(e=>e.type==='use'&&e.product==='fiber').reduce((s,e)=>s+(e.blocks||0),0);
+  const cfLF=allData.crackfill.filter(e=>e.type==='use').reduce((s,e)=>s+(e.linear_feet||0),0);
+  const paintBals={};PAINT_COLORS.forEach(c=>{paintBals[c]=0;});
+  allData.paint.forEach(e=>{if(!e.color)return;if(e.type==='buy')paintBals[e.color]=(paintBals[e.color]||0)+(e.gallons||0);else paintBals[e.color]=(paintBals[e.color]||0)-(e.gallons||0);});
+  const paintPurchased={};PAINT_COLORS.forEach(c=>{paintPurchased[c]=allData.paint.filter(e=>e.type==='buy'&&e.color===c).reduce((s,e)=>s+(e.gallons||0),0);});
+
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>AMP Season Summary ${year}</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#111;padding:32px;background:#fff;}h1{font-size:22px;font-weight:700;margin-bottom:4px;}.sub{font-size:11px;color:#666;margin-bottom:24px;}.section{margin-bottom:28px;border:1px solid #ddd;border-radius:8px;overflow:hidden;}.section-hd{padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;}.section-body{padding:14px 16px;}.row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}.stat{}.stat .lbl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:3px;}.stat .val{font-size:18px;font-weight:700;}.paint-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}.paint-card{border:1px solid #ddd;border-radius:6px;padding:8px;text-align:center;}.paint-card .clbl{font-size:10px;font-weight:700;margin-bottom:4px;}.paint-card .cval{font-size:14px;font-weight:700;}.footer{margin-top:28px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:10px;text-align:center;}@media print{body{padding:20px;}}</style>
+  </head><body>
+  <h1>AMP / Team Asphalt — Season Summary ${year}</h1>
+  <div class="sub">Spring Valley, WI · Generated ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+  <div class="section"><div class="section-hd" style="background:#2d7a0a;">🏗 Asphalt — Monarch</div><div class="section-body"><div class="row2"><div class="stat"><div class="lbl">Current Balance</div><div class="val" style="color:#2d7a0a;">${fmt(monBal)} ton</div></div><div class="stat"><div class="lbl">Total Purchased</div><div class="val">${fmt(monBuy)} ton</div></div><div class="stat"><div class="lbl">Total Used</div><div class="val" style="color:#c03820;">${fmt(monUse)} ton</div></div></div></div></div>
+  <div class="section"><div class="section-hd" style="background:#1a6aaa;">🏗 Asphalt — Martin Marietta</div><div class="section-body"><div class="row2"><div class="stat"><div class="lbl">Total Tons Logged</div><div class="val" style="color:#1a6aaa;">${fmt(marTotal)} ton</div></div><div class="stat"><div class="lbl">Total Entries</div><div class="val">${allData.martin.length}</div></div><div class="stat"><div class="lbl">Tracking</div><div class="val" style="font-size:13px;">Usage Log Only</div></div></div></div></div>
+  <div class="section"><div class="section-hd" style="background:#1a5080;">🛢 MixTek Sealer</div><div class="section-body"><div class="row2"><div class="stat"><div class="lbl">Current Level</div><div class="val" style="color:#1a6aaa;">${fmt(mxBal)} gal</div></div><div class="stat"><div class="lbl">Total Received</div><div class="val" style="color:#2d7a0a;">${fmt(mxRcv)} gal</div></div><div class="stat"><div class="lbl">Total Sold</div><div class="val" style="color:#c03820;">${fmt(mxSold)} gal</div></div></div></div></div>
+  <div class="section"><div class="section-hd" style="background:#5a3500;">🧱 Crackfill — Deery</div><div class="section-body"><div class="row2"><div class="stat"><div class="lbl">Rubber — Purchased</div><div class="val" style="color:#2d7a0a;">${fmt(cfRubBuy)} blocks</div></div><div class="stat"><div class="lbl">Rubber — Used</div><div class="val" style="color:#c03820;">${fmt(cfRubUse)} blocks</div></div><div class="stat"><div class="lbl">Total Linear Feet</div><div class="val">${cfLF?fmt(cfLF)+' ft':'—'}</div></div></div><div style="height:12px;"></div><div class="row2"><div class="stat"><div class="lbl">Fiber/Rubber — Purchased</div><div class="val" style="color:#2d7a0a;">${fmt(cfFibBuy)} blocks</div></div><div class="stat"><div class="lbl">Fiber/Rubber — Used</div><div class="val" style="color:#c03820;">${fmt(cfFibUse)} blocks</div></div><div></div></div></div></div>
+  <div class="section"><div class="section-hd" style="background:#333;">🎨 Traffic Paint</div><div class="section-body"><div class="paint-grid">${PAINT_COLORS.map(c=>`<div class="paint-card"><div class="clbl">${c}</div><div class="cval" style="color:#1a6aaa;">${fmt(paintBals[c])} gal</div><div style="font-size:9px;color:#888;">balance</div></div>`).join('')}</div></div></div>
+  <div class="footer">AMP Materials Ledger · ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+  </body></html>`;
+  const win=window.open('','_blank','width=900,height=800,scrollbars=yes');
+  if(!win){showToast('Allow popups to print.','red');return;}
+  win.document.write(html);win.document.close();win.focus();setTimeout(()=>win.print(),700);
+}
+window.openSeasonSummary=openSeasonSummary;
 
 /* ══ CSV EXPORT ══════════════════════════════════════════ */
 function exportCSV(){
   const t=currentTracker;let rows;
-  if(t==='monarch'){
-    rows=[['Date','Type','Supplier','Mix Type','Note','Tons','Balance (ton)']];
-    [...allEntries].reverse().forEach(e=>rows.push([e.date,e.type==='buy'?'Purchase':'Usage',e.supplier||'',e.mix||'',e.note||'',e.tons,e.balance]));
-  } else if(t==='martin'){
-    rows=[['Date','Mix Type','Note','Tons Logged','Running Total (ton)']];
-    [...allEntries].reverse().forEach(e=>rows.push([e.date,e.mix||e.supplier||'',e.note||'',e.tons,e.balance]));
-  } else {
-    rows=[['Date','Type','Inches Before','Gal Before','Inches After','Gal After','Gal Received','Gal Sold','Balance (gal)','Note/Buyer']];
-    [...allEntries].reverse().forEach(e=>rows.push([
-      e.date,e.type,
-      e.inches_before||'',e.gallons_before||'',
-      e.inches_after||'',e.gallons_after||0,
-      e.type==='fill'?(e.delivered||0):'',
-      e.type==='sale'?(e.gallons_sold||0):'',
-      e.balance||'',
-      e.type==='sale'?(e.buyer||'')+(e.note?' - '+e.note:''):(e.note||'')
-    ]));
-  }
+  if(t==='monarch') rows=[['Date','Type','Supplier','Mix Type','Note','Tons','Balance (ton)'],...[...allEntries].reverse().map(e=>[e.date,e.type==='buy'?'Purchase':'Usage',e.supplier||'',e.mix||'',e.note||'',e.tons,e.balance])];
+  else if(t==='martin') rows=[['Date','Mix Type','Note','Tons','Running Total (ton)'],...[...allEntries].reverse().map(e=>[e.date,e.mix||'',e.note||'',e.tons,e.balance])];
+  else if(t==='mixtek') rows=[['Date','Type','In Before','Gal Before','In After','Gal After','Delivered','Gal Sold','Balance (gal)','Note/Buyer'],...[...allEntries].reverse().map(e=>[e.date,e.type,e.inches_before||'',e.gallons_before||'',e.inches_after||'',e.gallons_after||0,e.type==='fill'?(e.delivered||0):'',e.type==='sale'?(e.gallons_sold||0):'',e.balance||'',e.type==='sale'?(e.buyer||''):(e.note||'')])];
+  else if(t==='crackfill') rows=[['Date','Type','Product','Blocks','Weight (lbs)','Linear Feet','Note/Buyer'],...[...allEntries].reverse().map(e=>[e.date,e.type,e.product==='fiber'?'Mod. Fiber/Rubber':'Rubber',e.blocks,(e.blocks||0)*30,e.linear_feet||'',e.type==='sale'?(e.buyer||''):(e.note||'')])];
+  else rows=[['Date','Type','Color','Gallons','Note/Buyer'],...[...allEntries].reverse().map(e=>[e.date,e.type,e.color||'',e.gallons,e.type==='sale'?(e.buyer||''):(e.note||'')])];
   const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
   const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='amp-'+t+'-ledger.csv';a.click();URL.revokeObjectURL(url);
@@ -1146,216 +1112,10 @@ window.exportCSV=exportCSV;
 function fmt(n){if(n===undefined||n===null)return'—';return Number(n).toLocaleString('en-US',{maximumFractionDigits:3});}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function today(){return new Date().toISOString().slice(0,10);}
+function fmtDate(d){if(!d)return'—';const p=d.split('-');if(p.length!==3)return d;const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return m[parseInt(p[1])-1]+' '+parseInt(p[2])+', '+p[0];}
 function setTodayDates(ids){ids.forEach(id=>{const el=document.getElementById(id);if(el)el.value=today();});}
-function showToast(msg,cls){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className='show'+(cls?' '+cls:'');
-  clearTimeout(t._t);t._t=setTimeout(()=>{t.className='';},3200);
-}
+function showToast(msg,cls){const t=document.getElementById('toast');t.textContent=msg;t.className='show'+(cls?' '+cls:'');clearTimeout(t._t);t._t=setTimeout(()=>{t.className='';},3200);}
 
-/* ══ CONTRACTOR SALES REPORT ═════════════════════════ */
-function openReport(){
-  // Populate contractor dropdown from existing sale entries
-  const buyers = [...new Set(
-    allEntries.filter(e=>e.type==='sale'&&e.buyer).map(e=>e.buyer.trim())
-  )].sort();
-  const sel = document.getElementById('rpt-buyer');
-  sel.innerHTML = '<option value="all">All Contractors</option>';
-  buyers.forEach(b=>{
-    const opt=document.createElement('option');
-    opt.value=b; opt.textContent=b;
-    sel.appendChild(opt);
-  });
-  // Default date range: start of current year to today
-  const now = new Date();
-  document.getElementById('rpt-from').value = now.getFullYear()+'-01-01';
-  document.getElementById('rpt-to').value   = today();
-  document.getElementById('report-output').innerHTML =
-    '<p style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--text3);text-align:center;">Set filters above and click Run Report.</p>';
-  document.getElementById('rpt-print-btn').style.display='none';
-  document.getElementById('report-modal-bg').style.display='flex';
-}
-window.openReport=openReport;
-
-function closeReport(){
-  document.getElementById('report-modal-bg').style.display='none';
-}
-window.closeReport=closeReport;
-
-function generateReport(){
-  const from   = document.getElementById('rpt-from').value;
-  const to     = document.getElementById('rpt-to').value;
-  const buyer  = document.getElementById('rpt-buyer').value;
-
-  if(!from||!to){ showToast('Select both a from and to date.','red'); return; }
-  if(from>to){    showToast('From date must be before to date.','red'); return; }
-
-  // Filter entries
-  const sales = allEntries.filter(e=>{
-    if(e.type!=='sale') return false;
-    if(e.date < from || e.date > to) return false;
-    if(buyer!=='all' && (e.buyer||'').trim()!==buyer) return false;
-    return true;
-  }).slice().reverse(); // chronological order for report
-
-  const totalGal = sales.reduce((s,e)=>s+(e.gallons_sold||0),0);
-  const buyerLabel = buyer==='all'?'All Contractors':buyer;
-  const fromFmt = formatDateDisplay(from);
-  const toFmt   = formatDateDisplay(to);
-
-  if(!sales.length){
-    document.getElementById('report-output').innerHTML =
-      '<p style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--text3);text-align:center;padding:2rem 0;">No sales found for this contractor and date range.</p>';
-    document.getElementById('rpt-print-btn').style.display='none';
-    return;
-  }
-
-  // Group by buyer if "all" selected
-  const grouped={};
-  sales.forEach(e=>{
-    const k=(e.buyer||'Unknown').trim();
-    if(!grouped[k]) grouped[k]=[];
-    grouped[k].push(e);
-  });
-
-  let html = `
-    <div id="report-content" style="font-family:'IBM Plex Mono',monospace;">
-      <!-- Report header -->
-      <div style="border-bottom:2px solid var(--border2);padding-bottom:16px;margin-bottom:20px;">
-        <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;">AMP / Team Asphalt</div>
-        <div style="font-size:11px;color:var(--text3);">Spring Valley, WI · MixTek Sealer Sales Report</div>
-        <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-          <div>
-            <div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;">Contractor</div>
-            <div style="font-size:13px;color:var(--text);">${esc(buyerLabel)}</div>
-          </div>
-          <div>
-            <div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;">Date Range</div>
-            <div style="font-size:13px;color:var(--text);">${fromFmt} — ${toFmt}</div>
-          </div>
-          <div>
-            <div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;">Total Gallons Sold</div>
-            <div style="font-size:20px;font-weight:700;color:var(--red);">${fmt(totalGal)} <span style="font-size:12px;color:var(--text3);">gal</span></div>
-          </div>
-        </div>
-      </div>`;
-
-  // One table per contractor (or just one if specific buyer selected)
-  Object.entries(grouped).sort(([a],[b])=>a.localeCompare(b)).forEach(([bName, bSales])=>{
-    const bTotal = bSales.reduce((s,e)=>s+(e.gallons_sold||0),0);
-    html += `
-      <div style="margin-bottom:24px;">
-        ${buyer==='all'?`<div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:10px;padding:6px 10px;background:var(--bg3);border-radius:6px;border-left:3px solid var(--red);">${esc(bName)}</div>`:''}
-        <table style="width:100%;border-collapse:collapse;font-size:12px;">
-          <thead>
-            <tr style="background:var(--bg3);">
-              <th style="padding:8px 12px;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;">Date</th>
-              <th style="padding:8px 12px;text-align:right;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;">Gallons Sold</th>
-              <th style="padding:8px 12px;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:500;">Note / Invoice</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${bSales.map((e,i)=>`
-              <tr style="border-top:1px solid var(--border);background:${i%2===0?'var(--bg2)':'var(--bg3)'};">
-                <td style="padding:9px 12px;color:var(--text);">${esc(e.date||'—')}</td>
-                <td style="padding:9px 12px;text-align:right;font-weight:600;color:var(--red);">−${fmt(e.gallons_sold||0)}</td>
-                <td style="padding:9px 12px;color:var(--text3);">${esc(e.note||'')}</td>
-              </tr>`).join('')}
-          </tbody>
-          <tfoot>
-            <tr style="border-top:2px solid var(--border2);">
-              <td style="padding:10px 12px;font-weight:600;color:var(--text);font-size:11px;">${buyer==='all'?esc(bName)+' Total':'Total'}</td>
-              <td style="padding:10px 12px;text-align:right;font-weight:700;color:var(--red);font-size:14px;">${fmt(bTotal)} <span style="font-size:10px;color:var(--text3);">gal</span></td>
-              <td style="padding:10px 12px;"></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>`;
-  });
-
-  if(buyer==='all'&&Object.keys(grouped).length>1){
-    html += `
-      <div style="border-top:2px solid var(--border2);padding-top:14px;display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:12px;font-weight:600;color:var(--text);">Grand Total — All Contractors</span>
-        <span style="font-size:20px;font-weight:700;color:var(--red);">${fmt(totalGal)} <span style="font-size:12px;color:var(--text3);">gal</span></span>
-      </div>`;
-  }
-
-  html += '</div>';
-
-  document.getElementById('report-output').innerHTML = html;
-  document.getElementById('rpt-print-btn').style.display='inline-flex';
-}
-window.generateReport=generateReport;
-
-function printReport(){
-  const content = document.getElementById('report-content');
-  if(!content){ showToast('Run the report first.','red'); return; }
-
-  const from  = document.getElementById('rpt-from').value;
-  const to    = document.getElementById('rpt-to').value;
-  const buyer = document.getElementById('rpt-buyer').value;
-  const buyerLabel = buyer==='all'?'All Contractors':buyer;
-
-  const printHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"/>
-    <title>Sealer Sales Report — ${buyerLabel}</title>
-    <style>
-      *{box-sizing:border-box;margin:0;padding:0;}
-      body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#111;padding:32px;background:#fff;}
-      h1{font-size:20px;font-weight:700;margin-bottom:4px;}
-      .sub{font-size:11px;color:#666;margin-bottom:20px;}
-      .meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;border-bottom:2px solid #ccc;padding-bottom:16px;margin-bottom:20px;}
-      .meta-label{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:3px;}
-      .meta-val{font-size:14px;font-weight:600;color:#111;}
-      .meta-val.big{font-size:20px;color:#c03820;}
-      table{width:100%;border-collapse:collapse;margin-bottom:20px;}
-      th{padding:8px 10px;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#666;background:#f0f0f0;font-weight:500;border-bottom:1px solid #ccc;}
-      th.right{text-align:right;}
-      td{padding:8px 10px;border-bottom:1px solid #e5e5e5;}
-      td.right{text-align:right;}
-      tr:nth-child(even) td{background:#f9f9f9;}
-      tfoot td{border-top:2px solid #ccc;font-weight:700;padding-top:10px;}
-      tfoot td.right{color:#c03820;font-size:14px;}
-      .contractor-head{font-size:12px;font-weight:700;color:#111;padding:6px 10px;background:#f0f0f0;border-left:3px solid #c03820;margin-bottom:8px;}
-      .grand-total{border-top:2px solid #ccc;padding-top:12px;display:flex;justify-content:space-between;align-items:center;}
-      .grand-total span:first-child{font-size:13px;font-weight:700;}
-      .grand-total span:last-child{font-size:20px;font-weight:700;color:#c03820;}
-      .footer{margin-top:32px;font-size:10px;color:#888;border-top:1px solid #ddd;padding-top:10px;}
-      @media print{body{padding:20px;}}
-    </style>
-  </head><body>
-    <h1>AMP / Team Asphalt</h1>
-    <div class="sub">Spring Valley, WI · MixTek Sealer Sales Report</div>
-    ${content.querySelector('.meta-grid') ? content.querySelector('.meta-grid').outerHTML : `
-    <div class="meta">
-      <div><div class="meta-label">Contractor</div><div class="meta-val">${buyerLabel}</div></div>
-      <div><div class="meta-label">Date Range</div><div class="meta-val">${formatDateDisplay(from)} — ${formatDateDisplay(to)}</div></div>
-      <div><div class="meta-label">Total Gallons Sold</div><div class="meta-val big">${document.querySelector('#report-content tfoot td.right, #report-content .grand-total span:last-child')?.textContent||'—'} gal</div></div>
-    </div>`}
-    ${content.innerHTML}
-    <div class="footer">Printed ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} · AMP Materials Ledger</div>
-  </body></html>`;
-
-  // Open print in a new window — stays open until user closes it manually
-  const printWin = window.open('','_blank','width=800,height=700,scrollbars=yes');
-  if(!printWin){ showToast('Allow popups for this site to print.','red'); return; }
-  printWin.document.write(printHTML);
-  printWin.document.close();
-  printWin.focus();
-  // Small delay so content renders before print dialog opens
-  setTimeout(()=>{ printWin.print(); }, 600);
-}
-window.printReport=printReport;
-
-function formatDateDisplay(d){
-  if(!d) return '—';
-  const parts=d.split('-');
-  if(parts.length!==3) return d;
-  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return months[parseInt(parts[1])-1]+' '+parseInt(parts[2])+', '+parts[0];
-}
-
-/* ══ INIT ════════════════════════════════════════════ */
 buildUI();
 initAllListeners();
 </script>
